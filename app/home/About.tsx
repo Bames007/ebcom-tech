@@ -17,13 +17,13 @@ import { Bebas_Neue, Poppins } from "next/font/google";
 const bebasNeue = Bebas_Neue({
   weight: "400",
   subsets: ["latin"],
-  display: "swap",
+  variable: "--font-bebas-neue",
 });
 
 const poppins = Poppins({
   weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin"],
-  display: "swap",
+  variable: "--font-poppins",
 });
 
 // Types for better TypeScript support
