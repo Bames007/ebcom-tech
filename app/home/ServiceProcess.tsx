@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { Bebas_Neue, Poppins, Gantari } from "next/font/google";
 import Lottie from "lottie-react";
 import {
@@ -11,6 +11,7 @@ import {
   Smartphone,
   Zap,
   ArrowRight,
+  ChevronDown,
   Play,
   Pause,
   MessageCircle,
@@ -18,6 +19,7 @@ import {
   Palette,
   Figma,
   Terminal,
+  Globe,
   CheckCircle2,
   Users,
   FileText,
@@ -452,117 +454,128 @@ const services = [
 export default function ServiceProcess() {
   const [activeService, setActiveService] = useState(services[0]);
   const [activeStep, setActiveStep] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [, setScrollProgress] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false); // Start with false for better UX
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const stepsRef = useRef<HTMLDivElement>(null);
+  const scrollTicking = useRef(false);
+
+  // Memoize services to prevent unnecessary re-renders
+  const memoizedServices = useMemo(() => services, []);
+
+  // Optimized scroll handler with requestAnimationFrame
+  const handleScroll = useCallback(() => {
+    if (!scrollTicking.current && stepsRef.current) {
+      requestAnimationFrame(() => {
+        const element = stepsRef.current!;
+        const scrollTop = element.scrollTop;
+        const scrollHeight = element.scrollHeight - element.clientHeight;
+
+        setScrollProgress((scrollTop / scrollHeight) * 100);
+
+        const stepHeight = element.scrollHeight / activeService.steps.length;
+        const currentStep = Math.floor(scrollTop / stepHeight);
+        setActiveStep(Math.min(currentStep, activeService.steps.length - 1));
+
+        scrollTicking.current = false;
+      });
+      scrollTicking.current = true;
+    }
+  }, [activeService.steps.length]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!stepsRef.current) return;
-
-      const element = stepsRef.current;
-      const scrollTop = element.scrollTop;
-      const scrollHeight = element.scrollHeight - element.clientHeight;
-      const progress = (scrollTop / scrollHeight) * 100;
-
-      setScrollProgress(progress);
-
-      // Calculate active step based on scroll position
-      const stepHeight = element.scrollHeight / activeService.steps.length;
-      const currentStep = Math.floor(scrollTop / stepHeight);
-      setActiveStep(Math.min(currentStep, activeService.steps.length - 1));
-    };
-
     const stepsElement = stepsRef.current;
     if (stepsElement) {
-      stepsElement.addEventListener("scroll", handleScroll);
+      stepsElement.addEventListener("scroll", handleScroll, { passive: true });
       return () => stepsElement.removeEventListener("scroll", handleScroll);
     }
-  }, [activeService]);
+  }, [handleScroll]);
 
+  // Optimized auto-scroll with cleanup
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
     if (isPlaying && activeStep < activeService.steps.length - 1) {
       interval = setInterval(() => {
-        setActiveStep((prev) => {
-          const nextStep = prev + 1;
-          if (nextStep >= activeService.steps.length) {
-            setIsPlaying(false);
-            return prev;
-          }
+        if (stepsRef.current) {
+          const nextStep = activeStep + 1;
+          const stepHeight =
+            stepsRef.current.scrollHeight / activeService.steps.length;
 
-          // Scroll to next step
-          if (stepsRef.current) {
-            const stepHeight =
-              stepsRef.current.scrollHeight / activeService.steps.length;
-            stepsRef.current.scrollTo({
-              top: stepHeight * nextStep,
-              behavior: "smooth",
-            });
-          }
+          stepsRef.current.scrollTo({
+            top: stepHeight * nextStep,
+            behavior: "smooth",
+          });
 
-          return nextStep;
-        });
-      }, 3000);
+          // Let the scroll handler update the active step
+          setTimeout(() => {
+            if (stepsRef.current) {
+              const currentScroll = stepsRef.current.scrollTop;
+              const expectedScroll = stepHeight * nextStep;
+              // Only update if scroll reached the target (smooth scroll completed)
+              if (Math.abs(currentScroll - expectedScroll) < 10) {
+                setActiveStep(nextStep);
+              }
+            }
+          }, 500);
+        }
+      }, 4000); // Increased interval for better UX
     }
 
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [isPlaying, activeStep, activeService.steps.length]);
 
-  const handleServiceChange = (service: (typeof services)[0]) => {
+  const handleServiceChange = useCallback((service: (typeof services)[0]) => {
     setActiveService(service);
     setActiveStep(0);
-    setIsPlaying(true);
+    setIsPlaying(false);
     setIsMobileMenuOpen(false);
     if (stepsRef.current) {
       stepsRef.current.scrollTop = 0;
     }
-  };
+  }, []);
 
-  const scrollToStep = (index: number) => {
-    setActiveStep(index);
-    setIsPlaying(false);
+  const scrollToStep = useCallback(
+    (index: number) => {
+      setActiveStep(index);
+      setIsPlaying(false);
 
-    if (stepsRef.current) {
-      const stepHeight =
-        stepsRef.current.scrollHeight / activeService.steps.length;
-      stepsRef.current.scrollTo({
-        top: stepHeight * index,
-        behavior: "smooth",
-      });
-    }
-  };
+      if (stepsRef.current) {
+        const stepHeight =
+          stepsRef.current.scrollHeight / activeService.steps.length;
+        stepsRef.current.scrollTo({
+          top: stepHeight * index,
+          behavior: "smooth",
+        });
+      }
+    },
+    [activeService.steps.length]
+  );
+
+  // Memoize current step data
+  const currentStepData = useMemo(
+    () => activeService.steps[activeStep],
+    [activeService, activeStep]
+  );
 
   return (
     <section
-      className={`relative min-h-screen py-20 px-4 sm:px-6 lg:px-8 overflow-hidden ${bebasNeue.variable} ${poppins.variable} ${gantari.variable}`}
+      className={`relative min-h-screen py-20 px-4 sm:px-6 lg:px-8 overflow-hidden ${bebasNeue.className} ${poppins.variable} ${gantari.variable}`}
     >
-      {/* Animated Background */}
+      {/* Simplified Background for better performance */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Gradient Orbs */}
-        <div className="absolute -top-40 -right-32 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-r from-blue-600/20 via-cyan-600/20 to-emerald-600/20 rounded-full blur-3xl opacity-20 animate-pulse-slow" />
-        <div
-          className="absolute -bottom-40 -left-32 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-r from-emerald-600/20 via-blue-600/20 to-cyan-600/20 rounded-full blur-3xl opacity-20 animate-pulse-slow"
-          style={{ animationDelay: "2s" }}
-        />
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-purple-600/10 via-pink-600/10 to-red-600/10 rounded-full blur-3xl opacity-15 animate-pulse-slow"
-          style={{ animationDelay: "4s" }}
-        />
-
-        {/* Animated Grid */}
-        <div className="absolute inset-0 opacity-[0.03]">
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.1)_1px,transparent_1px)] bg-[size:64px_64px] animate-grid-flow" />
-        </div>
+        <div className="absolute -top-40 -right-32 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-r from-blue-600/10 to-cyan-600/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-32 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-r from-emerald-600/10 to-blue-600/10 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12 lg:mb-16">
           <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
-            <Zap className="w-5 h-5 text-blue-400 animate-pulse" />
+            <Zap className="w-5 h-5 text-blue-400" />
             <span className="text-blue-400 text-sm font-poppins font-semibold tracking-wider uppercase">
               Our Process
             </span>
@@ -609,7 +622,7 @@ export default function ServiceProcess() {
 
           {isMobileMenuOpen && (
             <div className="mt-2 bg-white/90 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-xl overflow-hidden">
-              {services.map((service) => {
+              {memoizedServices.map((service) => {
                 const IconComponent = service.icon;
                 return (
                   <button
@@ -640,7 +653,7 @@ export default function ServiceProcess() {
 
         {/* Desktop Service Selection */}
         <div className="hidden lg:flex flex-wrap justify-center gap-4 mb-12">
-          {services.map((service) => {
+          {memoizedServices.map((service) => {
             const IconComponent = service.icon;
             return (
               <button
@@ -693,19 +706,22 @@ export default function ServiceProcess() {
             <div className="p-4 lg:p-6 space-y-8 lg:space-y-12">
               {activeService.steps.map((step, index) => {
                 const StepIcon = step.icon;
+                const isStepActive = index === activeStep;
+                const isStepVisible = Math.abs(index - activeStep) <= 1; // Only render active and adjacent steps fully
+
                 return (
                   <div
                     key={index}
-                    className={`group relative transition-all duration-1000 ${
+                    className={`group relative transition-all duration-500 ${
                       index <= activeStep
                         ? "opacity-100 translate-y-0"
-                        : "opacity-30 translate-y-8"
+                        : "opacity-40 translate-y-4"
                     }`}
                   >
                     {/* Connection Line */}
                     {index < activeService.steps.length - 1 && (
                       <div
-                        className={`absolute left-6 top-20 w-0.5 h-24 transition-all duration-1000 ${
+                        className={`absolute left-6 top-20 w-0.5 h-24 transition-all duration-500 ${
                           index < activeStep
                             ? `bg-gradient-to-b ${activeService.color}`
                             : "bg-slate-300"
@@ -716,9 +732,9 @@ export default function ServiceProcess() {
                     <div className="flex gap-4 lg:gap-6">
                       {/* Step Number */}
                       <div
-                        className={`flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center font-bebas-neue text-xl transition-all duration-500 ${
+                        className={`flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center font-bebas-neue text-xl transition-all duration-300 ${
                           index <= activeStep
-                            ? `bg-gradient-to-r ${activeService.color} text-white shadow-lg scale-110`
+                            ? `bg-gradient-to-r ${activeService.color} text-white shadow-lg scale-105`
                             : "bg-slate-200 text-slate-400"
                         }`}
                       >
@@ -773,24 +789,29 @@ export default function ServiceProcess() {
                           )}
                         </div>
 
-                        {/* Lottie Animation */}
-                        <div className="mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-200/60">
-                          <div className="w-full h-32 lg:h-48 rounded-xl overflow-hidden">
-                            <Lottie
-                              animationData={
-                                lottieAnimations[
-                                  step.lottie as keyof typeof lottieAnimations
-                                ]
-                              }
-                              loop={index === activeStep}
-                              autoplay={index === activeStep}
-                              className="w-full h-full"
-                            />
+                        {/* Lottie Animation - Only render for visible steps */}
+                        {isStepVisible && (
+                          <div className="mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-200/60">
+                            <div className="w-full h-32 lg:h-48 rounded-xl overflow-hidden">
+                              <Lottie
+                                animationData={
+                                  lottieAnimations[
+                                    step.lottie as keyof typeof lottieAnimations
+                                  ]
+                                }
+                                loop={isStepActive}
+                                autoplay={isStepActive}
+                                className="w-full h-full"
+                                rendererSettings={{
+                                  preserveAspectRatio: "xMidYMid slice",
+                                }}
+                              />
+                            </div>
+                            <div className="text-center mt-2 font-poppins text-slate-500 text-sm">
+                              {step.title} visualization
+                            </div>
                           </div>
-                          <div className="text-center mt-2 font-poppins text-slate-500 text-sm">
-                            {step.title} visualization
-                          </div>
-                        </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -815,7 +836,7 @@ export default function ServiceProcess() {
                   Step {activeStep + 1} of {activeService.steps.length}
                 </div>
                 <div className="font-poppins text-slate-600 text-sm lg:text-base line-clamp-2">
-                  {activeService.steps[activeStep]?.title}
+                  {currentStepData?.title}
                 </div>
               </div>
 
@@ -896,11 +917,6 @@ export default function ServiceProcess() {
         {/* CTA */}
         <div className="text-center mt-12 lg:mt-16">
           <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-3xl p-6 lg:p-8 xl:p-12 text-white relative overflow-hidden">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-5">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] bg-[length:32px_32px]" />
-            </div>
-
             <h3 className="font-bebas-neue text-2xl sm:text-3xl lg:text-4xl mb-4 relative z-10">
               Ready to Start Your Project?
             </h3>
@@ -919,43 +935,6 @@ export default function ServiceProcess() {
 
       {/* Custom Styles */}
       <style jsx global>{`
-        .font-bebas-neue {
-          font-family: var(--font-bebas-neue), sans-serif;
-        }
-        .font-poppins {
-          font-family: var(--font-poppins), sans-serif;
-        }
-        .font-gantari {
-          font-family: var(--font-gantari), sans-serif;
-        }
-
-        @keyframes pulse-slow {
-          0%,
-          100% {
-            opacity: 0.2;
-          }
-          50% {
-            opacity: 0.4;
-          }
-        }
-
-        @keyframes grid-flow {
-          0% {
-            transform: translateY(0) translateX(0);
-          }
-          100% {
-            transform: translateY(-64px) translateX(-64px);
-          }
-        }
-
-        .animate-pulse-slow {
-          animation: pulse-slow 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        .animate-grid-flow {
-          animation: grid-flow 20s linear infinite;
-        }
-
         /* Custom Scrollbar */
         .scroll-smooth {
           scroll-behavior: smooth;
