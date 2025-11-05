@@ -30,6 +30,7 @@ import {
   Workflow,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 interface FooterProps {
   scrollToSection: (section: string) => void;
@@ -182,13 +183,16 @@ export default function Footer({ scrollToSection }: FooterProps) {
                 }`}
               >
                 <div className="flex items-center gap-3 mb-6">
-                  <div
+                  {/* <div
                     className={`w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 ${"shadow-lg shadow-blue-500/20"}`}
-                  >
-                    <div className="w-6 h-6 bg-white rounded-md flex items-center justify-center">
-                      <div className="w-4 h-4 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-sm" />
-                    </div>
-                  </div>
+                  > */}
+                  <Image
+                    src={"/logo.png"}
+                    alt="EBCom Technologies"
+                    width={32}
+                    height={32}
+                  />
+                  {/* </div> */}
                   <div>
                     <h3 className="font-bebas-neue text-3xl text-slate-800 leading-none">
                       EBCOM

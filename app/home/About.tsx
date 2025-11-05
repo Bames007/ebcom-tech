@@ -197,7 +197,7 @@ export default function AboutSection() {
         >
           About{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
-            Ebcom Technologies
+            EBCom Technologies
           </span>
         </h2>
 
@@ -210,7 +210,7 @@ export default function AboutSection() {
         >
           We are a digital innovation company committed to helping businesses
           harness the power of technology for growth, efficiency, and impact.
-          From software development to digital transformation, Ebcom is where
+          From software development to digital transformation, EBCom is where
           vision meets precision.
         </p>
 

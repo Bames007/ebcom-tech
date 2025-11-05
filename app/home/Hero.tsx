@@ -14,6 +14,7 @@ import {
   Handshake,
 } from "lucide-react";
 import { Bebas_Neue, Poppins } from "next/font/google";
+import Link from "next/link";
 
 const bebasNeue = Bebas_Neue({
   subsets: ["latin"],
@@ -180,13 +181,14 @@ export default function Hero() {
 
           {/* Enhanced CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
-            <button
+            <Link
+              href="/schedule"
               className={`${poppins.className} group relative bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-blue-500/40 hover:scale-105 flex items-center gap-3 overflow-hidden`}
             >
               <span className="relative z-10">Start Your Project</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
               <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </button>
+            </Link>
 
             <button
               className={`${poppins.className} group relative bg-white/80 backdrop-blur-sm border border-slate-300 hover:border-blue-500 text-slate-700 hover:text-blue-600 font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 flex items-center gap-3 shadow-sm hover:shadow-md`}

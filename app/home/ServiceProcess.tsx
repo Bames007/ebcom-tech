@@ -37,6 +37,7 @@ import networkAnimation from "@/public/assets/animations/network.json";
 import securityAnimation from "@/public/assets/animations/cybersecurity.json";
 import cloudAnimation from "@/public/assets/animations/cloud_security.json";
 import mobileAnimation from "@/public/assets/animations/mobile_showcase.json";
+import Link from "next/link";
 
 // Dynamically import Lottie to reduce initial bundle size
 const Lottie = dynamic(() => import("lottie-react"), {
@@ -862,10 +863,13 @@ export default function ServiceProcess() {
               proven process and expertise.
             </p>
 
-            <button className="group bg-white text-slate-900 font-poppins font-semibold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 flex items-center gap-3 mx-auto">
+            <Link
+              href="/schedule"
+              className="group bg-white text-slate-900 font-poppins font-semibold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 flex items-center gap-3 mx-auto"
+            >
               Start Your Journey
               <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5 group-hover:translate-x-1 transition-transform duration-200" />
-            </button>
+            </Link>
           </div>
         </div>
       </div>

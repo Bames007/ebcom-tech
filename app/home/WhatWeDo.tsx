@@ -37,6 +37,7 @@ import {
   Codesandbox,
   HeartHandshake,
 } from "lucide-react";
+import Link from "next/link";
 
 // Font configurations
 const bebasNeue = Bebas_Neue({
@@ -463,11 +464,14 @@ export default function WhatWeDo() {
             mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <button className="group relative bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-poppins font-semibold text-base sm:text-lg w-full sm:w-auto px-8 py-4 sm:px-10 sm:py-5 rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3">
+          <Link
+            href="/schedule"
+            className="group relative bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-poppins font-semibold text-base sm:text-lg w-full sm:w-auto px-8 py-4 sm:px-10 sm:py-5 rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3"
+          >
             Start Your Project
             <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-200" />
             <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </button>
+          </Link>
 
           <button className="group relative bg-white/80 backdrop-blur-sm text-slate-700 font-poppins font-semibold text-base sm:text-lg w-full sm:w-auto px-8 py-4 sm:px-10 sm:py-5 rounded-xl sm:rounded-2xl border border-slate-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3">
             <Play className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />

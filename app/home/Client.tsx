@@ -23,6 +23,7 @@ import {
   Stethoscope,
   Shield,
 } from "lucide-react";
+import Link from "next/link";
 
 // Font configurations
 const bebasNeue = Bebas_Neue({
@@ -827,10 +828,13 @@ export default function Clients() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="group bg-white text-blue-600 font-poppins font-semibold text-lg px-8 py-4 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 flex items-center gap-3">
+            <Link
+              href="/schedule"
+              className="group bg-white text-blue-600 font-poppins font-semibold text-lg px-8 py-4 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 flex items-center gap-3"
+            >
               Start Your Project
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
-            </button>
+            </Link>
 
             <button className="group bg-transparent border-2 border-white text-white font-poppins font-semibold text-lg px-8 py-4 rounded-2xl hover:bg-white/10 transition-all duration-300 hover:scale-105 flex items-center gap-3">
               View Case Studies

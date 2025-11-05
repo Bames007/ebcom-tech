@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { Menu, X, Phone, MessageCircle } from "lucide-react";
+import Image from "next/image";
 
 interface HeaderProps {
   scrollToSection: (section: string) => void;
@@ -190,15 +191,18 @@ export default function Header({
             onClick={() => scrollToSection("home")}
             className="flex items-center space-x-3 group"
           >
-            <div
+            {/* <div
               className={`w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 ${
                 isScrolled ? "shadow-md" : "shadow-lg shadow-blue-500/20"
               }`}
-            >
-              <div className="w-6 h-6 bg-white rounded-md flex items-center justify-center">
-                <div className="w-4 h-4 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-sm" />
-              </div>
-            </div>
+            > */}
+            <Image
+              src={"/logo.png"}
+              alt="EBCom Technologies"
+              width={32}
+              height={32}
+            />
+            {/* </div> */}
 
             <div className="flex flex-col">
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
@@ -298,17 +302,12 @@ export default function Header({
               className={`relative flex justify-between items-center p-6 border-b ${mobileBorders.border}`}
             >
               <div className="flex items-center space-x-3">
-                <div
-                  className={`w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center shadow-2xl ${
-                    !isScrolled && activeSection === "home"
-                      ? "shadow-blue-500/25"
-                      : "shadow-2xl"
-                  }`}
-                >
-                  <div className="w-7 h-7 bg-white rounded-lg flex items-center justify-center">
-                    <div className="w-5 h-5 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-md" />
-                  </div>
-                </div>
+                <Image
+                  src={"/logo.png"}
+                  alt="EBCom Technologies"
+                  width={32}
+                  height={32}
+                />
                 <div className="flex flex-col">
                   <span
                     className={`text-2xl font-bold ${
@@ -517,7 +516,7 @@ export default function Header({
                       : "text-white/40"
                   }`}
                 >
-                  Let's build something amazing together
+                  Let&apos;s build something amazing together
                 </p>
               </div>
             </div>
