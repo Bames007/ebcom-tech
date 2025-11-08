@@ -1,9 +1,10 @@
-// app/home/Header.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import { Menu, X, Phone, MessageCircle } from "lucide-react";
 import Image from "next/image";
+import { Router } from "next/router";
+import Link from "next/link";
 
 interface HeaderProps {
   scrollToSection: (section: string) => void;
@@ -186,27 +187,22 @@ export default function Header({
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          {/* Logo */}
+          {/* Logo - Fixed alignment for EBCOM and TECHNOLOGIES */}
           <button
             onClick={() => scrollToSection("home")}
             className="flex items-center space-x-3 group"
           >
-            {/* <div
-              className={`w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 ${
-                isScrolled ? "shadow-md" : "shadow-lg shadow-blue-500/20"
-              }`}
-            > */}
             <Image
               src={"/logo.png"}
               alt="EBCom Technologies"
               width={32}
               height={32}
+              className="flex-shrink-0"
             />
-            {/* </div> */}
 
-            <div className="flex flex-col">
+            <div className="flex flex-col items-start leading-tight">
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-                EBCom
+                EBCOM
               </span>
               <span
                 className={`hidden lg:block text-xs tracking-widest font-medium transition-colors duration-300 ${
@@ -218,7 +214,7 @@ export default function Header({
             </div>
           </button>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Removed indicator */}
           <nav className="hidden lg:flex items-center space-x-1">
             {navItems.map((item) => (
               <div key={item.name} className="relative">
@@ -231,9 +227,7 @@ export default function Header({
                   } ${isScrolled ? "hover:bg-blue-50" : "hover:bg-white/10"}`}
                 >
                   {item.name}
-                  {isActive(item.section) && (
-                    <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full" />
-                  )}
+                  {/* Indicator removed as requested */}
                 </button>
               </div>
             ))}
@@ -251,8 +245,8 @@ export default function Header({
               <Phone className="w-4 h-4" />
               <span className="font-medium text-sm">08127728084</span>
             </div>
-            <button
-              onClick={() => scrollToSection("contact")}
+            <Link
+              href={"/schedule"}
               className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                 isScrolled
                   ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg hover:shadow-xl"
@@ -260,7 +254,7 @@ export default function Header({
               }`}
             >
               Get Started
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -307,8 +301,9 @@ export default function Header({
                   alt="EBCom Technologies"
                   width={32}
                   height={32}
+                  className="flex-shrink-0"
                 />
-                <div className="flex flex-col">
+                <div className="flex flex-col items-start leading-tight">
                   <span
                     className={`text-2xl font-bold ${
                       !isScrolled && activeSection === "home"
@@ -316,7 +311,7 @@ export default function Header({
                         : "text-white"
                     }`}
                   >
-                    EBCom
+                    EBCOM
                   </span>
                   <span
                     className={`text-xs tracking-widest ${
@@ -407,7 +402,7 @@ export default function Header({
               </div>
             </nav>
 
-            {/* Enhanced Mobile Contact Footer */}
+            {/* Enhanced Mobile Contact Footer - Center aligned CTA text for smaller screens */}
             <div
               className={`relative z-10 p-6 border-t ${mobileBorders.border} ${
                 !isScrolled && activeSection === "home"
@@ -434,7 +429,7 @@ export default function Header({
                   >
                     <Phone className="w-5 h-5" />
                   </div>
-                  <span className="font-semibold">Call Now</span>
+                  <span className="font-semibold text-center">Call Now</span>
                 </button>
                 <button
                   onClick={handleWhatsApp}
@@ -453,7 +448,7 @@ export default function Header({
                   >
                     <MessageCircle className="w-5 h-5" />
                   </div>
-                  <span className="font-semibold">WhatsApp</span>
+                  <span className="font-semibold text-center">WhatsApp</span>
                 </button>
               </div>
 
@@ -475,7 +470,7 @@ export default function Header({
                   Available 24/7
                 </p>
                 <p
-                  className={`font-bold text-xl tracking-wide ${
+                  className={`font-bold text-xl tracking-wide text-center ${
                     !isScrolled && activeSection === "home"
                       ? "text-slate-800"
                       : "text-white"
@@ -494,16 +489,16 @@ export default function Header({
                 </p>
               </div>
 
-              {/* Main CTA */}
+              {/* Main CTA - Center aligned for smaller screens */}
               <button
                 onClick={() => {
                   scrollToSection("contact");
                   setIsMenuOpen(false);
                 }}
-                className="w-full py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3 group"
+                className="w-full py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3 group text-center"
               >
                 <MessageCircle className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-                Start Your Project
+                <span className="text-center">Start Your Project</span>
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </button>
 
