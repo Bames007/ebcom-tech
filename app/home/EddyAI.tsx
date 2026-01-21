@@ -1,4 +1,3 @@
-// components/eddy-ai.tsx
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -1231,29 +1230,29 @@ Would you like to explore any of these areas in more detail, or is there somethi
   const renderServiceCard = (service: Service) => (
     <div
       key={service.id}
-      className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-3"
+      className="bg-[#DCD7C9] border border-[#a27b5b]/20 rounded-lg p-4 mb-3"
     >
-      <h4 className="font-semibold text-blue-900 mb-2">{service.title}</h4>
-      <p className="text-sm text-blue-700 mb-3">{service.description}</p>
-      <div className="text-xs text-blue-600 space-y-1">
+      <h4 className="font-semibold text-[#2c3639] mb-2">{service.title}</h4>
+      <p className="text-sm text-[#3f4e4f] mb-3">{service.description}</p>
+      <div className="text-xs text-[#3f4e4f] space-y-1">
         {service.features.map((feature, index) => (
           <div key={index} className="flex items-start gap-2">
-            <CheckCircle className="w-3 h-3 mt-0.5 flex-shrink-0" />
+            <CheckCircle className="w-3 h-3 mt-0.5 flex-shrink-0 text-[#a27b5b]" />
             <span>{feature}</span>
           </div>
         ))}
       </div>
       {service.startingPrice && (
-        <div className="mt-3 pt-2 border-t border-blue-200 text-xs">
+        <div className="mt-3 pt-2 border-t border-[#a27b5b]/20 text-xs">
           <div className="flex justify-between">
-            <span className="text-blue-600">Starting from:</span>
-            <span className="font-semibold text-blue-900">
+            <span className="text-[#3f4e4f]">Starting from:</span>
+            <span className="font-semibold text-[#2c3639]">
               {service.startingPrice}
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-blue-600">Timeline:</span>
-            <span className="font-semibold text-blue-900">
+            <span className="text-[#3f4e4f]">Timeline:</span>
+            <span className="font-semibold text-[#2c3639]">
               {service.timeline}
             </span>
           </div>
@@ -1263,33 +1262,33 @@ Would you like to explore any of these areas in more detail, or is there somethi
   );
 
   const renderContactInfo = () => (
-    <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-3">
+    <div className="bg-[#DCD7C9] border border-[#a27b5b]/20 rounded-lg p-4 space-y-3">
       <div className="flex items-center gap-3">
-        <Phone className="w-4 h-4 text-green-600" />
+        <Phone className="w-4 h-4 text-[#a27b5b]" />
         <div>
-          <div className="font-semibold text-green-900">Phone</div>
-          <div className="text-sm text-green-700">{contactInfo.phone}</div>
+          <div className="font-semibold text-[#2c3639]">Phone</div>
+          <div className="text-sm text-[#3f4e4f]">{contactInfo.phone}</div>
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <Mail className="w-4 h-4 text-green-600" />
+        <Mail className="w-4 h-4 text-[#a27b5b]" />
         <div>
-          <div className="font-semibold text-green-900">Email</div>
-          <div className="text-sm text-green-700">{contactInfo.email}</div>
+          <div className="font-semibold text-[#2c3639]">Email</div>
+          <div className="text-sm text-[#3f4e4f]">{contactInfo.email}</div>
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <Calendar className="w-4 h-4 text-green-600" />
+        <Calendar className="w-4 h-4 text-[#a27b5b]" />
         <div>
-          <div className="font-semibold text-green-900">Meeting</div>
-          <div className="text-sm text-green-700">{contactInfo.meeting}</div>
+          <div className="font-semibold text-[#2c3639]">Meeting</div>
+          <div className="text-sm text-[#3f4e4f]">{contactInfo.meeting}</div>
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <MapPin className="w-4 h-4 text-green-600" />
+        <MapPin className="w-4 h-4 text-[#a27b5b]" />
         <div>
-          <div className="font-semibold text-green-900">Address</div>
-          <div className="text-sm text-green-700">{contactInfo.address}</div>
+          <div className="font-semibold text-[#2c3639]">Address</div>
+          <div className="text-sm text-[#3f4e4f]">{contactInfo.address}</div>
         </div>
       </div>
     </div>
@@ -1304,10 +1303,10 @@ Would you like to explore any of these areas in more detail, or is there somethi
       >
         <div className="relative">
           {/* Pulsing animation */}
-          <div className="absolute inset-0 bg-blue-600 rounded-full animate-ping opacity-20"></div>
+          <div className="absolute inset-0 bg-[#a27b5b] rounded-full animate-ping opacity-20"></div>
 
           {/* Main button */}
-          <div className="relative bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-2xl shadow-2xl shadow-blue-500/40 hover:shadow-blue-500/60 transition-all duration-300 hover:scale-110 flex items-center gap-3">
+          <div className="relative bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] text-white p-4 rounded-2xl shadow-2xl shadow-[#2c3639]/40 hover:shadow-[#2c3639]/60 transition-all duration-300 hover:scale-110 flex items-center gap-3">
             <div className="relative">
               <Bot className="w-6 h-6" />
               <div className="w-2 h-2 bg-green-400 rounded-full absolute -top-1 -right-1 border border-white"></div>
@@ -1331,7 +1330,7 @@ Would you like to explore any of these areas in more detail, or is there somethi
           {/* Chat Container */}
           <div className="relative w-full max-w-md h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-t-2xl flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] text-white p-4 rounded-t-2xl flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -1341,7 +1340,7 @@ Would you like to explore any of these areas in more detail, or is there somethi
                 </div>
                 <div>
                   <h3 className="font-bold text-lg">Eddy AI</h3>
-                  <p className="text-blue-100 text-sm">
+                  <p className="text-white/80 text-sm">
                     EBCom Technologies Assistant
                   </p>
                 </div>
@@ -1364,7 +1363,7 @@ Would you like to explore any of these areas in more detail, or is there somethi
             </div>
 
             {/* Messages Container */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#DCD7C9]/30">
               {messages.map((message) => (
                 <div
                   key={message.id}
@@ -1375,13 +1374,13 @@ Would you like to explore any of these areas in more detail, or is there somethi
                   <div
                     className={`max-w-[85%] rounded-2xl p-4 ${
                       message.sender === "user"
-                        ? "bg-blue-600 text-white rounded-br-none"
-                        : "bg-white text-gray-800 shadow-sm border border-gray-200 rounded-bl-none"
+                        ? "bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] text-white rounded-br-none"
+                        : "bg-white text-[#2c3639] shadow-sm border border-[#3f4e4f]/10 rounded-bl-none"
                     }`}
                   >
                     <div className="flex items-center gap-2 mb-2">
                       {message.sender === "ai" && (
-                        <Bot className="w-4 h-4 text-blue-500" />
+                        <Bot className="w-4 h-4 text-[#a27b5b]" />
                       )}
                       <span className="text-xs opacity-70 font-medium">
                         {message.sender === "ai" ? "Eddy AI" : "You"}
@@ -1425,18 +1424,18 @@ Would you like to explore any of these areas in more detail, or is there somethi
 
               {isTyping && (
                 <div className="flex justify-start">
-                  <div className="bg-white text-gray-800 shadow-sm border border-gray-200 rounded-2xl rounded-bl-none p-4 max-w-[85%]">
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <Bot className="w-4 h-4 text-blue-500" />
+                  <div className="bg-white text-[#2c3639] shadow-sm border border-[#3f4e4f]/10 rounded-2xl rounded-bl-none p-4 max-w-[85%]">
+                    <div className="flex items-center gap-2 text-xs text-[#3f4e4f]">
+                      <Bot className="w-4 h-4 text-[#a27b5b]" />
                       Eddy AI is thinking
                       <div className="flex gap-1 ml-2">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-[#3f4e4f] rounded-full animate-bounce"></div>
                         <div
-                          className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                          className="w-2 h-2 bg-[#3f4e4f] rounded-full animate-bounce"
                           style={{ animationDelay: "0.2s" }}
                         ></div>
                         <div
-                          className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                          className="w-2 h-2 bg-[#3f4e4f] rounded-full animate-bounce"
                           style={{ animationDelay: "0.4s" }}
                         ></div>
                       </div>
@@ -1462,7 +1461,7 @@ Would you like to explore any of these areas in more detail, or is there somethi
                           setInputText(reply);
                           setTimeout(() => handleSendMessage(), 100);
                         }}
-                        className="text-xs bg-white border border-gray-300 text-gray-700 px-3 py-2 rounded-full hover:bg-gray-50 hover:border-blue-300 transition-colors duration-200"
+                        className="text-xs bg-white border border-[#3f4e4f]/20 text-[#3f4e4f] px-3 py-2 rounded-full hover:bg-[#DCD7C9] hover:border-[#a27b5b] transition-colors duration-200"
                       >
                         {reply}
                       </button>
@@ -1472,7 +1471,7 @@ Would you like to explore any of these areas in more detail, or is there somethi
               )}
 
             {/* Input Area */}
-            <div className="p-4 border-t border-gray-200 bg-white rounded-b-2xl">
+            <div className="p-4 border-t border-[#3f4e4f]/10 bg-white rounded-b-2xl">
               <div className="flex gap-2">
                 <input
                   ref={inputRef}
@@ -1487,18 +1486,18 @@ Would you like to explore any of these areas in more detail, or is there somethi
                       ? "Your business name..."
                       : "Ask me about services, pricing, portfolio..."
                   }
-                  className="flex-1 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  className="flex-1 border border-[#3f4e4f]/20 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#a27b5b] focus:border-transparent text-sm text-[#2c3639]"
                   disabled={isTyping}
                 />
                 <button
                   onClick={handleSendMessage}
                   disabled={!inputText.trim() || isTyping}
-                  className="bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center"
+                  className="bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] text-white p-3 rounded-xl hover:opacity-90 disabled:bg-[#DCD7C9] disabled:text-[#3f4e4f] disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center"
                 >
                   <Send className="w-4 h-4" />
                 </button>
               </div>
-              <p className="text-xs text-gray-500 text-center mt-2">
+              <p className="text-xs text-[#3f4e4f] text-center mt-2">
                 Powered by EBCom Technologies AI • {contactInfo.phone}
               </p>
             </div>

@@ -1,8 +1,6 @@
-// components/Contact.tsx
 "use client";
 
 import { useState, useEffect } from "react";
-import { Bebas_Neue, Poppins, Gantari } from "next/font/google";
 import {
   Phone,
   Mail,
@@ -11,32 +9,70 @@ import {
   MessageCircle,
   Send,
   CheckCircle,
-  Users,
   Zap,
-  Shield,
-  Building2,
-  Smartphone,
   Navigation,
+  Building2,
+  Globe,
+  Shield,
 } from "lucide-react";
 
-// Font configurations
-const bebasNeue = Bebas_Neue({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-bebas-neue",
-});
+// SVG Icons for Social Media
+const TwitterIcon = () => (
+  <svg
+    className="w-5 h-5"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+  </svg>
+);
 
-const poppins = Poppins({
-  weight: ["300", "400", "500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-poppins",
-});
+const FacebookIcon = () => (
+  <svg
+    className="w-5 h-5"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path
+      fillRule="evenodd"
+      d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
 
-const gantari = Gantari({
-  weight: ["300", "400", "500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-gantari",
-});
+const InstagramIcon = () => (
+  <svg
+    className="w-5 h-5"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path
+      fillRule="evenodd"
+      d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.467.398.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
+const LinkedInIcon = () => (
+  <svg
+    className="w-5 h-5"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path
+      fillRule="evenodd"
+      d="M12.51 8.796v1.697a3.738 3.738 0 013.288-1.684c3.455 0 4.202 2.16 4.202 4.97V19.5h-3.2v-5.072c0-1.21-.244-2.766-2.128-2.766-1.827 0-2.139 1.317-2.139 2.676V19.5h-3.19V8.796h3.168ZM7.2 6.106a1.61 1.61 0 01-.988 1.483 1.595 1.595 0 01-1.743-.348A1.607 1.607 0 015.6 4.5a1.601 1.601 0 011.6 1.606z"
+      clipRule="evenodd"
+    />
+    <path d="M7.2 8.809H4V19.5h3.2V8.809z" />
+  </svg>
+);
 
 export default function Contact() {
   const [mounted, setMounted] = useState(false);
@@ -84,7 +120,7 @@ export default function Contact() {
       description: "Speak directly with our team",
       details: "08127728084",
       action: "Call Now",
-      gradient: "from-blue-600 to-cyan-500",
+      color: "#a27b5b",
       href: "tel:+2348127728084",
     },
     {
@@ -93,7 +129,7 @@ export default function Contact() {
       description: "Send us your project details",
       details: "ebcomtechnologies@gmail.com",
       action: "Send Email",
-      gradient: "from-emerald-600 to-green-500",
+      color: "#3f4e4f",
       href: "mailto:ebcomtechnologies@gmail.com",
     },
     {
@@ -102,17 +138,17 @@ export default function Contact() {
       description: "Quick chat for instant support",
       details: "08127728084",
       action: "Start Chat",
-      gradient: "from-green-600 to-emerald-500",
+      color: "#2c3639",
       href: "https://wa.me/2348127728084",
     },
     {
       icon: MapPin,
       title: "Visit Us",
       description: "Meet our team in person",
-      details: "Lagos, Nigeria",
+      details: "Abuja, Nigeria",
       action: "Get Directions",
-      gradient: "from-amber-600 to-orange-500",
-      href: "https://maps.google.com/?q=Lagos+Nigeria",
+      color: "#a27b5b",
+      href: "https://maps.google.com/?q=Abuja+Nigeria",
     },
   ];
 
@@ -137,77 +173,42 @@ export default function Contact() {
     "Not Sure",
   ];
 
+  const socialLinks = [
+    { icon: FacebookIcon, href: "#", label: "Facebook", color: "#1877F2" },
+    { icon: TwitterIcon, href: "#", label: "Twitter", color: "#1DA1F2" },
+    { icon: InstagramIcon, href: "#", label: "Instagram", color: "#E4405F" },
+    { icon: LinkedInIcon, href: "#", label: "LinkedIn", color: "#0A66C2" },
+  ];
+
   return (
     <section
-      className={`relative py-20 overflow-hidden px-4 sm:px-6 lg:px-8 ${bebasNeue.variable} ${poppins.variable} ${gantari.variable}`}
+      className="relative bg-white py-24 lg:py-32 overflow-hidden"
       id="contact"
     >
-      {/* Enhanced Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Animated Grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]" />
+      {/* Background Pattern */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#a27b5b]/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#3f4e4f]/20 to-transparent" />
 
-        {/* Floating Elements */}
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-blue-500 rounded-full opacity-40 animate-float-slow hidden sm:block"
-            style={{
-              top: `${15 + i * 12}%`,
-              left: `${8 + i * 11}%`,
-              animationDelay: `${i * 0.6}s`,
-              animationDuration: `${7 + i * 1.5}s`,
-            }}
-          >
-            <div
-              className="absolute inset-0 bg-blue-400 rounded-full animate-ping-slow"
-              style={{ animationDelay: `${i * 0.3}s` }}
-            />
-          </div>
-        ))}
-
-        {/* Enhanced Gradient Orbs */}
-        <div className="absolute -top-40 -right-32 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-r from-blue-600/20 via-cyan-600/20 to-emerald-600/20 rounded-full blur-3xl opacity-10 sm:opacity-15 animate-pulse-slow" />
-        <div
-          className="absolute -bottom-40 -left-32 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-r from-emerald-600/20 via-blue-600/20 to-cyan-600/20 rounded-full blur-3xl opacity-10 sm:opacity-15 animate-pulse-slow"
-          style={{ animationDelay: "3s" }}
-        />
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-60 h-60 sm:w-80 sm:h-80 bg-gradient-to-r from-cyan-600/20 to-blue-600/20 rounded-full blur-3xl opacity-5 sm:opacity-10 animate-pulse-slow"
-          style={{ animationDelay: "6s" }}
-        />
+        {/* Grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(44,54,57,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(44,54,57,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,black,transparent)]"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <div
-            className={`inline-flex items-center gap-2 px-6 py-3 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6 transition-all duration-1000 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}
-          >
-            <MessageCircle className="w-5 h-5 text-blue-400" />
-            <span className="text-blue-400 text-sm font-poppins font-semibold tracking-wider uppercase">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#a27b5b]/10 border border-[#a27b5b]/20 mb-6">
+            <MessageCircle className="w-4 h-4 text-[#a27b5b]" />
+            <span className="text-sm font-medium text-[#a27b5b] tracking-wider uppercase">
               Let's Build Something Amazing
             </span>
           </div>
 
-          <h2
-            className={`font-bebas-neue text-4xl sm:text-5xl lg:text-6xl text-slate-800 mb-6 transition-all duration-1000 delay-200 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}
-          >
-            Start Your{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-              Project
-            </span>
+          <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-[#2c3639] mb-6">
+            Start Your <span className="text-[#a27b5b]">Project</span>
           </h2>
 
-          <p
-            className={`text-lg sm:text-xl text-slate-500 font-gantari font-light max-w-3xl mx-auto transition-all duration-1000 delay-400 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}
-          >
+          <p className="text-lg lg:text-xl text-[#3f4e4f] max-w-3xl mx-auto leading-relaxed">
             Ready to transform your business with cutting-edge technology? Let's
             discuss your project and create solutions that drive real results.
           </p>
@@ -219,7 +220,7 @@ export default function Contact() {
             {/* Contact Methods */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {contactMethods.map((method, index) => {
-                const IconComponent = method.icon;
+                const Icon = method.icon;
                 return (
                   <a
                     key={method.title}
@@ -230,26 +231,27 @@ export default function Contact() {
                         ? "noopener noreferrer"
                         : ""
                     }
-                    className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/60 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-2 hover:scale-105 block"
-                    style={{
-                      animationDelay: `${index * 100}ms`,
-                    }}
+                    className="group bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#a27b5b]/30"
                   >
                     <div
-                      className={`w-12 h-12 bg-gradient-to-r ${method.gradient} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+                      style={{ backgroundColor: method.color + "10" }}
                     >
-                      <IconComponent className="w-6 h-6 text-white" />
+                      <Icon
+                        className="w-6 h-6"
+                        style={{ color: method.color }}
+                      />
                     </div>
-                    <h3 className="font-poppins font-semibold text-slate-800 text-lg mb-2">
+                    <h3 className="font-bold text-[#2c3639] text-lg mb-2">
                       {method.title}
                     </h3>
-                    <p className="font-gantari text-slate-600 text-sm mb-3">
+                    <p className="text-[#3f4e4f] text-sm mb-3">
                       {method.description}
                     </p>
-                    <div className="font-poppins font-semibold text-slate-800 mb-4">
+                    <div className="font-semibold text-[#2c3639] mb-4">
                       {method.details}
                     </div>
-                    <div className="w-full bg-slate-100 text-slate-700 font-poppins font-semibold text-sm py-3 rounded-xl group-hover:bg-slate-200 transition-all duration-300 flex items-center justify-center gap-2">
+                    <div className="w-full bg-gray-50 text-[#3f4e4f] font-semibold text-sm py-3 rounded-lg group-hover:bg-gray-100 transition-all duration-300 flex items-center justify-center gap-2">
                       {method.action}
                       <Zap className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
                     </div>
@@ -259,99 +261,88 @@ export default function Contact() {
             </div>
 
             {/* Business Hours & Info */}
-            <div className="bg-gradient-to-br from-blue-600 to-cyan-600 rounded-2xl p-8 text-white transform hover:scale-105 transition-all duration-500">
-              <h3 className="font-bebas-neue text-2xl mb-6">Business Hours</h3>
+            <div className="bg-[#2c3639] rounded-2xl p-8 text-white">
+              <h3 className="text-2xl font-bold mb-6">Business Hours</h3>
 
               <div className="space-y-4 mb-6">
-                <div className="flex items-center justify-between group">
-                  <span className="font-gantari group-hover:translate-x-2 transition-transform duration-300">
-                    Monday - Friday
-                  </span>
-                  <span className="font-poppins font-semibold group-hover:translate-x-2 transition-transform duration-300">
-                    8:00 AM - 6:00 PM
-                  </span>
+                <div className="flex items-center justify-between">
+                  <span>Monday - Friday</span>
+                  <span className="font-semibold">8:00 AM - 6:00 PM</span>
                 </div>
-                <div className="flex items-center justify-between group">
-                  <span className="font-gantari group-hover:translate-x-2 transition-transform duration-300">
-                    Saturday
-                  </span>
-                  <span className="font-poppins font-semibold group-hover:translate-x-2 transition-transform duration-300">
-                    9:00 AM - 4:00 PM
-                  </span>
+                <div className="flex items-center justify-between">
+                  <span>Saturday</span>
+                  <span className="font-semibold">9:00 AM - 4:00 PM</span>
                 </div>
-                <div className="flex items-center justify-between group">
-                  <span className="font-gantari group-hover:translate-x-2 transition-transform duration-300">
-                    Sunday
-                  </span>
-                  <span className="font-poppins font-semibold group-hover:translate-x-2 transition-transform duration-300">
-                    Emergency Support
-                  </span>
+                <div className="flex items-center justify-between">
+                  <span>Sunday</span>
+                  <span className="font-semibold">Emergency Support</span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 text-blue-100 group">
-                <Clock className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
-                <span className="font-gantari text-sm group-hover:translate-x-1 transition-transform duration-300">
+              <div className="flex items-center gap-2 text-gray-300">
+                <Clock className="w-4 h-4" />
+                <span className="text-sm">
                   24/7 Emergency Support Available
                 </span>
               </div>
             </div>
 
-            {/* Quick Stats */}
-            <div className="grid grid-cols-3 gap-4">
-              {[
-                { number: "2h", label: "Avg. Response" },
-                { number: "24/7", label: "Support" },
-                { number: "100%", label: "Satisfaction" },
-              ].map((stat, index) => (
-                <div
-                  key={stat.label}
-                  className="text-center bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-slate-200/60 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-                  style={{ animationDelay: `${800 + index * 100}ms` }}
-                >
-                  <div className="font-bebas-neue text-2xl text-blue-600 mb-1">
-                    {stat.number}
-                  </div>
-                  <div className="font-poppins text-slate-600 text-xs">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
+            {/* Social Links */}
+            <div className="bg-white border border-gray-100 rounded-2xl p-6">
+              <h3 className="font-bold text-[#2c3639] text-lg mb-4">
+                Connect With Us
+              </h3>
+              <div className="flex gap-3">
+                {socialLinks.map((social) => {
+                  const Icon = social.icon;
+                  return (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      className="w-10 h-10 rounded-lg flex items-center justify-center text-white transition-all duration-300 hover:scale-110 hover:-translate-y-1"
+                      style={{ backgroundColor: social.color }}
+                      aria-label={social.label}
+                    >
+                      <Icon />
+                    </a>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
           {/* Contact Form */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-slate-200/60 shadow-xl transform hover:shadow-2xl transition-all duration-500">
+          <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-lg">
             {isSubmitted ? (
               <div className="text-center py-12">
-                <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6 animate-bounce" />
-                <h3 className="font-bebas-neue text-3xl text-slate-800 mb-4">
+                <CheckCircle className="w-16 h-16 text-[#a27b5b] mx-auto mb-6" />
+                <h3 className="text-3xl font-bold text-[#2c3639] mb-4">
                   Message Sent!
                 </h3>
-                <p className="font-gantari text-slate-600 mb-6">
+                <p className="text-[#3f4e4f] mb-6">
                   Thank you for your inquiry! Our team will contact you within 2
                   hours to discuss your project.
                 </p>
                 <button
                   onClick={() => setIsSubmitted(false)}
-                  className="bg-blue-600 text-white font-poppins font-semibold px-8 py-3 rounded-xl hover:bg-blue-700 transition-all duration-300 hover:scale-105"
+                  className="bg-[#a27b5b] text-white font-semibold px-8 py-3 rounded-lg hover:bg-[#8b6b4b] transition-colors"
                 >
                   Send Another Message
                 </button>
               </div>
             ) : (
               <>
-                <h3 className="font-bebas-neue text-3xl text-slate-800 mb-2">
+                <h3 className="text-3xl font-bold text-[#2c3639] mb-2">
                   Project Inquiry
                 </h3>
-                <p className="font-gantari text-slate-600 mb-8">
+                <p className="text-[#3f4e4f] mb-8">
                   Fill out the form below and we'll get back to you ASAP
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="group">
-                      <label className="block font-poppins font-semibold text-slate-700 mb-2">
+                    <div>
+                      <label className="block font-semibold text-[#2c3639] mb-2">
                         Full Name *
                       </label>
                       <input
@@ -360,12 +351,12 @@ export default function Contact() {
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 group-hover:shadow-lg"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a27b5b] focus:border-transparent transition-all duration-300"
                         placeholder="John Doe"
                       />
                     </div>
-                    <div className="group">
-                      <label className="block font-poppins font-semibold text-slate-700 mb-2">
+                    <div>
+                      <label className="block font-semibold text-[#2c3639] mb-2">
                         Email Address *
                       </label>
                       <input
@@ -374,14 +365,14 @@ export default function Contact() {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 group-hover:shadow-lg"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a27b5b] focus:border-transparent transition-all duration-300"
                         placeholder="john@company.com"
                       />
                     </div>
                   </div>
 
-                  <div className="group">
-                    <label className="block font-poppins font-semibold text-slate-700 mb-2">
+                  <div>
+                    <label className="block font-semibold text-[#2c3639] mb-2">
                       Company Name
                     </label>
                     <input
@@ -389,14 +380,14 @@ export default function Contact() {
                       name="company"
                       value={formData.company}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 group-hover:shadow-lg"
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a27b5b] focus:border-transparent transition-all duration-300"
                       placeholder="Your Company Name"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="group">
-                      <label className="block font-poppins font-semibold text-slate-700 mb-2">
+                    <div>
+                      <label className="block font-semibold text-[#2c3639] mb-2">
                         Service Needed *
                       </label>
                       <select
@@ -404,7 +395,7 @@ export default function Contact() {
                         value={formData.service}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 group-hover:shadow-lg"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a27b5b] focus:border-transparent transition-all duration-300"
                       >
                         <option value="">Select a service</option>
                         {services.map((service) => (
@@ -414,15 +405,15 @@ export default function Contact() {
                         ))}
                       </select>
                     </div>
-                    <div className="group">
-                      <label className="block font-poppins font-semibold text-slate-700 mb-2">
+                    <div>
+                      <label className="block font-semibold text-[#2c3639] mb-2">
                         Project Budget
                       </label>
                       <select
                         name="budget"
                         value={formData.budget}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 group-hover:shadow-lg"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a27b5b] focus:border-transparent transition-all duration-300"
                       >
                         <option value="">Select budget range</option>
                         {budgetRanges.map((budget) => (
@@ -434,8 +425,8 @@ export default function Contact() {
                     </div>
                   </div>
 
-                  <div className="group">
-                    <label className="block font-poppins font-semibold text-slate-700 mb-2">
+                  <div>
+                    <label className="block font-semibold text-[#2c3639] mb-2">
                       Project Details *
                     </label>
                     <textarea
@@ -444,7 +435,7 @@ export default function Contact() {
                       onChange={handleChange}
                       required
                       rows={5}
-                      className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 group-hover:shadow-lg resize-none"
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a27b5b] focus:border-transparent transition-all duration-300 resize-none"
                       placeholder="Tell us about your project requirements, timeline, and any specific needs..."
                     />
                   </div>
@@ -452,7 +443,7 @@ export default function Contact() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="group relative w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-poppins font-semibold text-lg py-4 rounded-xl shadow-2xl shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-[#2c3639] text-white font-semibold text-lg py-4 rounded-lg hover:bg-[#1e2729] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                   >
                     {isSubmitting ? (
                       <>
@@ -462,12 +453,12 @@ export default function Contact() {
                     ) : (
                       <>
                         Send Message
-                        <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
+                        <Send className="w-5 h-5" />
                       </>
                     )}
                   </button>
 
-                  <p className="text-center font-gantari text-slate-500 text-sm">
+                  <p className="text-center text-[#3f4e4f] text-sm">
                     We'll get back to you within 2 hours during business hours
                   </p>
                 </form>
@@ -477,99 +468,42 @@ export default function Contact() {
         </div>
 
         {/* Map Section */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-slate-200/60 shadow-xl transform hover:shadow-2xl transition-all duration-500">
+        <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-lg">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-r from-amber-600 to-orange-500 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-[#a27b5b] rounded-xl flex items-center justify-center">
               <Navigation className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="font-bebas-neue text-3xl text-slate-800">
-                Find Us
-              </h3>
-              <p className="font-gantari text-slate-600">
-                Visit our office in Lagos, Nigeria
+              <h3 className="text-3xl font-bold text-[#2c3639]">Find Us</h3>
+              <p className="text-[#3f4e4f]">
+                Visit our office in Abuja, Nigeria
               </p>
             </div>
           </div>
 
-          <div className="rounded-xl overflow-hidden shadow-lg h-96 bg-gradient-to-br from-slate-100 to-slate-200 relative">
+          <div className="rounded-lg overflow-hidden shadow-lg h-96 bg-gray-50 relative">
             {/* Interactive Map Placeholder */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
-                <MapPin className="w-16 h-16 text-blue-600 mx-auto mb-4 animate-bounce" />
-                <h4 className="font-bebas-neue text-2xl text-slate-800 mb-2">
-                  Lagos, Nigeria
+                <MapPin className="w-16 h-16 text-[#a27b5b] mx-auto mb-4" />
+                <h4 className="text-2xl font-bold text-[#2c3639] mb-2">
+                  Abuja, Nigeria
                 </h4>
-                <p className="font-gantari text-slate-600 mb-4">
-                  Our headquarters
-                </p>
+                <p className="text-[#3f4e4f] mb-4">Our headquarters</p>
                 <a
-                  href="https://maps.google.com/?q=Lagos+Nigeria"
+                  href="https://maps.google.com/?q=Abuja+Nigeria"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-blue-600 text-white font-poppins font-semibold px-6 py-3 rounded-xl hover:bg-blue-700 transition-all duration-300 hover:scale-105"
+                  className="inline-flex items-center gap-2 bg-[#a27b5b] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[#8b6b4b] transition-colors"
                 >
                   <Navigation className="w-4 h-4" />
                   Open in Google Maps
                 </a>
               </div>
             </div>
-
-            {/* Map Grid Overlay */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.05)_1px,transparent_1px)] bg-[size:32px_32px]" />
           </div>
         </div>
       </div>
-
-      <style jsx global>{`
-        .font-bebas-neue {
-          font-family: var(--font-bebas-neue), sans-serif;
-        }
-        .font-poppins {
-          font-family: var(--font-poppins), sans-serif;
-        }
-        .font-gantari {
-          font-family: var(--font-gantari), sans-serif;
-        }
-        @keyframes float-slow {
-          0%,
-          100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-15px) rotate(90deg);
-          }
-        }
-        @keyframes ping-slow {
-          0% {
-            transform: scale(1);
-            opacity: 1;
-          }
-          75%,
-          100% {
-            transform: scale(3);
-            opacity: 0;
-          }
-        }
-        @keyframes pulse-slow {
-          0%,
-          100% {
-            opacity: 0.1;
-          }
-          50% {
-            opacity: 0.2;
-          }
-        }
-        .animate-float-slow {
-          animation: float-slow 8s ease-in-out infinite;
-        }
-        .animate-ping-slow {
-          animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
-        }
-        .animate-pulse-slow {
-          animation: pulse-slow 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-      `}</style>
     </section>
   );
 }

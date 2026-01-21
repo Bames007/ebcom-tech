@@ -1,7 +1,6 @@
-// app/home/page.tsx
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import Hero from "./Hero";
 import AboutSection from "./About";
 import WhatWeDo from "./WhatWeDo";
@@ -23,47 +22,52 @@ const HomePage = () => {
   const serviceProcessRef = useRef<HTMLDivElement | null>(null);
   const contactRef = useRef<HTMLDivElement | null>(null);
 
-  // Track active section on scroll
+  // Store refs in an array for easier iteration
+  const sectionRefs = [
+    { id: "home", ref: heroRef },
+    { id: "about", ref: aboutRef },
+    { id: "services", ref: servicesRef },
+    { id: "clients", ref: clientsRef },
+    { id: "serviceProcess", ref: serviceProcessRef },
+    { id: "contact", ref: contactRef },
+  ];
+
+  // Track active section on scroll with improved logic
   useEffect(() => {
-    const sections = [
-      { id: "home", ref: heroRef },
-      { id: "about", ref: aboutRef },
-      { id: "services", ref: servicesRef },
-      { id: "clients", ref: clientsRef },
-      { id: "serviceProcess", ref: serviceProcessRef },
-      { id: "contact", ref: contactRef },
-    ];
+    const handleIntersection = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+          const sectionId = entry.target.id;
+          // Use functional update to avoid dependency on activeSection
+          setActiveSection((prevSection) => {
+            // Only update if it's a different section
+            if (prevSection !== sectionId) {
+              return sectionId;
+            }
+            return prevSection;
+          });
+        }
+      });
+    };
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      {
-        threshold: 0.5, // 50% of section visible
-        rootMargin: "-20% 0px -20% 0px", // Adjust this to change when section becomes active
-      }
-    );
+    const observer = new IntersectionObserver(handleIntersection, {
+      threshold: [0.1, 0.3, 0.5, 0.7, 0.9],
+      rootMargin: "-100px 0px -100px 0px",
+    });
 
-    sections.forEach(({ ref }) => {
+    sectionRefs.forEach(({ ref }) => {
       if (ref.current) {
         observer.observe(ref.current);
       }
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, []); // Empty dependency array since we don't depend on activeSection
 
   // Scroll function that handles the refs properly
-  const scrollToSection = (section: string) => {
+  const scrollToSection = useCallback((section: string) => {
     // Map sections to their refs
-    const sectionRefs: Record<
-      string,
-      React.RefObject<HTMLDivElement | null>
-    > = {
+    const sectionMap: Record<string, React.RefObject<HTMLDivElement | null>> = {
       home: heroRef,
       about: aboutRef,
       services: servicesRef,
@@ -72,19 +76,22 @@ const HomePage = () => {
       contact: contactRef,
     };
 
-    const targetRef = sectionRefs[section];
+    const targetRef = sectionMap[section];
 
     if (targetRef?.current) {
+      // Update active section immediately
+      setActiveSection(section);
+
+      // Scroll to section
       targetRef.current.scrollIntoView({
         behavior: "smooth",
         block: "start",
       });
-      setActiveSection(section);
     }
-  };
+  }, []);
 
   return (
-    <div className="relative">
+    <div className="relative bg-[#dcd7c9]">
       <Header scrollToSection={scrollToSection} activeSection={activeSection} />
 
       <section ref={heroRef} id="home">
@@ -103,15 +110,15 @@ const HomePage = () => {
         <Clients />
       </section>
 
-      <section ref={clientsRef} id="serviceProcess">
+      <section ref={serviceProcessRef} id="serviceProcess">
         <ServiceProcess />
       </section>
 
       <section ref={contactRef} id="contact">
         <Contact />
       </section>
-      <EddyAI />
 
+      <EddyAI />
       <Footer scrollToSection={scrollToSection} />
     </div>
   );

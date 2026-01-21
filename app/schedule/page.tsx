@@ -22,6 +22,9 @@ import {
   Shield,
   Cloud,
   Smartphone,
+  Briefcase,
+  TrendingUp,
+  Users,
 } from "lucide-react";
 
 // Font configurations
@@ -76,8 +79,8 @@ const services: Service[] = [
       { length: 30, price: 20000, label: "30 min" },
       { length: 60, price: 35000, label: "1 hour" },
     ],
-    color: "from-blue-500 to-cyan-500",
-    gradient: "bg-gradient-to-r from-blue-500 to-cyan-500",
+    color: "from-[#2c3639] to-[#3f4e4f]",
+    gradient: "bg-gradient-to-r from-[#2c3639] to-[#3f4e4f]",
   },
   {
     id: "branding",
@@ -88,8 +91,8 @@ const services: Service[] = [
       { length: 30, price: 25000, label: "30 min" },
       { length: 60, price: 45000, label: "1 hour" },
     ],
-    color: "from-purple-500 to-pink-500",
-    gradient: "bg-gradient-to-r from-purple-500 to-pink-500",
+    color: "from-[#a27b5b] to-[#b8966f]",
+    gradient: "bg-gradient-to-r from-[#a27b5b] to-[#b8966f]",
   },
   {
     id: "software",
@@ -100,8 +103,8 @@ const services: Service[] = [
       { length: 30, price: 30000, label: "30 min" },
       { length: 60, price: 55000, label: "1 hour" },
     ],
-    color: "from-green-500 to-emerald-500",
-    gradient: "bg-gradient-to-r from-green-500 to-emerald-500",
+    color: "from-[#3f4e4f] to-[#526363]",
+    gradient: "bg-gradient-to-r from-[#3f4e4f] to-[#526363]",
   },
   {
     id: "network",
@@ -112,8 +115,8 @@ const services: Service[] = [
       { length: 30, price: 22000, label: "30 min" },
       { length: 60, price: 40000, label: "1 hour" },
     ],
-    color: "from-orange-500 to-amber-500",
-    gradient: "bg-gradient-to-r from-orange-500 to-amber-500",
+    color: "from-[#2c3639] to-[#3f4e4f]",
+    gradient: "bg-gradient-to-r from-[#2c3639] to-[#3f4e4f]",
   },
   {
     id: "security",
@@ -124,8 +127,8 @@ const services: Service[] = [
       { length: 30, price: 28000, label: "30 min" },
       { length: 60, price: 50000, label: "1 hour" },
     ],
-    color: "from-red-500 to-rose-500",
-    gradient: "bg-gradient-to-r from-red-500 to-rose-500",
+    color: "from-[#a27b5b] to-[#b8966f]",
+    gradient: "bg-gradient-to-r from-[#a27b5b] to-[#b8966f]",
   },
   {
     id: "cloud",
@@ -136,8 +139,8 @@ const services: Service[] = [
       { length: 30, price: 25000, label: "30 min" },
       { length: 60, price: 45000, label: "1 hour" },
     ],
-    color: "from-indigo-500 to-purple-500",
-    gradient: "bg-gradient-to-r from-indigo-500 to-purple-500",
+    color: "from-[#3f4e4f] to-[#526363]",
+    gradient: "bg-gradient-to-r from-[#3f4e4f] to-[#526363]",
   },
   {
     id: "mobile",
@@ -148,8 +151,8 @@ const services: Service[] = [
       { length: 30, price: 32000, label: "30 min" },
       { length: 60, price: 58000, label: "1 hour" },
     ],
-    color: "from-cyan-500 to-blue-500",
-    gradient: "bg-gradient-to-r from-cyan-500 to-blue-500",
+    color: "from-[#2c3639] to-[#3f4e4f]",
+    gradient: "bg-gradient-to-r from-[#2c3639] to-[#3f4e4f]",
   },
 ];
 
@@ -298,9 +301,8 @@ export default function ScheduleConsultation() {
     setTimeout(() => setBookingStep(1), 300);
   };
 
-  // New function to handle step navigation
   const handleStepNavigation = (step: number): void => {
-    if (step > bookingStep) return; // Only allow going backwards
+    if (step > bookingStep) return;
 
     setBookingStep(step);
 
@@ -318,48 +320,49 @@ export default function ScheduleConsultation() {
   if (bookingComplete) {
     return (
       <div
-        className={`min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-4 sm:py-8 px-3 sm:px-6 lg:px-8 ${bebasNeue.variable} ${poppins.variable}`}
+        className={`min-h-screen bg-gradient-to-br from-[#dcd7c9]/30 to-white py-4 sm:py-8 px-3 sm:px-6 lg:px-8 ${bebasNeue.variable} ${poppins.variable}`}
       >
         <div className="max-w-4xl mx-auto">
           {/* Enhanced Logo Header */}
           <div className="text-center mb-6 sm:mb-8">
-            <div className="inline-flex items-center gap-4 bg-white/90 backdrop-blur-sm rounded-3xl px-6 sm:px-8 py-4 shadow-2xl border border-blue-200/60">
+            <div className="inline-flex items-center gap-4 bg-white/90 backdrop-blur-sm rounded-3xl px-6 sm:px-8 py-4 shadow-2xl border border-[#a27b5b]/30">
               <div className="relative w-14 h-14 sm:w-16 sm:h-16">
                 <Image
                   src="/logo.png"
-                  alt="EBCOM"
-                  fill
-                  className="object-contain rounded-xl"
+                  alt="EBCOM Technologies"
+                  width={160}
+                  height={40}
+                  className="object-contain w-full h-full"
                   priority
                 />
               </div>
               <div className="text-left">
-                <h1 className="font-bebas-neue text-3xl sm:text-4xl text-slate-800 leading-none">
-                  EBCOM
+                <h1 className="font-bebas-neue text-3xl sm:text-4xl text-[#2c3639] leading-none">
+                  EBCOM TECHNOLOGIES
                 </h1>
-                <p className="font-poppins text-slate-600 text-xs sm:text-sm mt-1">
-                  Schedule Consultation
+                <p className="font-poppins text-[#3f4e4f] text-xs sm:text-sm mt-1">
+                  Consultation Scheduled
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-3xl shadow-2xl border border-blue-200/50 overflow-hidden">
+          <div className="bg-white rounded-3xl shadow-2xl border border-[#a27b5b]/20 overflow-hidden">
             <div className="p-6 sm:p-8 text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <div className="w-20 h-20 bg-gradient-to-r from-[#a27b5b] to-[#b8966f] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <CheckCircle2 className="w-10 h-10 text-white" />
               </div>
 
-              <h2 className="font-bebas-neue text-3xl sm:text-4xl text-slate-800 mb-4">
+              <h2 className="font-bebas-neue text-3xl sm:text-4xl text-[#2c3639] mb-4">
                 Booking Confirmed!
               </h2>
 
-              <p className="font-poppins text-slate-600 text-base sm:text-lg mb-6 max-w-md mx-auto leading-relaxed">
+              <p className="font-poppins text-[#3f4e4f] text-base sm:text-lg mb-6 max-w-md mx-auto leading-relaxed">
                 Thank you for scheduling your consultation. We've sent a
                 confirmation email with all the details and a calendar invite.
               </p>
 
-              <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-6 mb-6 max-w-md mx-auto border border-slate-200/60">
+              <div className="bg-[#dcd7c9]/30 rounded-2xl p-6 mb-6 max-w-md mx-auto border border-[#a27b5b]/20">
                 <div className="text-left space-y-4">
                   <div className="flex items-center gap-3">
                     <div
@@ -368,10 +371,10 @@ export default function ScheduleConsultation() {
                       <selectedService.icon className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <div className="font-poppins text-slate-500 text-sm">
+                      <div className="font-poppins text-[#3f4e4f] text-sm">
                         Service
                       </div>
-                      <div className="font-poppins font-semibold text-slate-800">
+                      <div className="font-poppins font-semibold text-[#2c3639]">
                         {selectedService.name}
                       </div>
                     </div>
@@ -379,29 +382,29 @@ export default function ScheduleConsultation() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <div className="font-poppins text-slate-500 text-sm">
+                      <div className="font-poppins text-[#3f4e4f] text-sm">
                         Duration
                       </div>
-                      <div className="font-poppins font-semibold text-slate-800">
+                      <div className="font-poppins font-semibold text-[#2c3639]">
                         {selectedDuration.label}
                       </div>
                     </div>
                     <div>
-                      <div className="font-poppins text-slate-500 text-sm">
+                      <div className="font-poppins text-[#3f4e4f] text-sm">
                         When
                       </div>
-                      <div className="font-poppins font-semibold text-slate-800">
+                      <div className="font-poppins font-semibold text-[#2c3639]">
                         {selectedDate && formatDate(selectedDate)}
                       </div>
                     </div>
                   </div>
 
-                  <div className="border-t border-slate-200 pt-4">
+                  <div className="border-t border-[#3f4e4f]/20 pt-4">
                     <div className="flex justify-between items-center">
-                      <span className="font-poppins text-slate-600">
+                      <span className="font-poppins text-[#3f4e4f]">
                         Total Amount
                       </span>
-                      <span className="font-bebas-neue text-2xl text-green-600">
+                      <span className="font-bebas-neue text-2xl text-[#a27b5b]">
                         {formatCurrency(selectedDuration.price)}
                       </span>
                     </div>
@@ -412,11 +415,11 @@ export default function ScheduleConsultation() {
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <button
                   onClick={resetBooking}
-                  className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-poppins font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-2xl hover:shadow-xl transition-all duration-300 hover:scale-105 flex-1 sm:flex-none"
+                  className="bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] text-white font-poppins font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-2xl hover:shadow-xl transition-all duration-300 hover:scale-105 flex-1 sm:flex-none"
                 >
                   Book Another Session
                 </button>
-                <button className="bg-white text-slate-700 border border-slate-200 font-poppins font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-2xl hover:shadow-lg transition-all duration-300 hover:scale-105 flex-1 sm:flex-none">
+                <button className="bg-white text-[#2c3639] border border-[#3f4e4f]/30 font-poppins font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-2xl hover:shadow-lg transition-all duration-300 hover:scale-105 flex-1 sm:flex-none hover:border-[#a27b5b]">
                   Download Calendar
                 </button>
               </div>
@@ -429,12 +432,12 @@ export default function ScheduleConsultation() {
 
   return (
     <div
-      className={`min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-4 sm:py-8 px-3 sm:px-6 lg:px-8 ${bebasNeue.variable} ${poppins.variable}`}
+      className={`min-h-screen bg-gradient-to-br from-[#dcd7c9]/30 to-white py-4 sm:py-8 px-3 sm:px-6 lg:px-8 ${bebasNeue.variable} ${poppins.variable}`}
     >
       <div className="max-w-7xl mx-auto">
         {/* Enhanced Logo Header */}
         <div className="text-center mb-6 sm:mb-8">
-          <div className="inline-flex items-center gap-4 bg-white/90 backdrop-blur-sm rounded-3xl px-6 sm:px-8 py-4 shadow-2xl border border-blue-200/60">
+          <div className="inline-flex items-center gap-4 bg-white/90 backdrop-blur-sm rounded-3xl px-6 sm:px-8 py-4 shadow-2xl border border-[#a27b5b]/30">
             <div className="relative w-14 h-14 sm:w-16 sm:h-16">
               <Image
                 src="/logo.png"
@@ -445,19 +448,40 @@ export default function ScheduleConsultation() {
               />
             </div>
             <div className="text-left">
-              <h1 className="font-bebas-neue text-3xl sm:text-4xl text-slate-800 leading-none">
-                EBCOM
+              <h1 className="font-bebas-neue text-3xl sm:text-4xl text-[#2c3639] leading-none">
+                EBCOM TECHNOLOGIES
               </h1>
-              <p className="font-poppins text-slate-600 text-xs sm:text-sm mt-1">
+              <p className="font-poppins text-[#3f4e4f] text-xs sm:text-sm mt-1">
                 Schedule Consultation
               </p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-2xl border border-blue-200/50 overflow-hidden">
+        {/* Company Stats */}
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          {[
+            { number: "500+", label: "Projects Delivered", icon: Briefcase },
+            { number: "7+", label: "Years Excellence", icon: Zap },
+            { number: "98%", label: "Client Satisfaction", icon: Users },
+          ].map((stat, index) => (
+            <div key={stat.label} className="text-center group">
+              <div className="w-12 h-12 bg-[#a27b5b]/20 rounded-2xl flex items-center justify-center mx-auto mb-2 group-hover:bg-[#a27b5b] transition-colors duration-300">
+                <stat.icon className="w-6 h-6 text-[#a27b5b] group-hover:text-[#dcd7c9] transition-colors duration-300" />
+              </div>
+              <h3 className={`font-bebas-neue text-2xl text-[#2c3639]`}>
+                {stat.number}
+              </h3>
+              <p className={`font-poppins text-[#3f4e4f] text-xs mt-1`}>
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-white rounded-3xl shadow-2xl border border-[#a27b5b]/20 overflow-hidden">
           {/* Enhanced Progress Steps */}
-          <div className="border-b border-slate-200/60 bg-slate-50/50">
+          <div className="border-b border-[#dcd7c9] bg-white">
             <div className="flex justify-center p-4 sm:p-6">
               <div className="flex items-center space-x-4 sm:space-x-8">
                 {[
@@ -473,8 +497,8 @@ export default function ScheduleConsultation() {
                         disabled={step > bookingStep}
                         className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full font-poppins font-semibold transition-all duration-300 ${
                           bookingStep >= step
-                            ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg hover:shadow-xl hover:scale-110 cursor-pointer"
-                            : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                            ? "bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] text-white shadow-lg hover:shadow-xl hover:scale-110 cursor-pointer"
+                            : "bg-[#dcd7c9] text-[#3f4e4f] cursor-not-allowed"
                         }`}
                       >
                         {bookingStep > step ? (
@@ -486,8 +510,8 @@ export default function ScheduleConsultation() {
                       <span
                         className={`font-poppins text-xs mt-2 hidden sm:block ${
                           bookingStep >= step
-                            ? "text-slate-800 font-medium cursor-pointer hover:text-blue-600 transition-colors"
-                            : "text-slate-400 cursor-not-allowed"
+                            ? "text-[#2c3639] font-medium cursor-pointer hover:text-[#a27b5b] transition-colors"
+                            : "text-[#3f4e4f]/60 cursor-not-allowed"
                         }`}
                         onClick={() => handleStepNavigation(step)}
                       >
@@ -498,8 +522,8 @@ export default function ScheduleConsultation() {
                       <div
                         className={`w-8 sm:w-16 h-1 mx-2 sm:mx-4 transition-all duration-300 ${
                           bookingStep > step
-                            ? "bg-gradient-to-r from-blue-600 to-cyan-500"
-                            : "bg-slate-200"
+                            ? "bg-gradient-to-r from-[#2c3639] to-[#3f4e4f]"
+                            : "bg-[#dcd7c9]"
                         }`}
                       />
                     )}
@@ -522,10 +546,10 @@ export default function ScheduleConsultation() {
                   }`}
                 >
                   <div className="text-center sm:text-left">
-                    <h2 className="font-bebas-neue text-3xl sm:text-4xl text-slate-800 mb-2">
+                    <h2 className="font-bebas-neue text-3xl sm:text-4xl text-[#2c3639] mb-2">
                       Choose Your Service
                     </h2>
-                    <p className="font-poppins text-slate-600 text-base sm:text-lg">
+                    <p className="font-poppins text-[#3f4e4f] text-base sm:text-lg">
                       Select the service you'd like to discuss with our experts
                     </p>
                   </div>
@@ -537,24 +561,24 @@ export default function ScheduleConsultation() {
                         <button
                           key={service.id}
                           onClick={() => handleServiceSelect(service)}
-                          className="group p-4 sm:p-6 rounded-2xl border-2 border-slate-200 hover:border-slate-300 hover:shadow-xl transition-all duration-300 text-left bg-white hover:scale-105"
+                          className="group p-4 sm:p-6 rounded-2xl border-2 border-[#dcd7c9] hover:border-[#a27b5b] hover:shadow-xl transition-all duration-300 text-left bg-white hover:scale-105"
                         >
                           <div
                             className={`w-12 h-12 rounded-xl ${service.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}
                           >
                             <IconComponent className="w-6 h-6 text-white" />
                           </div>
-                          <h3 className="font-bebas-neue text-xl sm:text-2xl text-slate-800 mb-2 leading-tight">
+                          <h3 className="font-bebas-neue text-xl sm:text-2xl text-[#2c3639] mb-2 leading-tight">
                             {service.name}
                           </h3>
-                          <p className="font-poppins text-slate-600 text-xs sm:text-sm mb-4 leading-relaxed">
+                          <p className="font-poppins text-[#3f4e4f] text-xs sm:text-sm mb-4 leading-relaxed">
                             {service.description}
                           </p>
                           <div className="flex flex-wrap gap-2">
                             {service.durations.map((duration) => (
                               <span
                                 key={duration.length}
-                                className="px-2 sm:px-3 py-1 bg-slate-100 text-slate-700 rounded-full font-poppins text-xs font-medium"
+                                className="px-2 sm:px-3 py-1 bg-[#dcd7c9] text-[#3f4e4f] rounded-full font-poppins text-xs font-medium"
                               >
                                 {duration.label}:{" "}
                                 {formatCurrency(duration.price)}
@@ -579,24 +603,24 @@ export default function ScheduleConsultation() {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="font-bebas-neue text-3xl sm:text-4xl text-slate-800">
+                      <h2 className="font-bebas-neue text-3xl sm:text-4xl text-[#2c3639]">
                         Select Date & Time
                       </h2>
-                      <p className="font-poppins text-slate-600 text-sm mt-1">
+                      <p className="font-poppins text-[#3f4e4f] text-sm mt-1">
                         {selectedService.name}
                       </p>
                     </div>
                     <button
                       onClick={handleBackToServices}
-                      className="font-poppins text-blue-600 hover:text-blue-700 font-medium text-sm bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-xl transition-all duration-300"
+                      className="font-poppins text-[#a27b5b] hover:text-[#b8966f] font-medium text-sm bg-[#a27b5b]/10 hover:bg-[#a27b5b]/20 px-4 py-2 rounded-xl transition-all duration-300"
                     >
                       Change Service
                     </button>
                   </div>
 
                   {/* Enhanced Duration Selection */}
-                  <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-4 sm:p-6 border border-slate-200/60">
-                    <h3 className="font-bebas-neue text-xl sm:text-2xl text-slate-800 mb-4">
+                  <div className="bg-[#dcd7c9]/30 rounded-2xl p-4 sm:p-6 border border-[#a27b5b]/20">
+                    <h3 className="font-bebas-neue text-xl sm:text-2xl text-[#2c3639] mb-4">
                       Consultation Duration
                     </h3>
                     <div className="grid grid-cols-2 gap-3 sm:gap-4">
@@ -606,17 +630,17 @@ export default function ScheduleConsultation() {
                           onClick={() => setSelectedDuration(duration)}
                           className={`p-4 rounded-xl border-2 transition-all duration-300 text-left ${
                             selectedDuration.length === duration.length
-                              ? "border-blue-500 bg-white shadow-lg scale-105"
-                              : "border-slate-200 hover:border-slate-300 bg-white"
+                              ? "border-[#a27b5b] bg-white shadow-lg scale-105"
+                              : "border-[#dcd7c9] hover:border-[#a27b5b]/50 bg-white"
                           }`}
                         >
-                          <div className="font-bebas-neue text-lg sm:text-xl text-slate-800">
+                          <div className="font-bebas-neue text-lg sm:text-xl text-[#2c3639]">
                             {duration.label}
                           </div>
-                          <div className="font-poppins font-bold text-green-600 text-sm sm:text-base">
+                          <div className="font-poppins font-bold text-[#a27b5b] text-sm sm:text-base">
                             {formatCurrency(duration.price)}
                           </div>
-                          <div className="font-poppins text-slate-500 text-xs mt-1">
+                          <div className="font-poppins text-[#3f4e4f] text-xs mt-1">
                             In-depth consultation
                           </div>
                         </button>
@@ -625,16 +649,16 @@ export default function ScheduleConsultation() {
                   </div>
 
                   {/* Enhanced Calendar */}
-                  <div className="bg-white rounded-2xl border border-slate-200/60 p-4 sm:p-6 shadow-sm">
+                  <div className="bg-white rounded-2xl border border-[#dcd7c9] p-4 sm:p-6 shadow-sm">
                     <div className="flex items-center justify-between mb-6">
                       <button
                         onClick={() => navigateMonth("prev")}
-                        className="p-2 hover:bg-slate-100 rounded-xl transition-colors"
+                        className="p-2 hover:bg-[#dcd7c9] rounded-xl transition-colors"
                       >
-                        <ChevronLeft className="w-5 h-5 text-slate-600" />
+                        <ChevronLeft className="w-5 h-5 text-[#3f4e4f]" />
                       </button>
 
-                      <h3 className="font-bebas-neue text-2xl sm:text-3xl text-slate-800">
+                      <h3 className="font-bebas-neue text-2xl sm:text-3xl text-[#2c3639]">
                         {currentMonth.toLocaleDateString("en-US", {
                           month: "long",
                           year: "numeric",
@@ -643,9 +667,9 @@ export default function ScheduleConsultation() {
 
                       <button
                         onClick={() => navigateMonth("next")}
-                        className="p-2 hover:bg-slate-100 rounded-xl transition-colors"
+                        className="p-2 hover:bg-[#dcd7c9] rounded-xl transition-colors"
                       >
-                        <ChevronRight className="w-5 h-5 text-slate-600" />
+                        <ChevronRight className="w-5 h-5 text-[#3f4e4f]" />
                       </button>
                     </div>
 
@@ -654,7 +678,7 @@ export default function ScheduleConsultation() {
                         (day) => (
                           <div
                             key={day}
-                            className="text-center font-poppins text-sm font-medium text-slate-500 py-2"
+                            className="text-center font-poppins text-sm font-medium text-[#3f4e4f] py-2"
                           >
                             {day.substring(0, 1)}
                           </div>
@@ -680,14 +704,14 @@ export default function ScheduleConsultation() {
                             disabled={isPast || !isCurrentMonth}
                             className={`h-10 sm:h-12 rounded-xl font-poppins font-medium transition-all duration-300 ${
                               isSelected
-                                ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg scale-105"
+                                ? "bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] text-white shadow-lg scale-105"
                                 : isToday
-                                ? "bg-blue-100 text-blue-600 border-2 border-blue-200"
+                                ? "bg-[#a27b5b]/20 text-[#a27b5b] border-2 border-[#a27b5b]/30"
                                 : isPast
-                                ? "text-slate-300 cursor-not-allowed"
+                                ? "text-[#dcd7c9] cursor-not-allowed"
                                 : !isCurrentMonth
-                                ? "text-slate-300 cursor-not-allowed"
-                                : "text-slate-700 hover:bg-slate-100 hover:scale-105"
+                                ? "text-[#dcd7c9] cursor-not-allowed"
+                                : "text-[#3f4e4f] hover:bg-[#dcd7c9] hover:scale-105"
                             }`}
                           >
                             {date.getDate()}
@@ -699,12 +723,12 @@ export default function ScheduleConsultation() {
 
                   {/* Enhanced Time Slots */}
                   {selectedDate && (
-                    <div className="bg-white rounded-2xl border border-slate-200/60 p-4 sm:p-6 shadow-sm">
+                    <div className="bg-white rounded-2xl border border-[#dcd7c9] p-4 sm:p-6 shadow-sm">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-bebas-neue text-xl sm:text-2xl text-slate-800">
+                        <h3 className="font-bebas-neue text-xl sm:text-2xl text-[#2c3639]">
                           Available Time Slots
                         </h3>
-                        <div className="font-poppins text-slate-500 text-sm">
+                        <div className="font-poppins text-[#3f4e4f] text-sm">
                           {selectedDate && formatDate(selectedDate)}
                         </div>
                       </div>
@@ -718,11 +742,11 @@ export default function ScheduleConsultation() {
                             }}
                             className={`p-3 rounded-xl border-2 transition-all duration-300 ${
                               selectedTime === time
-                                ? "border-blue-500 bg-blue-50 shadow-md scale-105"
-                                : "border-slate-200 hover:border-slate-300 hover:scale-105 bg-white"
+                                ? "border-[#a27b5b] bg-[#a27b5b]/10 shadow-md scale-105"
+                                : "border-[#dcd7c9] hover:border-[#a27b5b] hover:scale-105 bg-white"
                             }`}
                           >
-                            <div className="font-poppins font-semibold text-slate-800 text-sm sm:text-base">
+                            <div className="font-poppins font-semibold text-[#2c3639] text-sm sm:text-base">
                               {time}
                             </div>
                           </button>
@@ -737,7 +761,7 @@ export default function ScheduleConsultation() {
             {/* Right Side - Enhanced Booking Summary & Form */}
             <div className="space-y-6 sm:space-y-8">
               {/* Enhanced Booking Summary */}
-              <div className="bg-gradient-to-br from-blue-600 to-cyan-500 rounded-2xl p-4 sm:p-6 text-white shadow-xl">
+              <div className="bg-gradient-to-br from-[#2c3639] to-[#3f4e4f] rounded-2xl p-4 sm:p-6 text-white shadow-xl">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
                     <selectedService.icon className="w-5 h-5 text-white" />
@@ -785,7 +809,7 @@ export default function ScheduleConsultation() {
                       <span className="font-poppins opacity-90 text-lg">
                         Total Amount:
                       </span>
-                      <span className="font-bebas-neue text-3xl">
+                      <span className="font-bebas-neue text-3xl text-[#a27b5b]">
                         {formatCurrency(selectedDuration.price)}
                       </span>
                     </div>
@@ -795,7 +819,7 @@ export default function ScheduleConsultation() {
                 {selectedDate && selectedTime && (
                   <button
                     onClick={() => setBookingStep(4)}
-                    className="w-full mt-6 bg-white text-blue-600 font-poppins font-semibold py-3 sm:py-4 rounded-xl hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    className="w-full mt-6 bg-[#a27b5b] text-white font-poppins font-semibold py-3 sm:py-4 rounded-xl hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl hover:bg-[#b8966f]"
                   >
                     Continue to Details
                   </button>
@@ -804,8 +828,8 @@ export default function ScheduleConsultation() {
 
               {/* Enhanced Booking Form */}
               {bookingStep === 4 && (
-                <div className="bg-white rounded-2xl border border-slate-200/60 p-4 sm:p-6 shadow-sm">
-                  <h2 className="font-bebas-neue text-2xl sm:text-3xl text-slate-800 mb-6">
+                <div className="bg-white rounded-2xl border border-[#dcd7c9] p-4 sm:p-6 shadow-sm">
+                  <h2 className="font-bebas-neue text-2xl sm:text-3xl text-[#2c3639] mb-6">
                     Your Information
                   </h2>
 
@@ -815,8 +839,8 @@ export default function ScheduleConsultation() {
                   >
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="flex items-center gap-2 font-poppins font-medium text-slate-700 mb-2">
-                          <User className="w-4 h-4" />
+                        <label className="flex items-center gap-2 font-poppins font-medium text-[#2c3639] mb-2">
+                          <User className="w-4 h-4 text-[#a27b5b]" />
                           Full Name
                         </label>
                         <input
@@ -829,14 +853,14 @@ export default function ScheduleConsultation() {
                               name: e.target.value,
                             }))
                           }
-                          className="w-full p-3 border-2 border-slate-200 rounded-xl font-poppins focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                          className="w-full p-3 border-2 border-[#dcd7c9] rounded-xl font-poppins focus:border-[#a27b5b] focus:ring-2 focus:ring-[#a27b5b]/20 transition-all duration-300"
                           placeholder="Enter your full name"
                         />
                       </div>
 
                       <div>
-                        <label className="flex items-center gap-2 font-poppins font-medium text-slate-700 mb-2">
-                          <Mail className="w-4 h-4" />
+                        <label className="flex items-center gap-2 font-poppins font-medium text-[#2c3639] mb-2">
+                          <Mail className="w-4 h-4 text-[#a27b5b]" />
                           Email Address
                         </label>
                         <input
@@ -849,7 +873,7 @@ export default function ScheduleConsultation() {
                               email: e.target.value,
                             }))
                           }
-                          className="w-full p-3 border-2 border-slate-200 rounded-xl font-poppins focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                          className="w-full p-3 border-2 border-[#dcd7c9] rounded-xl font-poppins focus:border-[#a27b5b] focus:ring-2 focus:ring-[#a27b5b]/20 transition-all duration-300"
                           placeholder="Enter your email"
                         />
                       </div>
@@ -857,8 +881,8 @@ export default function ScheduleConsultation() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="flex items-center gap-2 font-poppins font-medium text-slate-700 mb-2">
-                          <Phone className="w-4 h-4" />
+                        <label className="flex items-center gap-2 font-poppins font-medium text-[#2c3639] mb-2">
+                          <Phone className="w-4 h-4 text-[#a27b5b]" />
                           Phone Number
                         </label>
                         <input
@@ -871,14 +895,14 @@ export default function ScheduleConsultation() {
                               phone: e.target.value,
                             }))
                           }
-                          className="w-full p-3 border-2 border-slate-200 rounded-xl font-poppins focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                          className="w-full p-3 border-2 border-[#dcd7c9] rounded-xl font-poppins focus:border-[#a27b5b] focus:ring-2 focus:ring-[#a27b5b]/20 transition-all duration-300"
                           placeholder="Your phone number"
                         />
                       </div>
 
                       <div>
-                        <label className="flex items-center gap-2 font-poppins font-medium text-slate-700 mb-2">
-                          <Building className="w-4 h-4" />
+                        <label className="flex items-center gap-2 font-poppins font-medium text-[#2c3639] mb-2">
+                          <Building className="w-4 h-4 text-[#a27b5b]" />
                           Business/Company
                         </label>
                         <input
@@ -891,15 +915,15 @@ export default function ScheduleConsultation() {
                               business: e.target.value,
                             }))
                           }
-                          className="w-full p-3 border-2 border-slate-200 rounded-xl font-poppins focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                          className="w-full p-3 border-2 border-[#dcd7c9] rounded-xl font-poppins focus:border-[#a27b5b] focus:ring-2 focus:ring-[#a27b5b]/20 transition-all duration-300"
                           placeholder="Your business name"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="flex items-center gap-2 font-poppins font-medium text-slate-700 mb-2">
-                        <FileText className="w-4 h-4" />
+                      <label className="flex items-center gap-2 font-poppins font-medium text-[#2c3639] mb-2">
+                        <FileText className="w-4 h-4 text-[#a27b5b]" />
                         Project Notes
                       </label>
                       <textarea
@@ -911,7 +935,7 @@ export default function ScheduleConsultation() {
                           }))
                         }
                         rows={4}
-                        className="w-full p-3 border-2 border-slate-200 rounded-xl font-poppins focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 resize-none"
+                        className="w-full p-3 border-2 border-[#dcd7c9] rounded-xl font-poppins focus:border-[#a27b5b] focus:ring-2 focus:ring-[#a27b5b]/20 transition-all duration-300 resize-none"
                         placeholder="Tell us about your project goals, timeline, and any specific requirements..."
                       />
                     </div>
@@ -919,7 +943,7 @@ export default function ScheduleConsultation() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-poppins font-semibold py-4 rounded-xl hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-lg"
+                      className="w-full bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] text-white font-poppins font-semibold py-4 rounded-xl hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-lg"
                     >
                       {isSubmitting ? (
                         <>

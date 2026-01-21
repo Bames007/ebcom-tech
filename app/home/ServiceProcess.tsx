@@ -43,7 +43,7 @@ import Link from "next/link";
 const Lottie = dynamic(() => import("lottie-react"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-32 lg:h-48 bg-slate-200 rounded-xl animate-pulse" />
+    <div className="w-full h-32 lg:h-48 bg-[#DCD7C9] rounded-xl animate-pulse" />
   ),
 });
 
@@ -65,6 +65,7 @@ const gantari = Gantari({
   subsets: ["latin"],
   variable: "--font-gantari",
 });
+
 // Lottie animations mapping
 const lottieAnimations = {
   discussion: discussionAnimation,
@@ -84,9 +85,9 @@ const services = [
     id: "software",
     title: "Software Development",
     icon: Code,
-    color: "from-blue-600 to-cyan-500",
-    bgColor: "bg-blue-500/10",
-    borderColor: "border-blue-500/20",
+    color: "from-[#2c3639] to-[#3f4e4f]",
+    bgColor: "bg-[#2c3639]/10",
+    borderColor: "border-[#2c3639]/20",
     steps: [
       {
         title: "Discovery & Discussion",
@@ -164,9 +165,9 @@ const services = [
     id: "network",
     title: "Network Solutions",
     icon: Network,
-    color: "from-emerald-600 to-green-500",
-    bgColor: "bg-emerald-500/10",
-    borderColor: "border-emerald-500/20",
+    color: "from-[#a27b5b] to-[#8a6a4f]",
+    bgColor: "bg-[#a27b5b]/10",
+    borderColor: "border-[#a27b5b]/20",
     steps: [
       {
         title: "Network Assessment",
@@ -240,9 +241,9 @@ const services = [
     id: "security",
     title: "Security Systems",
     icon: Shield,
-    color: "from-red-600 to-pink-500",
-    bgColor: "bg-red-500/10",
-    borderColor: "border-red-500/20",
+    color: "from-[#3f4e4f] to-[#2c3639]",
+    bgColor: "bg-[#3f4e4f]/10",
+    borderColor: "border-[#3f4e4f]/20",
     steps: [
       {
         title: "Security Assessment",
@@ -307,9 +308,9 @@ const services = [
     id: "cloud",
     title: "Cloud Solutions",
     icon: Cloud,
-    color: "from-purple-600 to-indigo-500",
-    bgColor: "bg-purple-500/10",
-    borderColor: "border-purple-500/20",
+    color: "from-[#2c3639] to-[#a27b5b]",
+    bgColor: "bg-[#2c3639]/10",
+    borderColor: "border-[#2c3639]/20",
     steps: [
       {
         title: "Cloud Strategy",
@@ -387,9 +388,9 @@ const services = [
     id: "mobile",
     title: "Mobile Development",
     icon: Smartphone,
-    color: "from-orange-600 to-amber-500",
-    bgColor: "bg-orange-500/10",
-    borderColor: "border-orange-500/20",
+    color: "from-[#a27b5b] to-[#3f4e4f]",
+    bgColor: "bg-[#a27b5b]/10",
+    borderColor: "border-[#a27b5b]/20",
     steps: [
       {
         title: "Concept & Strategy",
@@ -620,7 +621,7 @@ export default function ServiceProcess() {
                 className={`absolute left-6 top-20 w-0.5 h-24 transition-all duration-300 ${
                   index < activeStep
                     ? `bg-gradient-to-b ${activeService.color}`
-                    : "bg-slate-300"
+                    : "bg-[#3f4e4f]/30"
                 }`}
               />
             )}
@@ -631,7 +632,7 @@ export default function ServiceProcess() {
                 className={`flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center font-bebas-neue text-xl transition-all duration-300 ${
                   index <= activeStep
                     ? `bg-gradient-to-r ${activeService.color} text-white shadow-lg scale-105`
-                    : "bg-slate-200 text-slate-400"
+                    : "bg-[#DCD7C9] text-[#3f4e4f]"
                 }`}
               >
                 {index + 1}
@@ -645,26 +646,26 @@ export default function ServiceProcess() {
                       <StepIcon
                         className={`w-5 h-5 lg:w-6 lg:h-6 ${
                           index <= activeStep
-                            ? `text-${activeService.color.split("-")[1]}-500`
-                            : "text-slate-400"
+                            ? "text-[#a27b5b]"
+                            : "text-[#3f4e4f]"
                         }`}
                       />
                       <h3
                         className={`font-bebas-neue text-xl sm:text-2xl lg:text-3xl transition-colors duration-300 break-words ${
                           index <= activeStep
-                            ? "text-slate-800"
-                            : "text-slate-400"
+                            ? "text-[#2c3639]"
+                            : "text-[#3f4e4f]"
                         }`}
                       >
                         {step.title}
                       </h3>
                     </div>
-                    <p className="font-gantari text-slate-600 text-base lg:text-lg leading-relaxed">
+                    <p className="font-gantari text-[#3f4e4f] text-base lg:text-lg leading-relaxed">
                       {step.description}
                     </p>
                   </div>
 
-                  <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-sm font-poppins font-medium whitespace-nowrap self-start lg:self-auto">
+                  <span className="px-3 py-1 bg-[#DCD7C9] text-[#3f4e4f] rounded-full text-sm font-poppins font-medium whitespace-nowrap self-start lg:self-auto">
                     {step.duration}
                   </span>
                 </div>
@@ -674,7 +675,7 @@ export default function ServiceProcess() {
                   {step.deliverables.map((deliverable, deliverableIndex) => (
                     <span
                       key={deliverableIndex}
-                      className="px-3 py-1 bg-white border border-slate-200 text-slate-600 rounded-full text-sm font-poppins transition-all duration-300 hover:scale-105 hover:shadow-sm"
+                      className="px-3 py-1 bg-white border border-[#3f4e4f]/20 text-[#3f4e4f] rounded-full text-sm font-poppins transition-all duration-300 hover:scale-105 hover:shadow-sm"
                     >
                       {deliverable}
                     </span>
@@ -683,8 +684,8 @@ export default function ServiceProcess() {
 
                 {/* Simplified Lottie Animation - Only render when visible and active */}
                 {isStepVisible && (
-                  <div className="mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-200/60">
-                    <div className="w-full h-32 lg:h-48 rounded-xl overflow-hidden bg-slate-200">
+                  <div className="mt-4 p-4 bg-[#DCD7C9]/50 rounded-2xl border border-[#3f4e4f]/10">
+                    <div className="w-full h-32 lg:h-48 rounded-xl overflow-hidden bg-[#DCD7C9]">
                       {isStepActive && (
                         <Lottie
                           animationData={
@@ -701,7 +702,7 @@ export default function ServiceProcess() {
                         />
                       )}
                     </div>
-                    <div className="text-center mt-2 font-poppins text-slate-500 text-sm">
+                    <div className="text-center mt-2 font-poppins text-[#3f4e4f] text-sm">
                       {step.title} visualization
                     </div>
                   </div>
@@ -716,31 +717,41 @@ export default function ServiceProcess() {
 
   return (
     <section
-      className={`relative min-h-screen py-20 px-4 sm:px-6 lg:px-8 overflow-hidden ${bebasNeue.className}`}
+      className={`relative min-h-screen py-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#DCD7C9] ${bebasNeue.className}`}
     >
       {/* Simplified Background */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-32 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-r from-blue-600/5 to-cyan-600/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-32 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-r from-emerald-600/5 to-blue-600/5 rounded-full blur-3xl" />
+        <div className="absolute -top-40 -right-32 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-r from-[#2c3639]/10 to-[#3f4e4f]/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-32 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-r from-[#a27b5b]/10 to-[#2c3639]/10 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto">
-        {/* Header - unchanged */}
-
-        {/* Mobile Service Selection - unchanged */}
-
-        {/* Desktop Service Selection - unchanged */}
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h2
+            className={`font-bebas-neue text-4xl sm:text-5xl lg:text-6xl text-[#2c3639] mb-6 transition-all duration-1000`}
+          >
+            Our{" "}
+            <span className="bg-gradient-to-r from-[#2c3639] via-[#3f4e4f] to-[#a27b5b] bg-clip-text text-transparent">
+              Process
+            </span>
+          </h2>
+          <p className="font-gantari text-[#3f4e4f] text-lg max-w-3xl mx-auto">
+            A proven 6-step methodology that transforms your vision into
+            reality, ensuring excellence at every stage.
+          </p>
+        </div>
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
           {/* Process Steps */}
           <div
             ref={stepsRef}
-            className="lg:col-span-3 h-[500px] lg:h-[600px] overflow-y-auto scroll-smooth rounded-3xl bg-white/80 backdrop-blur-sm border border-slate-200/60 shadow-xl relative"
+            className="lg:col-span-3 h-[500px] lg:h-[600px] overflow-y-auto scroll-smooth rounded-3xl bg-white/80 backdrop-blur-sm border border-[#3f4e4f]/10 shadow-xl relative"
           >
             {/* Progress Bar */}
-            <div className="sticky top-0 z-20 bg-white/90 backdrop-blur-sm border-b border-slate-200/60 p-4">
-              <div className="w-full bg-slate-200 rounded-full h-2">
+            <div className="sticky top-0 z-20 bg-white/90 backdrop-blur-sm border-b border-[#3f4e4f]/10 p-4">
+              <div className="w-full bg-[#DCD7C9] rounded-full h-2">
                 <div
                   className={`h-2 rounded-full bg-gradient-to-r ${activeService.color} transition-all duration-300 ease-out`}
                   style={{
@@ -760,7 +771,7 @@ export default function ServiceProcess() {
 
           {/* Sidebar - Progress & Controls */}
           <div className="lg:col-span-1">
-            <div className="sticky top-8 bg-white/80 backdrop-blur-sm rounded-3xl border border-slate-200/60 shadow-xl p-4 lg:p-6">
+            <div className="sticky top-8 bg-white/80 backdrop-blur-sm rounded-3xl border border-[#3f4e4f]/10 shadow-xl p-4 lg:p-6">
               {/* Service Icon */}
               <div
                 className={`w-16 h-16 lg:w-20 lg:h-20 mx-auto mb-4 lg:mb-6 bg-gradient-to-r ${activeService.color} rounded-2xl flex items-center justify-center shadow-lg`}
@@ -770,10 +781,10 @@ export default function ServiceProcess() {
 
               {/* Progress */}
               <div className="text-center mb-4 lg:mb-6">
-                <div className="font-bebas-neue text-2xl lg:text-3xl text-slate-800 mb-2">
+                <div className="font-bebas-neue text-2xl lg:text-3xl text-[#2c3639] mb-2">
                   Step {activeStep + 1} of {activeService.steps.length}
                 </div>
-                <div className="font-poppins text-slate-600 text-sm lg:text-base line-clamp-2">
+                <div className="font-poppins text-[#3f4e4f] text-sm lg:text-base line-clamp-2">
                   {currentStepData?.title}
                 </div>
               </div>
@@ -788,8 +799,8 @@ export default function ServiceProcess() {
                       index === activeStep
                         ? `bg-gradient-to-r ${activeService.color} text-white shadow-lg`
                         : index < activeStep
-                        ? "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                        : "bg-white border border-slate-200 text-slate-500 hover:border-slate-300"
+                        ? "bg-[#DCD7C9] text-[#3f4e4f] hover:bg-[#DCD7C9]/80"
+                        : "bg-white border border-[#3f4e4f]/10 text-[#3f4e4f] hover:border-[#a27b5b]/30"
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -797,7 +808,7 @@ export default function ServiceProcess() {
                         {step.title}
                       </span>
                       {index < activeStep && (
-                        <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                        <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-[#a27b5b]" />
                       )}
                     </div>
                   </button>
@@ -810,7 +821,7 @@ export default function ServiceProcess() {
                   onClick={togglePlay}
                   className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-poppins font-semibold transition-all duration-300 ${
                     isPlaying
-                      ? "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      ? "bg-[#DCD7C9] text-[#3f4e4f] hover:bg-[#DCD7C9]/80"
                       : `bg-gradient-to-r ${activeService.color} text-white shadow-lg hover:shadow-xl`
                   }`}
                 >
@@ -826,7 +837,7 @@ export default function ServiceProcess() {
 
                 <button
                   onClick={() => scrollToStep(0)}
-                  className="px-4 py-3 bg-slate-100 text-slate-700 rounded-xl font-poppins font-semibold hover:bg-slate-200 transition-all duration-300"
+                  className="px-4 py-3 bg-[#DCD7C9] text-[#3f4e4f] rounded-xl font-poppins font-semibold hover:bg-[#DCD7C9]/80 transition-all duration-300"
                 >
                   <span className="hidden sm:inline">Reset</span>
                   <ArrowRight className="w-4 h-4 sm:hidden rotate-180" />
@@ -835,14 +846,14 @@ export default function ServiceProcess() {
 
               {/* Next Step Preview */}
               {activeStep < activeService.steps.length - 1 && (
-                <div className="mt-4 lg:mt-6 p-3 lg:p-4 bg-slate-50 rounded-xl border border-slate-200/60">
-                  <div className="font-poppins text-slate-500 text-sm mb-1 lg:mb-2">
+                <div className="mt-4 lg:mt-6 p-3 lg:p-4 bg-[#DCD7C9]/50 rounded-xl border border-[#3f4e4f]/10">
+                  <div className="font-poppins text-[#3f4e4f] text-sm mb-1 lg:mb-2">
                     Next:
                   </div>
-                  <div className="font-poppins font-semibold text-slate-700 text-sm lg:text-base">
+                  <div className="font-poppins font-semibold text-[#2c3639] text-sm lg:text-base">
                     {activeService.steps[activeStep + 1].title}
                   </div>
-                  <div className="flex items-center gap-2 mt-1 lg:mt-2 text-slate-500 text-xs lg:text-sm">
+                  <div className="flex items-center gap-2 mt-1 lg:mt-2 text-[#3f4e4f] text-xs lg:text-sm">
                     <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4" />
                     {activeService.steps[activeStep + 1].duration}
                   </div>
@@ -854,18 +865,18 @@ export default function ServiceProcess() {
 
         {/* CTA */}
         <div className="text-center mt-12 lg:mt-16">
-          <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-3xl p-6 lg:p-8 xl:p-12 text-white relative overflow-hidden">
+          <div className="bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] rounded-3xl p-6 lg:p-8 xl:p-12 text-white relative overflow-hidden">
             <h3 className="font-bebas-neue text-2xl sm:text-3xl lg:text-4xl mb-4 relative z-10">
               Ready to Start Your Project?
             </h3>
-            <p className="font-gantari text-slate-300 text-base lg:text-lg mb-6 lg:mb-8 max-w-2xl mx-auto relative z-10">
+            <p className="font-gantari text-white/80 text-base lg:text-lg mb-6 lg:mb-8 max-w-2xl mx-auto relative z-10">
               Let&apos;s discuss how we can bring your vision to life with our
               proven process and expertise.
             </p>
 
             <Link
               href="/schedule"
-              className="group bg-white text-slate-900 font-poppins font-semibold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 flex items-center gap-3 mx-auto"
+              className="group bg-white text-[#2c3639] font-poppins font-semibold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 flex items-center gap-3 mx-auto"
             >
               Start Your Journey
               <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5 group-hover:translate-x-1 transition-transform duration-200" />
@@ -890,12 +901,12 @@ export default function ServiceProcess() {
         }
 
         .scroll-smooth::-webkit-scrollbar-thumb {
-          background: rgba(100, 116, 139, 0.3);
+          background: rgba(63, 78, 79, 0.3);
           border-radius: 3px;
         }
 
         .scroll-smooth::-webkit-scrollbar-thumb:hover {
-          background: rgba(100, 116, 139, 0.5);
+          background: rgba(63, 78, 79, 0.5);
         }
 
         /* Line clamp utility */

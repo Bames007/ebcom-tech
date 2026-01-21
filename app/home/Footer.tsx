@@ -1,16 +1,9 @@
-// components/Footer.tsx
 "use client";
 
-import { Bebas_Neue, Poppins, Gantari } from "next/font/google";
 import {
   Phone,
   Mail,
   MapPin,
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  Youtube,
   MessageCircle,
   Zap,
   CheckCircle,
@@ -23,37 +16,90 @@ import {
   Globe,
   Shield,
   Cloud,
-  CameraIcon,
-  PaletteIcon,
-  SmartphoneIcon,
-  ColumnsSettings,
-  Workflow,
+  Camera,
+  Palette,
+  Smartphone,
+  Settings,
+  ChevronRight,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import Image from "next/image";
+
+// SVG Icons for Social Media
+const FacebookIcon = () => (
+  <svg
+    className="w-5 h-5"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path
+      fillRule="evenodd"
+      d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
+const TwitterIcon = () => (
+  <svg
+    className="w-5 h-5"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+  </svg>
+);
+
+const InstagramIcon = () => (
+  <svg
+    className="w-5 h-5"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path
+      fillRule="evenodd"
+      d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.467.398.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
+const LinkedInIcon = () => (
+  <svg
+    className="w-5 h-5"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path
+      fillRule="evenodd"
+      d="M12.51 8.796v1.697a3.738 3.738 0 013.288-1.684c3.455 0 4.202 2.16 4.202 4.97V19.5h-3.2v-5.072c0-1.21-.244-2.766-2.128-2.766-1.827 0-2.139 1.317-2.139 2.676V19.5h-3.19V8.796h3.168ZM7.2 6.106a1.61 1.61 0 01-.988 1.483 1.595 1.595 0 01-1.743-.348A1.607 1.607 0 015.6 4.5a1.601 1.601 0 011.6 1.606z"
+      clipRule="evenodd"
+    />
+    <path d="M7.2 8.809H4V19.5h3.2V8.809z" />
+  </svg>
+);
+
+const YouTubeIcon = () => (
+  <svg
+    className="w-5 h-5"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+  >
+    <path
+      fillRule="evenodd"
+      d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.417-4.814a2.507 2.507 0 0 1 1.768-1.768C5.744 5 11.998 5 11.998 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
 
 interface FooterProps {
   scrollToSection: (section: string) => void;
 }
-
-// Font configurations
-const bebasNeue = Bebas_Neue({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-bebas-neue",
-});
-
-const poppins = Poppins({
-  weight: ["300", "400", "500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-poppins",
-});
-
-const gantari = Gantari({
-  weight: ["300", "400", "500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-gantari",
-});
 
 export default function Footer({ scrollToSection }: FooterProps) {
   const [mounted, setMounted] = useState(false);
@@ -73,14 +119,14 @@ export default function Footer({ scrollToSection }: FooterProps) {
 
   const services = [
     { name: "Software Development", icon: Cloud },
-    { name: "Mobile Applications", icon: SmartphoneIcon },
+    { name: "Mobile Applications", icon: Smartphone },
     { name: "Web Applications", icon: Globe },
     { name: "Security Systems", icon: Shield },
-    { name: "CCTV Installation", icon: CameraIcon },
+    { name: "CCTV Installation", icon: Camera },
     { name: "Network Solutions", icon: Zap },
-    { name: "Branding & Design", icon: PaletteIcon },
+    { name: "Branding & Design", icon: Palette },
     { name: "IT Consultation", icon: Users },
-    { name: "Support & Maintenance", icon: ColumnsSettings },
+    { name: "Support & Maintenance", icon: Settings },
   ];
 
   const quickLinks = [
@@ -88,75 +134,51 @@ export default function Footer({ scrollToSection }: FooterProps) {
     { name: "About Us", icon: User, section: "about" },
     { name: "Services", icon: Briefcase, section: "services" },
     { name: "Clients", icon: Users, section: "clients" },
-    { name: "Our Process", icon: Workflow, section: "serviceProcess" },
+    { name: "Our Process", icon: Settings, section: "serviceProcess" },
     { name: "Contact", icon: Contact2, section: "contact" },
   ];
 
   const socialLinks = [
+    { icon: FacebookIcon, href: "#", label: "Facebook", color: "#1877F2" },
+    { icon: TwitterIcon, href: "#", label: "Twitter", color: "#1DA1F2" },
+    { icon: InstagramIcon, href: "#", label: "Instagram", color: "#E4405F" },
+    { icon: LinkedInIcon, href: "#", label: "LinkedIn", color: "#0A66C2" },
+    { icon: YouTubeIcon, href: "#", label: "YouTube", color: "#FF0000" },
+  ];
+
+  const stats = [
     {
-      icon: Facebook,
-      href: "#",
-      label: "Facebook",
-      color: "bg-blue-500 hover:bg-blue-600",
+      number: "500+",
+      label: "Projects Completed",
+      color: "#2c3639",
+      icon: Users,
     },
     {
-      icon: Twitter,
-      href: "#",
-      label: "Twitter",
-      color: "bg-sky-400 hover:bg-sky-500",
+      number: "75+",
+      label: "Happy Clients",
+      color: "#a27b5b",
+      icon: CheckCircle,
     },
     {
-      icon: Instagram,
-      href: "#",
-      label: "Instagram",
-      color: "bg-pink-500 hover:bg-pink-600",
+      number: "24/7",
+      label: "Support",
+      color: "#3f4e4f",
+      icon: Shield,
     },
     {
-      icon: Linkedin,
-      href: "#",
-      label: "LinkedIn",
-      color: "bg-blue-600 hover:bg-blue-700",
-    },
-    {
-      icon: Youtube,
-      href: "#",
-      label: "YouTube",
-      color: "bg-red-500 hover:bg-red-600",
+      number: "98%",
+      label: "Satisfaction",
+      color: "#2c3639",
+      icon: Handshake,
     },
   ];
 
   return (
-    <footer
-      className={`relative bg-gradient-to-br from-slate-50 via-white to-blue-50/30 overflow-hidden border-t border-slate-200/60 ${bebasNeue.variable} ${poppins.variable} ${gantari.variable}`}
-    >
-      {/* Enhanced Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Gradient Mesh Background */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-50/40 via-transparent to-cyan-50/30" />
-
-        {/* Animated Grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]" />
-
-        {/* Floating Tech Elements */}
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1.5 h-1.5 bg-blue-400/40 rounded-full animate-float-slow hidden lg:block"
-            style={{
-              top: `${15 + i * 12}%`,
-              left: `${5 + i * 10}%`,
-              animationDelay: `${i * 0.5}s`,
-              animationDuration: `${8 + i * 1.5}s`,
-            }}
-          />
-        ))}
-
-        {/* Gradient Orbs */}
-        <div className="absolute -top-40 -right-32 w-80 h-80 bg-gradient-to-r from-blue-200/30 to-cyan-200/20 rounded-full blur-3xl animate-pulse-slow" />
-        <div
-          className="absolute -bottom-40 -left-32 w-80 h-80 bg-gradient-to-r from-cyan-200/20 to-blue-200/30 rounded-full blur-3xl animate-pulse-slow"
-          style={{ animationDelay: "3s" }}
-        />
+    <footer className="relative bg-white overflow-hidden border-t border-gray-100">
+      {/* Background Pattern */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#a27b5b]/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#3f4e4f]/20 to-transparent" />
       </div>
 
       {/* Main Footer Content */}
@@ -164,9 +186,9 @@ export default function Footer({ scrollToSection }: FooterProps) {
         <div className="max-w-7xl mx-auto">
           {/* Trust Banner */}
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 rounded-full bg-blue-500/10 border border-blue-500/20">
-              <Handshake className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
-              <span className="text-blue-400 text-sm font-poppins font-semibold tracking-wider uppercase">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#a27b5b]/10 border border-[#a27b5b]/20">
+              <Handshake className="w-4 h-4 text-[#a27b5b]" />
+              <span className="text-sm font-medium text-[#a27b5b] tracking-wider uppercase">
                 Your Complete Technology Partner
               </span>
             </div>
@@ -174,111 +196,79 @@ export default function Footer({ scrollToSection }: FooterProps) {
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-16">
             {/* Company Info */}
-            <div className="lg:col-span-1">
-              <div
-                className={`transform transition-all duration-1000 ${
-                  mounted
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-10"
-                }`}
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  {/* <div
-                    className={`w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 ${"shadow-lg shadow-blue-500/20"}`}
-                  > */}
-                  <Image
-                    src={"/logo.png"}
-                    alt="EBCom Technologies"
-                    width={32}
-                    height={32}
-                  />
-                  {/* </div> */}
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-[#2c3639] flex items-center justify-center">
+                  <div className="text-white font-bold text-xl">E</div>
+                </div>
+                <div>
+                  <h3 className="text-3xl font-bold text-[#2c3639] leading-none">
+                    EBCOM
+                  </h3>
+                  <p className="text-[#3f4e4f] text-lg -mt-1">TECHNOLOGIES</p>
+                </div>
+              </div>
+
+              <p className="text-[#3f4e4f] mb-8 leading-relaxed">
+                Your complete technology partner for innovative digital
+                solutions, advanced security systems, and comprehensive IT
+                services.
+              </p>
+
+              {/* Contact Info */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-[#2c3639]/10 rounded-xl flex items-center justify-center">
+                    <Phone className="w-4 h-4 text-[#2c3639]" />
+                  </div>
                   <div>
-                    <h3 className="font-bebas-neue text-3xl text-slate-800 leading-none">
-                      EBCOM
-                    </h3>
-                    <p className="font-bebas-neue text-slate-600 text-lg -mt-1">
-                      TECHNOLOGIES
+                    <p className="text-[#3f4e4f] text-sm">Call Us</p>
+                    <p className="font-semibold text-[#2c3639]">08127728084</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-[#3f4e4f]/10 rounded-xl flex items-center justify-center">
+                    <Mail className="w-4 h-4 text-[#3f4e4f]" />
+                  </div>
+                  <div>
+                    <p className="text-[#3f4e4f] text-sm">Email Us</p>
+                    <p className="font-semibold text-[#2c3639] break-words">
+                      ebcomtechnologies@gmail.com
                     </p>
                   </div>
                 </div>
 
-                <p className="font-gantari text-slate-600 mb-8 leading-relaxed text-lg">
-                  Your complete technology partner for innovative digital
-                  solutions, advanced security systems, and comprehensive IT
-                  services.
-                </p>
-
-                {/* Contact Info */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4 group cursor-pointer hover:translate-x-2 transition-transform duration-300">
-                    <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-500 transition-colors duration-300 flex-shrink-0">
-                      <Phone className="w-4 h-4 text-blue-600 group-hover:text-white transition-colors duration-300" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="font-poppins text-slate-500 text-sm">
-                        Call Us
-                      </p>
-                      <p className="font-poppins font-semibold text-slate-800 truncate">
-                        08127728084
-                      </p>
-                    </div>
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-[#a27b5b]/10 rounded-xl flex items-center justify-center">
+                    <MapPin className="w-4 h-4 text-[#a27b5b]" />
                   </div>
-
-                  <div className="flex items-center gap-4 group cursor-pointer hover:translate-x-2 transition-transform duration-300">
-                    <div className="w-10 h-10 bg-cyan-100 rounded-xl flex items-center justify-center group-hover:bg-cyan-500 transition-colors duration-300 flex-shrink-0">
-                      <Mail className="w-4 h-4 text-cyan-600 group-hover:text-white transition-colors duration-300" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="font-poppins text-slate-500 text-sm">
-                        Email Us
-                      </p>
-                      <p className="font-poppins font-semibold text-slate-800 break-words">
-                        ebcomtechnologies@gmail.com
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4 group cursor-pointer hover:translate-x-2 transition-transform duration-300">
-                    <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center group-hover:bg-emerald-500 transition-colors duration-300 flex-shrink-0">
-                      <MapPin className="w-4 h-4 text-emerald-600 group-hover:text-white transition-colors duration-300" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="font-poppins text-slate-500 text-sm">
-                        Location
-                      </p>
-                      <p className="font-poppins font-semibold text-slate-800">
-                        Lagos, Nigeria
-                      </p>
-                    </div>
+                  <div>
+                    <p className="text-[#3f4e4f] text-sm">Location</p>
+                    <p className="font-semibold text-[#2c3639]">
+                      Abuja, Nigeria
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Quick Links */}
-            <div
-              className={`transform transition-all duration-1000 delay-200 ${
-                mounted
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-10"
-              }`}
-            >
-              <h4 className="font-bebas-neue text-2xl text-slate-800 mb-8">
+            <div>
+              <h4 className="text-2xl font-bold text-[#2c3639] mb-8">
                 Quick Links
               </h4>
               <ul className="space-y-4">
                 {quickLinks.map((link, index) => {
-                  const IconComponent = link.icon;
+                  const Icon = link.icon;
                   return (
                     <li key={link.name}>
                       <button
                         onClick={() => scrollToSection(link.section)}
-                        className="font-poppins text-slate-600 hover:text-blue-600 transition-all duration-300 flex items-center gap-4 group w-full text-left hover:translate-x-2 p-3 rounded-xl hover:bg-white/50 backdrop-blur-sm"
-                        style={{ transitionDelay: `${index * 50}ms` }}
+                        className="text-[#3f4e4f] hover:text-[#a27b5b] transition-colors flex items-center gap-4 group w-full text-left"
                       >
-                        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                          <IconComponent className="w-3 h-3 text-white" />
+                        <div className="w-8 h-8 bg-[#2c3639] rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <Icon className="w-3 h-3 text-white" />
                         </div>
                         <span className="font-semibold">{link.name}</span>
                       </button>
@@ -289,27 +279,20 @@ export default function Footer({ scrollToSection }: FooterProps) {
             </div>
 
             {/* Services */}
-            <div
-              className={`transform transition-all duration-1000 delay-300 ${
-                mounted
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-10"
-              }`}
-            >
-              <h4 className="font-bebas-neue text-2xl text-slate-800 mb-8">
+            <div>
+              <h4 className="text-2xl font-bold text-[#2c3639] mb-8">
                 Our Services
               </h4>
-              <div className="grid grid-cols-1 gap-3">
+              <div className="space-y-3">
                 {services.map((service, index) => {
-                  const IconComponent = service.icon;
+                  const Icon = service.icon;
                   return (
                     <button
                       key={service.name}
                       onClick={() => scrollToSection("services")}
-                      className="font-poppins text-slate-600 hover:text-slate-800 transition-all duration-300 flex items-center gap-3 group text-left p-3 rounded-xl hover:bg-white/50 backdrop-blur-sm hover:shadow-sm"
-                      style={{ transitionDelay: `${index * 30}ms` }}
+                      className="text-[#3f4e4f] hover:text-[#2c3639] transition-colors flex items-center gap-3 group text-left"
                     >
-                      <IconComponent className="w-4 h-4 text-blue-500 group-hover:scale-110 transition-transform duration-300" />
+                      <Icon className="w-4 h-4 text-[#a27b5b]" />
                       <span className="text-sm font-medium">
                         {service.name}
                       </span>
@@ -320,30 +303,24 @@ export default function Footer({ scrollToSection }: FooterProps) {
             </div>
 
             {/* Newsletter & Social */}
-            <div
-              className={`transform transition-all duration-1000 delay-400 ${
-                mounted
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-10"
-              }`}
-            >
-              <h4 className="font-bebas-neue text-2xl text-slate-800 mb-8">
+            <div>
+              <h4 className="text-2xl font-bold text-[#2c3639] mb-8">
                 Stay Connected
               </h4>
 
               {/* Newsletter */}
               <div className="mb-8">
-                <p className="font-gantari text-slate-600 mb-4 leading-relaxed">
+                <p className="text-[#3f4e4f] mb-4 leading-relaxed">
                   Get the latest tech insights and project updates delivered to
                   your inbox.
                 </p>
                 {isSubscribed ? (
-                  <div className="bg-green-50 border border-green-200 rounded-2xl p-6 text-center">
+                  <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
                     <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-3" />
-                    <p className="font-poppins font-semibold text-green-700">
+                    <p className="font-semibold text-green-700">
                       Welcome to EBCOM!
                     </p>
-                    <p className="font-gantari text-green-600 text-sm mt-1">
+                    <p className="text-green-600 text-sm mt-1">
                       Check your email for confirmation.
                     </p>
                   </div>
@@ -355,11 +332,11 @@ export default function Footer({ scrollToSection }: FooterProps) {
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Enter your email"
                       required
-                      className="w-full px-4 py-4 bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-slate-800 placeholder-slate-400 text-sm shadow-sm hover:shadow-md"
+                      className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a27b5b] focus:border-transparent text-[#2c3639] placeholder-[#3f4e4f] text-sm"
                     />
                     <button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-poppins font-semibold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
+                      className="w-full bg-[#2c3639] text-white font-semibold py-3 rounded-lg hover:bg-[#1e2729] transition-colors flex items-center justify-center gap-2"
                     >
                       <MessageCircle className="w-4 h-4" />
                       Subscribe to Newsletter
@@ -370,21 +347,21 @@ export default function Footer({ scrollToSection }: FooterProps) {
 
               {/* Social Links */}
               <div>
-                <p className="font-poppins font-semibold text-slate-700 mb-4">
+                <p className="font-semibold text-[#2c3639] mb-4">
                   Follow Our Journey
                 </p>
                 <div className="flex gap-3">
-                  {socialLinks.map((social, index) => {
-                    const IconComponent = social.icon;
+                  {socialLinks.map((social) => {
+                    const Icon = social.icon;
                     return (
                       <a
                         key={social.label}
                         href={social.href}
-                        className={`w-12 h-12 ${social.color} rounded-xl flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 hover:-translate-y-1`}
+                        className="w-10 h-10 rounded-lg flex items-center justify-center text-white transition-colors hover:opacity-90"
+                        style={{ backgroundColor: social.color }}
                         aria-label={social.label}
-                        style={{ transitionDelay: `${index * 100}ms` }}
                       >
-                        <IconComponent className="w-5 h-5" />
+                        <Icon />
                       </a>
                     );
                   })}
@@ -394,54 +371,22 @@ export default function Footer({ scrollToSection }: FooterProps) {
           </div>
 
           {/* Trust Stats */}
-          <div
-            className={`border-t border-slate-300/60 pt-12 transform transition-all duration-1000 delay-500 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}
-          >
+          <div className="border-t border-gray-200 pt-12">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-              {[
-                {
-                  number: "75+",
-                  label: "Happy Clients",
-                  color: "from-blue-500 to-cyan-500",
-                  icon: Users,
-                },
-                {
-                  number: "150+",
-                  label: "Projects Completed",
-                  color: "from-emerald-500 to-green-500",
-                  icon: CheckCircle,
-                },
-                {
-                  number: "24/7",
-                  label: "Support",
-                  color: "from-amber-500 to-orange-500",
-                  icon: Shield,
-                },
-                {
-                  number: "99%",
-                  label: "Satisfaction",
-                  color: "from-purple-500 to-pink-500",
-                  icon: Handshake,
-                },
-              ].map((stat, index) => {
-                const IconComponent = stat.icon;
+              {stats.map((stat, index) => {
+                const Icon = stat.icon;
                 return (
-                  <div
-                    key={stat.label}
-                    className="text-center group hover:scale-105 transition-transform duration-300"
-                    style={{ transitionDelay: `${600 + index * 100}ms` }}
-                  >
+                  <div key={stat.label} className="text-center">
                     <div
-                      className={`w-16 h-16 bg-gradient-to-r ${stat.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
+                      className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+                      style={{ backgroundColor: stat.color + "10" }}
                     >
-                      <IconComponent className="w-6 h-6 text-white" />
+                      <Icon className="w-6 h-6" style={{ color: stat.color }} />
                     </div>
-                    <div className="font-bebas-neue text-3xl text-slate-800 mb-2 group-hover:scale-110 transition-transform duration-300">
+                    <div className="text-3xl font-bold text-[#2c3639] mb-2">
                       {stat.number}
                     </div>
-                    <div className="font-poppins text-slate-600 text-sm font-medium">
+                    <div className="text-[#3f4e4f] text-sm font-medium">
                       {stat.label}
                     </div>
                   </div>
@@ -453,10 +398,10 @@ export default function Footer({ scrollToSection }: FooterProps) {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-slate-300/60 bg-white/80 backdrop-blur-sm py-8 px-4 sm:px-6 lg:px-8">
+      <div className="border-t border-gray-100 bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
           <div className="text-center lg:text-left">
-            <p className="font-gantari text-slate-600 text-sm">
+            <p className="text-[#3f4e4f] text-sm">
               © 2024 EBCOM Technologies. All rights reserved. | Building the
               Future, Today.
             </p>
@@ -464,12 +409,11 @@ export default function Footer({ scrollToSection }: FooterProps) {
 
           <div className="flex items-center gap-6">
             {["Privacy Policy", "Terms of Service", "Cookie Policy"].map(
-              (link, index) => (
+              (link) => (
                 <a
                   key={link}
                   href="#"
-                  className="font-poppins text-slate-600 hover:text-blue-600 text-sm transition-all duration-300 hover:scale-105 font-medium"
-                  style={{ transitionDelay: `${index * 50}ms` }}
+                  className="text-[#3f4e4f] hover:text-[#a27b5b] text-sm transition-colors font-medium"
                 >
                   {link}
                 </a>
@@ -478,42 +422,6 @@ export default function Footer({ scrollToSection }: FooterProps) {
           </div>
         </div>
       </div>
-
-      <style jsx global>{`
-        .font-bebas-neue {
-          font-family: var(--font-bebas-neue), sans-serif;
-        }
-        .font-poppins {
-          font-family: var(--font-poppins), sans-serif;
-        }
-        .font-gantari {
-          font-family: var(--font-gantari), sans-serif;
-        }
-        @keyframes float-slow {
-          0%,
-          100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-10px) rotate(180deg);
-          }
-        }
-        @keyframes pulse-slow {
-          0%,
-          100% {
-            opacity: 0.3;
-          }
-          50% {
-            opacity: 0.5;
-          }
-        }
-        .animate-float-slow {
-          animation: float-slow 8s ease-in-out infinite;
-        }
-        .animate-pulse-slow {
-          animation: pulse-slow 6s ease-in-out infinite;
-        }
-      `}</style>
     </footer>
   );
 }
