@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Bebas_Neue, Poppins } from "next/font/google";
+import { useState } from "react";
 import Image from "next/image";
 import {
   Calendar,
@@ -13,7 +12,6 @@ import {
   FileText,
   ChevronLeft,
   ChevronRight,
-  X,
   CheckCircle2,
   CreditCard,
   Palette,
@@ -23,22 +21,9 @@ import {
   Cloud,
   Smartphone,
   Briefcase,
-  TrendingUp,
   Users,
 } from "lucide-react";
-
-// Font configurations
-const bebasNeue = Bebas_Neue({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-bebas-neue",
-});
-
-const poppins = Poppins({
-  weight: ["300", "400", "500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-poppins",
-});
+import { bebasNeue, poppins } from "../util/constants";
 
 interface Service {
   id: string;
@@ -182,7 +167,7 @@ const timeSlots: string[] = [
 export default function ScheduleConsultation() {
   const [selectedService, setSelectedService] = useState<Service>(services[0]);
   const [selectedDuration, setSelectedDuration] = useState<Duration>(
-    services[0].durations[0]
+    services[0].durations[0],
   );
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
@@ -682,7 +667,7 @@ export default function ScheduleConsultation() {
                           >
                             {day.substring(0, 1)}
                           </div>
-                        )
+                        ),
                       )}
                     </div>
 
@@ -706,12 +691,12 @@ export default function ScheduleConsultation() {
                               isSelected
                                 ? "bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] text-white shadow-lg scale-105"
                                 : isToday
-                                ? "bg-[#a27b5b]/20 text-[#a27b5b] border-2 border-[#a27b5b]/30"
-                                : isPast
-                                ? "text-[#dcd7c9] cursor-not-allowed"
-                                : !isCurrentMonth
-                                ? "text-[#dcd7c9] cursor-not-allowed"
-                                : "text-[#3f4e4f] hover:bg-[#dcd7c9] hover:scale-105"
+                                  ? "bg-[#a27b5b]/20 text-[#a27b5b] border-2 border-[#a27b5b]/30"
+                                  : isPast
+                                    ? "text-[#dcd7c9] cursor-not-allowed"
+                                    : !isCurrentMonth
+                                      ? "text-[#dcd7c9] cursor-not-allowed"
+                                      : "text-[#3f4e4f] hover:bg-[#dcd7c9] hover:scale-105"
                             }`}
                           >
                             {date.getDate()}

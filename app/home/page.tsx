@@ -10,6 +10,7 @@ import Footer from "./Footer";
 import EddyAI from "./EddyAI";
 import Header from "./Header";
 import ServiceProcess from "./ServiceProcess";
+import PortfolioPage from "../portfolio/page";
 
 const HomePage = () => {
   const [activeSection, setActiveSection] = useState("home");
@@ -104,6 +105,10 @@ const HomePage = () => {
 
       <section ref={servicesRef} id="services">
         <WhatWeDo />
+      </section>
+
+      <section ref={clientsRef} id="portfolio">
+        <PortfolioPage />
       </section>
 
       <section ref={clientsRef} id="clients">
