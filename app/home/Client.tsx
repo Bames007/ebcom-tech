@@ -70,7 +70,7 @@ export default function Clients() {
   }, []);
 
   const stats = [
-    { number: "500+", label: "Projects Completed", icon: CheckCircle },
+    { number: "300+", label: "Projects Completed", icon: CheckCircle },
     { number: "75+", label: "Happy Clients", icon: Users },
     { number: "24/7", label: "Support Available", icon: Clock },
     { number: "98%", label: "Client Satisfaction", icon: Award },
@@ -450,8 +450,8 @@ export default function Clients() {
                                 client.status === "Active"
                                   ? "bg-green-100 text-green-700"
                                   : client.status === "Completed"
-                                  ? "bg-blue-100 text-blue-700"
-                                  : "bg-gray-100 text-gray-700"
+                                    ? "bg-blue-100 text-blue-700"
+                                    : "bg-gray-100 text-gray-700"
                               }`}
                             >
                               {client.status}

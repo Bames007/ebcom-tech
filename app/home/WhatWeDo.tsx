@@ -310,7 +310,7 @@ export default function WhatWeDo() {
   ];
 
   const stats = [
-    { number: "500+", label: "Projects Completed", icon: CheckCircle },
+    { number: "300+", label: "Projects Completed", icon: CheckCircle },
     { number: "75+", label: "Happy Clients", icon: Users },
     { number: "24/7", label: "Support Available", icon: Clock },
     { number: "98%", label: "Client Satisfaction", icon: TrendingUp },

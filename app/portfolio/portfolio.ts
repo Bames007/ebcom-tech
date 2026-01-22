@@ -44,8 +44,8 @@ export const portfolioProjects = [
       "Web Design",
     ],
     year: "2025",
-    client: "Exelita Watches Ltd.",
-    location: "Geneva, Switzerland",
+    client: "Exelita Immigration Tech",
+    location: "Dallas Texas, USA",
 
     colors: {
       primary: "#151253",
@@ -109,9 +109,9 @@ export const portfolioProjects = [
 
     logo: "/brands/handylegal/logo.jpg",
     mockups: [
-      "/brands/handylegal/mockup-1.jpg",
-      "/brands/handylegal/mockup-2.jpg",
-      "/brands/handylegal/mockup-3.jpg",
+      "/brands/handylegal/mockup-1.jpeg",
+      "/brands/handylegal/mockup-2.jpeg",
+      "/brands/handylegal/mockup-3.jpeg",
       "/brands/handylegal/mockup-4.jpg",
       "/brands/handylegal/mockup-5.jpg",
     ],

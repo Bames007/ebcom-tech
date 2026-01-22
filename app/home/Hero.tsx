@@ -14,7 +14,7 @@ import {
   Handshake,
 } from "lucide-react";
 import Link from "next/link";
-import { bebasNeue, poppins } from "../util/constants";
+import { bebasNeue, gantari, poppins } from "../util/constants";
 
 const clients = [
   {
@@ -154,7 +154,7 @@ export default function Hero() {
               <div className="flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-[#a27b5b]" />
                 <span className={`${poppins.className} text-sm text-[#3f4e4f]`}>
-                  500+ Projects
+                  300+ Projects
                 </span>
               </div>
             </div>
@@ -182,7 +182,7 @@ export default function Hero() {
           {/* Company Stats */}
           <div className="grid grid-cols-3 gap-8 mt-12">
             {[
-              { number: "500+", label: "Projects Delivered", icon: Briefcase },
+              { number: "300+", label: "Projects Delivered", icon: Briefcase },
               { number: "7+", label: "Years Excellence", icon: Zap },
               { number: "98%", label: "Client Satisfaction", icon: Users },
             ].map((stat, index) => (

@@ -148,7 +148,7 @@ export default function Footer({ scrollToSection }: FooterProps) {
 
   const stats = [
     {
-      number: "500+",
+      number: "300+",
       label: "Projects Completed",
       color: "#2c3639",
       icon: Users,
@@ -417,7 +417,7 @@ export default function Footer({ scrollToSection }: FooterProps) {
                 >
                   {link}
                 </a>
-              )
+              ),
             )}
           </div>
         </div>

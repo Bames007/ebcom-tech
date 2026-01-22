@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   Calendar,
@@ -22,8 +22,17 @@ import {
   Smartphone,
   Briefcase,
   Users,
+  Star,
+  ArrowRight,
+  Target,
+  Trophy,
+  Award,
+  Check,
+  Clock4,
+  CalendarDays,
+  Sparkles,
+  Zap as Lightning,
 } from "lucide-react";
-import { bebasNeue, poppins } from "../util/constants";
 
 interface Service {
   id: string;
@@ -33,6 +42,7 @@ interface Service {
   durations: Duration[];
   color: string;
   gradient: string;
+  features: string[];
 }
 
 interface Duration {
@@ -49,23 +59,19 @@ interface BookingFormData {
   notes: string;
 }
 
-interface CalendarDay {
-  date: Date;
-  isCurrentMonth: boolean;
-}
-
 const services: Service[] = [
   {
     id: "consultation",
     name: "Strategy Consultation",
     description: "Initial project discussion and planning session",
-    icon: Calendar,
+    icon: Target,
     durations: [
       { length: 30, price: 20000, label: "30 min" },
       { length: 60, price: 35000, label: "1 hour" },
     ],
     color: "from-[#2c3639] to-[#3f4e4f]",
-    gradient: "bg-gradient-to-r from-[#2c3639] to-[#3f4e4f]",
+    gradient: "bg-gradient-to-br from-[#2c3639] to-[#3f4e4f]",
+    features: ["Project Scoping", "Timeline Planning", "Resource Allocation"],
   },
   {
     id: "branding",
@@ -77,7 +83,8 @@ const services: Service[] = [
       { length: 60, price: 45000, label: "1 hour" },
     ],
     color: "from-[#a27b5b] to-[#b8966f]",
-    gradient: "bg-gradient-to-r from-[#a27b5b] to-[#b8966f]",
+    gradient: "bg-gradient-to-br from-[#a27b5b] to-[#b8966f]",
+    features: ["Logo Concepts", "Color Palette", "Visual Identity"],
   },
   {
     id: "software",
@@ -89,7 +96,12 @@ const services: Service[] = [
       { length: 60, price: 55000, label: "1 hour" },
     ],
     color: "from-[#3f4e4f] to-[#526363]",
-    gradient: "bg-gradient-to-r from-[#3f4e4f] to-[#526363]",
+    gradient: "bg-gradient-to-br from-[#3f4e4f] to-[#526363]",
+    features: [
+      "Technical Architecture",
+      "Tech Stack Selection",
+      "Development Roadmap",
+    ],
   },
   {
     id: "network",
@@ -101,7 +113,12 @@ const services: Service[] = [
       { length: 60, price: 40000, label: "1 hour" },
     ],
     color: "from-[#2c3639] to-[#3f4e4f]",
-    gradient: "bg-gradient-to-r from-[#2c3639] to-[#3f4e4f]",
+    gradient: "bg-gradient-to-br from-[#2c3639] to-[#3f4e4f]",
+    features: [
+      "Network Architecture",
+      "Security Assessment",
+      "Infrastructure Planning",
+    ],
   },
   {
     id: "security",
@@ -113,7 +130,8 @@ const services: Service[] = [
       { length: 60, price: 50000, label: "1 hour" },
     ],
     color: "from-[#a27b5b] to-[#b8966f]",
-    gradient: "bg-gradient-to-r from-[#a27b5b] to-[#b8966f]",
+    gradient: "bg-gradient-to-br from-[#a27b5b] to-[#b8966f]",
+    features: ["Risk Assessment", "Security Protocols", "Compliance Check"],
   },
   {
     id: "cloud",
@@ -125,7 +143,8 @@ const services: Service[] = [
       { length: 60, price: 45000, label: "1 hour" },
     ],
     color: "from-[#3f4e4f] to-[#526363]",
-    gradient: "bg-gradient-to-r from-[#3f4e4f] to-[#526363]",
+    gradient: "bg-gradient-to-br from-[#3f4e4f] to-[#526363]",
+    features: ["Cloud Strategy", "Migration Plan", "Cost Optimization"],
   },
   {
     id: "mobile",
@@ -137,7 +156,12 @@ const services: Service[] = [
       { length: 60, price: 58000, label: "1 hour" },
     ],
     color: "from-[#2c3639] to-[#3f4e4f]",
-    gradient: "bg-gradient-to-r from-[#2c3639] to-[#3f4e4f]",
+    gradient: "bg-gradient-to-br from-[#2c3639] to-[#3f4e4f]",
+    features: [
+      "App Architecture",
+      "Platform Strategy",
+      "User Experience Design",
+    ],
   },
 ];
 
@@ -160,8 +184,6 @@ const timeSlots: string[] = [
   "16:30",
   "17:00",
   "17:30",
-  "18:00",
-  "18:30",
 ];
 
 export default function ScheduleConsultation() {
@@ -169,8 +191,8 @@ export default function ScheduleConsultation() {
   const [selectedDuration, setSelectedDuration] = useState<Duration>(
     services[0].durations[0],
   );
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [selectedTime, setSelectedTime] = useState<string | null>("10:00");
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [formData, setFormData] = useState<BookingFormData>({
     name: "",
@@ -182,51 +204,22 @@ export default function ScheduleConsultation() {
   const [bookingStep, setBookingStep] = useState<number>(1);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [bookingComplete, setBookingComplete] = useState<boolean>(false);
-  const [showServiceGrid, setShowServiceGrid] = useState<boolean>(true);
+  const [mounted, setMounted] = useState(false);
 
-  // Generate calendar days
-  const getDaysInMonth = (date: Date): CalendarDay[] => {
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const days: CalendarDay[] = [];
+    const days = [];
 
-    // Add previous month's days
-    const startingDayOfWeek = firstDay.getDay();
-    for (let i = startingDayOfWeek - 1; i >= 0; i--) {
-      const prevDate = new Date(year, month, -i);
-      days.push({ date: prevDate, isCurrentMonth: false });
-    }
-
-    // Add current month's days
-    for (let i = 1; i <= lastDay.getDate(); i++) {
-      const currentDate = new Date(year, month, i);
-      days.push({ date: currentDate, isCurrentMonth: true });
-    }
-
-    // Add next month's days to fill the grid
-    const totalCells = 42; // 6 weeks
-    while (days.length < totalCells) {
-      const nextDateNumber =
-        days.length - lastDay.getDate() - startingDayOfWeek + 1;
-      const nextDate = new Date(year, month + 1, nextDateNumber);
-      days.push({ date: nextDate, isCurrentMonth: false });
+    for (let i = 1; i <= new Date(year, month + 1, 0).getDate(); i++) {
+      days.push(new Date(year, month, i));
     }
 
     return days;
-  };
-
-  const navigateMonth = (direction: "prev" | "next"): void => {
-    setCurrentMonth((prev) => {
-      const newMonth = new Date(prev);
-      if (direction === "prev") {
-        newMonth.setMonth(prev.getMonth() - 1);
-      } else {
-        newMonth.setMonth(prev.getMonth() + 1);
-      }
-      return newMonth;
-    });
   };
 
   const formatCurrency = (amount: number): string => {
@@ -239,20 +232,17 @@ export default function ScheduleConsultation() {
 
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
+      weekday: "short",
+      month: "short",
       day: "numeric",
+      year: "numeric",
     });
   };
 
   const handleFormSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
-
     setIsSubmitting(false);
     setBookingComplete(true);
   };
@@ -260,153 +250,145 @@ export default function ScheduleConsultation() {
   const resetBooking = (): void => {
     setSelectedService(services[0]);
     setSelectedDuration(services[0].durations[0]);
-    setSelectedDate(null);
-    setSelectedTime(null);
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      business: "",
-      notes: "",
-    });
+    setSelectedDate(new Date());
+    setSelectedTime("10:00");
+    setFormData({ name: "", email: "", phone: "", business: "", notes: "" });
     setBookingStep(1);
     setBookingComplete(false);
-    setShowServiceGrid(true);
   };
 
-  const handleServiceSelect = (service: Service): void => {
-    setSelectedService(service);
-    setSelectedDuration(service.durations[0]);
-    setShowServiceGrid(false);
-    setTimeout(() => setBookingStep(2), 300);
-  };
-
-  const handleBackToServices = (): void => {
-    setShowServiceGrid(true);
-    setTimeout(() => setBookingStep(1), 300);
-  };
-
-  const handleStepNavigation = (step: number): void => {
-    if (step > bookingStep) return;
-
-    setBookingStep(step);
-
-    if (step === 1) {
-      setShowServiceGrid(true);
-    } else {
-      setShowServiceGrid(false);
-    }
-  };
-
-  const days: CalendarDay[] = getDaysInMonth(currentMonth);
+  const days = getDaysInMonth(currentMonth);
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
 
   if (bookingComplete) {
     return (
-      <div
-        className={`min-h-screen bg-gradient-to-br from-[#dcd7c9]/30 to-white py-4 sm:py-8 px-3 sm:px-6 lg:px-8 ${bebasNeue.variable} ${poppins.variable}`}
-      >
-        <div className="max-w-4xl mx-auto">
-          {/* Enhanced Logo Header */}
-          <div className="text-center mb-6 sm:mb-8">
-            <div className="inline-flex items-center gap-4 bg-white/90 backdrop-blur-sm rounded-3xl px-6 sm:px-8 py-4 shadow-2xl border border-[#a27b5b]/30">
-              <div className="relative w-14 h-14 sm:w-16 sm:h-16">
-                <Image
-                  src="/logo.png"
-                  alt="EBCOM Technologies"
-                  width={160}
-                  height={40}
-                  className="object-contain w-full h-full"
-                  priority
-                />
-              </div>
-              <div className="text-left">
-                <h1 className="font-bebas-neue text-3xl sm:text-4xl text-[#2c3639] leading-none">
-                  EBCOM TECHNOLOGIES
-                </h1>
-                <p className="font-poppins text-[#3f4e4f] text-xs sm:text-sm mt-1">
-                  Consultation Scheduled
-                </p>
+      <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+        {/* Animated Background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#a27b5b]/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#b8966f]/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-[#2c3639]/30 via-[#a27b5b]/30 to-[#3f4e4f]/30 rounded-full blur-3xl animate-spin-slow"></div>
+
+          {/* Floating Particles */}
+          {Array.from({ length: 20 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-2 h-2 bg-white/30 rounded-full animate-float"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${i * 0.2}s`,
+                animationDuration: `${3 + Math.random() * 4}s`,
+              }}
+            ></div>
+          ))}
+        </div>
+
+        <div className="relative z-10 py-8 px-4">
+          <div className="max-w-6xl mx-auto">
+            {/* Success Header */}
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-4 bg-white/10 backdrop-blur-md rounded-3xl px-8 py-6 shadow-2xl border border-white/20">
+                <div className="relative w-20 h-20">
+                  <Image
+                    src="/logo.png"
+                    alt="EBCOM Technologies"
+                    width={80}
+                    height={80}
+                    className="object-contain rounded-xl"
+                    priority
+                  />
+                </div>
+                <div className="text-left">
+                  <h1 className="text-4xl font-bold text-white">
+                    EBCOM TECHNOLOGIES
+                  </h1>
+                  <p className="text-gray-300 text-sm mt-1">
+                    Consultation Confirmed
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="bg-white rounded-3xl shadow-2xl border border-[#a27b5b]/20 overflow-hidden">
-            <div className="p-6 sm:p-8 text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-[#a27b5b] to-[#b8966f] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <CheckCircle2 className="w-10 h-10 text-white" />
-              </div>
+            {/* Success Card */}
+            <div className="bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl border border-white/20 overflow-hidden max-w-2xl mx-auto">
+              <div className="p-12 text-center">
+                <div className="relative inline-block">
+                  <div className="relative w-24 h-24 bg-gradient-to-br from-[#a27b5b] to-[#b8966f] rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-[#a27b5b]/50 animate-bounce-slow">
+                    <CheckCircle2 className="w-12 h-12 text-white" />
+                    <div className="absolute inset-0 rounded-full border-4 border-[#a27b5b]/50 animate-ping"></div>
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-10 h-10 bg-[#a27b5b] rounded-full flex items-center justify-center animate-bounce shadow-lg">
+                    <Award className="w-5 h-5 text-white" />
+                  </div>
+                </div>
 
-              <h2 className="font-bebas-neue text-3xl sm:text-4xl text-[#2c3639] mb-4">
-                Booking Confirmed!
-              </h2>
+                <h2 className="text-5xl font-bold text-white mb-6">
+                  Booking Confirmed!
+                </h2>
 
-              <p className="font-poppins text-[#3f4e4f] text-base sm:text-lg mb-6 max-w-md mx-auto leading-relaxed">
-                Thank you for scheduling your consultation. We've sent a
-                confirmation email with all the details and a calendar invite.
-              </p>
+                <p className="text-gray-300 text-lg mb-10 max-w-md mx-auto leading-relaxed">
+                  Your consultation has been scheduled. We've sent a
+                  confirmation email with all the details and a calendar invite.
+                </p>
 
-              <div className="bg-[#dcd7c9]/30 rounded-2xl p-6 mb-6 max-w-md mx-auto border border-[#a27b5b]/20">
-                <div className="text-left space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-10 h-10 rounded-xl ${selectedService.gradient} flex items-center justify-center`}
-                    >
-                      <selectedService.icon className="w-5 h-5 text-white" />
-                    </div>
+                {/* Summary Card */}
+                <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-8 mb-10 text-left text-white border border-white/20 backdrop-blur-sm">
+                  <div className="grid grid-cols-2 gap-6 mb-6">
                     <div>
-                      <div className="font-poppins text-[#3f4e4f] text-sm">
-                        Service
-                      </div>
-                      <div className="font-poppins font-semibold text-[#2c3639]">
+                      <p className="text-gray-300 text-sm mb-2">Service</p>
+                      <p className="text-xl font-semibold">
                         {selectedService.name}
-                      </div>
+                      </p>
                     </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <div className="font-poppins text-[#3f4e4f] text-sm">
-                        Duration
-                      </div>
-                      <div className="font-poppins font-semibold text-[#2c3639]">
+                      <p className="text-gray-300 text-sm mb-2">Duration</p>
+                      <p className="text-xl font-semibold">
                         {selectedDuration.label}
-                      </div>
+                      </p>
                     </div>
                     <div>
-                      <div className="font-poppins text-[#3f4e4f] text-sm">
-                        When
-                      </div>
-                      <div className="font-poppins font-semibold text-[#2c3639]">
-                        {selectedDate && formatDate(selectedDate)}
-                      </div>
+                      <p className="text-gray-300 text-sm mb-2">Date & Time</p>
+                      <p className="text-xl font-semibold">
+                        {selectedDate && formatDate(selectedDate)} at{" "}
+                        {selectedTime}
+                      </p>
                     </div>
-                  </div>
-
-                  <div className="border-t border-[#3f4e4f]/20 pt-4">
-                    <div className="flex justify-between items-center">
-                      <span className="font-poppins text-[#3f4e4f]">
-                        Total Amount
-                      </span>
-                      <span className="font-bebas-neue text-2xl text-[#a27b5b]">
+                    <div>
+                      <p className="text-gray-300 text-sm mb-2">Amount</p>
+                      <p className="text-3xl font-bold text-[#b8966f]">
                         {formatCurrency(selectedDuration.price)}
-                      </span>
+                      </p>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <button
-                  onClick={resetBooking}
-                  className="bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] text-white font-poppins font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-2xl hover:shadow-xl transition-all duration-300 hover:scale-105 flex-1 sm:flex-none"
-                >
-                  Book Another Session
-                </button>
-                <button className="bg-white text-[#2c3639] border border-[#3f4e4f]/30 font-poppins font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-2xl hover:shadow-lg transition-all duration-300 hover:scale-105 flex-1 sm:flex-none hover:border-[#a27b5b]">
-                  Download Calendar
-                </button>
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <button
+                    onClick={resetBooking}
+                    className="group relative overflow-hidden bg-gradient-to-r from-[#a27b5b] to-[#b8966f] text-white font-semibold px-8 py-4 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#b8966f] to-[#a27b5b] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <Calendar className="w-5 h-5 relative z-10 group-hover:rotate-12 transition-transform" />
+                    <span className="relative z-10">Book Another Session</span>
+                    <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-2 transition-transform" />
+                  </button>
+                  <button className="bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 font-semibold px-8 py-4 rounded-2xl hover:shadow-xl transition-all duration-300 hover:scale-105 hover:border-[#a27b5b] hover:text-[#b8966f] hover:bg-white/20">
+                    Download Calendar
+                  </button>
+                </div>
+
+                {/* Support Note */}
+                <p className="text-gray-400 text-sm mt-10">
+                  Need to reschedule? Contact us at{" "}
+                  <a
+                    href="mailto:info@ebcomtechnologies.com"
+                    className="text-[#b8966f] hover:text-[#a27b5b] font-semibold transition-colors"
+                  >
+                    info@ebcomtechnologies.com
+                  </a>
+                </p>
               </div>
             </div>
           </div>
@@ -416,547 +398,847 @@ export default function ScheduleConsultation() {
   }
 
   return (
-    <div
-      className={`min-h-screen bg-gradient-to-br from-[#dcd7c9]/30 to-white py-4 sm:py-8 px-3 sm:px-6 lg:px-8 ${bebasNeue.variable} ${poppins.variable}`}
-    >
-      <div className="max-w-7xl mx-auto">
-        {/* Enhanced Logo Header */}
-        <div className="text-center mb-6 sm:mb-8">
-          <div className="inline-flex items-center gap-4 bg-white/90 backdrop-blur-sm rounded-3xl px-6 sm:px-8 py-4 shadow-2xl border border-[#a27b5b]/30">
-            <div className="relative w-14 h-14 sm:w-16 sm:h-16">
-              <Image
-                src="/logo.png"
-                alt="EBCOM"
-                fill
-                className="object-contain rounded-xl"
-                priority
-              />
-            </div>
-            <div className="text-left">
-              <h1 className="font-bebas-neue text-3xl sm:text-4xl text-[#2c3639] leading-none">
-                EBCOM TECHNOLOGIES
-              </h1>
-              <p className="font-poppins text-[#3f4e4f] text-xs sm:text-sm mt-1">
-                Schedule Consultation
-              </p>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100"></div>
+
+      {/* Animated Gradient Orbs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-r from-[#a27b5b]/10 to-[#b8966f]/10 rounded-full blur-3xl animate-spin-slow"></div>
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-r from-[#2c3639]/10 to-[#3f4e4f]/10 rounded-full blur-3xl animate-spin-slow reverse"></div>
+        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-gradient-to-r from-[#a27b5b]/5 to-transparent rounded-full blur-3xl animate-pulse delay-700"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-gradient-to-r from-[#3f4e4f]/5 to-transparent rounded-full blur-3xl animate-pulse delay-300"></div>
+
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 opacity-[0.03]">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `linear-gradient(to right, #a27b5b 1px, transparent 1px),
+                             linear-gradient(to bottom, #a27b5b 1px, transparent 1px)`,
+              backgroundSize: "50px 50px",
+            }}
+          ></div>
+        </div>
+
+        {/* Floating Elements */}
+        {Array.from({ length: 15 }).map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-3 h-3 bg-gradient-to-br from-[#a27b5b]/30 to-[#b8966f]/30 rounded-full animate-float"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${i * 0.3}s`,
+              animationDuration: `${4 + Math.random() * 6}s`,
+            }}
+          ></div>
+        ))}
+      </div>
+
+      <div className="relative z-10 py-8 px-4">
+        <div className="max-w-7xl mx-auto">
+          {/* Enhanced Header */}
+          <div className="text-center mb-12 relative">
+            <div className="inline-flex flex-col items-center gap-6">
+              {/* Animated Logo Container */}
+              <div className="relative group">
+                <div className="relative w-24 h-24 rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 p-5 shadow-2xl animate-pulse">
+                  <Image
+                    src="/logo.png"
+                    alt="EBCOM Technologies"
+                    width={80}
+                    height={80}
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+                <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-[#a27b5b] via-[#b8966f] to-[#a27b5b] opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-100"></div>
+              </div>
+
+              <div className="space-y-4">
+                {/* Animated Tagline */}
+                <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-900 to-gray-800 rounded-full group relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#a27b5b] to-[#b8966f] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <span className="text-white text-sm font-medium tracking-wide relative z-10">
+                    SCHEDULE CONSULTATION
+                  </span>
+                </div>
+
+                <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 tracking-tight relative">
+                  Book Your{" "}
+                  <span className="relative">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#a27b5b] via-[#b8966f] to-[#a27b5b] animate-gradient-x">
+                      Expert
+                    </span>
+                    <span className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-[#a27b5b] via-[#b8966f] to-[#a27b5b] rounded-full animate-pulse"></span>
+                  </span>{" "}
+                  Session
+                </h1>
+
+                <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+                  Connect with our specialists to transform your ideas into
+                  exceptional digital solutions
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Company Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          {[
-            { number: "500+", label: "Projects Delivered", icon: Briefcase },
-            { number: "7+", label: "Years Excellence", icon: Zap },
-            { number: "98%", label: "Client Satisfaction", icon: Users },
-          ].map((stat, index) => (
-            <div key={stat.label} className="text-center group">
-              <div className="w-12 h-12 bg-[#a27b5b]/20 rounded-2xl flex items-center justify-center mx-auto mb-2 group-hover:bg-[#a27b5b] transition-colors duration-300">
-                <stat.icon className="w-6 h-6 text-[#a27b5b] group-hover:text-[#dcd7c9] transition-colors duration-300" />
+          {/* Animated Stats Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+            {[
+              {
+                number: "300+",
+                label: "Projects Delivered",
+                icon: Trophy,
+                color: "from-[#2c3639] to-[#3f4e4f]",
+              },
+              {
+                number: "98%",
+                label: "Client Satisfaction",
+                icon: Star,
+                color: "from-[#a27b5b] to-[#b8966f]",
+              },
+              {
+                number: "7+ Years",
+                label: "Industry Excellence",
+                icon: Award,
+                color: "from-gray-900 to-gray-800",
+              },
+            ].map((stat, index) => (
+              <div key={stat.label} className="group relative">
+                <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-200 hover:shadow-2xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                  {/* Hover Effect */}
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
+                  />
+
+                  {/* Animated Border */}
+                  <div
+                    className={`absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-gradient-to-br ${stat.color} transition-all duration-500`}
+                  ></div>
+
+                  <div className="relative flex items-center gap-4">
+                    <div
+                      className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}
+                    >
+                      <stat.icon className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <div className="text-3xl font-bold text-gray-900">
+                        {stat.number}
+                      </div>
+                      <div className="text-gray-600 text-sm mt-1">
+                        {stat.label}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h3 className={`font-bebas-neue text-2xl text-[#2c3639]`}>
-                {stat.number}
-              </h3>
-              <p className={`font-poppins text-[#3f4e4f] text-xs mt-1`}>
-                {stat.label}
-              </p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        <div className="bg-white rounded-3xl shadow-2xl border border-[#a27b5b]/20 overflow-hidden">
-          {/* Enhanced Progress Steps */}
-          <div className="border-b border-[#dcd7c9] bg-white">
-            <div className="flex justify-center p-4 sm:p-6">
-              <div className="flex items-center space-x-4 sm:space-x-8">
-                {[
-                  { step: 1, label: "Service" },
-                  { step: 2, label: "Time" },
-                  { step: 3, label: "Details" },
-                  { step: 4, label: "Confirm" },
-                ].map(({ step, label }) => (
-                  <div key={step} className="flex items-center">
-                    <div className="flex flex-col items-center">
+          {/* Main Booking Card with Glass Effect */}
+          <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl border border-white/20 overflow-hidden relative">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-5">
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundImage: `radial-gradient(circle at 2px 2px, #a27b5b 1px, transparent 1px)`,
+                  backgroundSize: "40px 40px",
+                }}
+              ></div>
+            </div>
+
+            {/* Progress Steps */}
+            <div className="border-b border-white/30 bg-gradient-to-r from-white/50 to-white/30">
+              <div className="p-8">
+                <div className="flex items-center justify-between">
+                  {[
+                    { step: 1, label: "Select Service", icon: Target },
+                    { step: 2, label: "Pick Time", icon: CalendarDays },
+                    { step: 3, label: "Your Details", icon: User },
+                    { step: 4, label: "Confirm", icon: CheckCircle2 },
+                  ].map(({ step, label, icon: Icon }) => (
+                    <div key={step} className="flex flex-col items-center">
                       <button
-                        onClick={() => handleStepNavigation(step)}
-                        disabled={step > bookingStep}
-                        className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full font-poppins font-semibold transition-all duration-300 ${
+                        onClick={() =>
+                          bookingStep >= step && setBookingStep(step)
+                        }
+                        className={`relative flex items-center justify-center w-16 h-16 rounded-2xl transition-all duration-500 ${
                           bookingStep >= step
-                            ? "bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] text-white shadow-lg hover:shadow-xl hover:scale-110 cursor-pointer"
-                            : "bg-[#dcd7c9] text-[#3f4e4f] cursor-not-allowed"
+                            ? "bg-gradient-to-br from-[#a27b5b] to-[#b8966f] text-white shadow-lg scale-110 cursor-pointer ring-4 ring-[#a27b5b]/20 animate-pulse"
+                            : "bg-gray-100/50 text-gray-400 cursor-not-allowed backdrop-blur-sm"
                         }`}
                       >
-                        {bookingStep > step ? (
-                          <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                        ) : (
-                          step
+                        <Icon className="w-6 h-6" />
+                        {bookingStep > step && (
+                          <div className="absolute -top-1 -right-1 w-6 h-6 bg-[#a27b5b] rounded-full flex items-center justify-center animate-bounce">
+                            <Check className="w-3 h-3 text-white" />
+                          </div>
                         )}
                       </button>
                       <span
-                        className={`font-poppins text-xs mt-2 hidden sm:block ${
+                        className={`mt-3 text-sm font-medium ${
                           bookingStep >= step
-                            ? "text-[#2c3639] font-medium cursor-pointer hover:text-[#a27b5b] transition-colors"
-                            : "text-[#3f4e4f]/60 cursor-not-allowed"
+                            ? "text-gray-900"
+                            : "text-gray-400"
                         }`}
-                        onClick={() => handleStepNavigation(step)}
                       >
                         {label}
                       </span>
                     </div>
-                    {step < 4 && (
-                      <div
-                        className={`w-8 sm:w-16 h-1 mx-2 sm:mx-4 transition-all duration-300 ${
-                          bookingStep > step
-                            ? "bg-gradient-to-r from-[#2c3639] to-[#3f4e4f]"
-                            : "bg-[#dcd7c9]"
-                        }`}
-                      />
-                    )}
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8 p-4 sm:p-6 lg:p-8">
-            {/* Left Side - Service & Calendar */}
-            <div className="space-y-6 sm:space-y-8">
-              {/* Enhanced Service Selection */}
-              {bookingStep === 1 && (
-                <div
-                  className={`space-y-6 transition-all duration-300 ${
-                    showServiceGrid
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-4 absolute"
-                  }`}
-                >
-                  <div className="text-center sm:text-left">
-                    <h2 className="font-bebas-neue text-3xl sm:text-4xl text-[#2c3639] mb-2">
-                      Choose Your Service
-                    </h2>
-                    <p className="font-poppins text-[#3f4e4f] text-base sm:text-lg">
-                      Select the service you'd like to discuss with our experts
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                    {services.map((service) => {
-                      const IconComponent = service.icon;
-                      return (
-                        <button
-                          key={service.id}
-                          onClick={() => handleServiceSelect(service)}
-                          className="group p-4 sm:p-6 rounded-2xl border-2 border-[#dcd7c9] hover:border-[#a27b5b] hover:shadow-xl transition-all duration-300 text-left bg-white hover:scale-105"
-                        >
-                          <div
-                            className={`w-12 h-12 rounded-xl ${service.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}
-                          >
-                            <IconComponent className="w-6 h-6 text-white" />
-                          </div>
-                          <h3 className="font-bebas-neue text-xl sm:text-2xl text-[#2c3639] mb-2 leading-tight">
-                            {service.name}
-                          </h3>
-                          <p className="font-poppins text-[#3f4e4f] text-xs sm:text-sm mb-4 leading-relaxed">
-                            {service.description}
-                          </p>
-                          <div className="flex flex-wrap gap-2">
-                            {service.durations.map((duration) => (
-                              <span
-                                key={duration.length}
-                                className="px-2 sm:px-3 py-1 bg-[#dcd7c9] text-[#3f4e4f] rounded-full font-poppins text-xs font-medium"
-                              >
-                                {duration.label}:{" "}
-                                {formatCurrency(duration.price)}
-                              </span>
-                            ))}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {/* Enhanced Calendar & Time Selection */}
-              {(bookingStep === 2 || bookingStep === 3) && (
-                <div
-                  className={`space-y-6 transition-all duration-300 ${
-                    !showServiceGrid
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-4"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
+            <div className="grid lg:grid-cols-2 gap-8 p-8 relative z-10">
+              {/* Left Side - Service Selection & Scheduling */}
+              <div className="space-y-8">
+                {/* Service Selection */}
+                {bookingStep === 1 && (
+                  <div className="space-y-8">
                     <div>
-                      <h2 className="font-bebas-neue text-3xl sm:text-4xl text-[#2c3639]">
-                        Select Date & Time
+                      <h2 className="text-3xl font-bold text-gray-900 mb-3 animate-fade-in">
+                        Choose Your Service
                       </h2>
-                      <p className="font-poppins text-[#3f4e4f] text-sm mt-1">
-                        {selectedService.name}
+                      <p className="text-gray-600 animate-fade-in-delay">
+                        Select the specialized service you'd like to discuss
+                        with our experts
                       </p>
                     </div>
-                    <button
-                      onClick={handleBackToServices}
-                      className="font-poppins text-[#a27b5b] hover:text-[#b8966f] font-medium text-sm bg-[#a27b5b]/10 hover:bg-[#a27b5b]/20 px-4 py-2 rounded-xl transition-all duration-300"
-                    >
-                      Change Service
-                    </button>
-                  </div>
 
-                  {/* Enhanced Duration Selection */}
-                  <div className="bg-[#dcd7c9]/30 rounded-2xl p-4 sm:p-6 border border-[#a27b5b]/20">
-                    <h3 className="font-bebas-neue text-xl sm:text-2xl text-[#2c3639] mb-4">
-                      Consultation Duration
-                    </h3>
-                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                      {selectedService.durations.map((duration) => (
-                        <button
-                          key={duration.length}
-                          onClick={() => setSelectedDuration(duration)}
-                          className={`p-4 rounded-xl border-2 transition-all duration-300 text-left ${
-                            selectedDuration.length === duration.length
-                              ? "border-[#a27b5b] bg-white shadow-lg scale-105"
-                              : "border-[#dcd7c9] hover:border-[#a27b5b]/50 bg-white"
-                          }`}
-                        >
-                          <div className="font-bebas-neue text-lg sm:text-xl text-[#2c3639]">
-                            {duration.label}
-                          </div>
-                          <div className="font-poppins font-bold text-[#a27b5b] text-sm sm:text-base">
-                            {formatCurrency(duration.price)}
-                          </div>
-                          <div className="font-poppins text-[#3f4e4f] text-xs mt-1">
-                            In-depth consultation
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Enhanced Calendar */}
-                  <div className="bg-white rounded-2xl border border-[#dcd7c9] p-4 sm:p-6 shadow-sm">
-                    <div className="flex items-center justify-between mb-6">
-                      <button
-                        onClick={() => navigateMonth("prev")}
-                        className="p-2 hover:bg-[#dcd7c9] rounded-xl transition-colors"
-                      >
-                        <ChevronLeft className="w-5 h-5 text-[#3f4e4f]" />
-                      </button>
-
-                      <h3 className="font-bebas-neue text-2xl sm:text-3xl text-[#2c3639]">
-                        {currentMonth.toLocaleDateString("en-US", {
-                          month: "long",
-                          year: "numeric",
-                        })}
-                      </h3>
-
-                      <button
-                        onClick={() => navigateMonth("next")}
-                        className="p-2 hover:bg-[#dcd7c9] rounded-xl transition-colors"
-                      >
-                        <ChevronRight className="w-5 h-5 text-[#3f4e4f]" />
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-7 gap-1 mb-3">
-                      {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-                        (day) => (
-                          <div
-                            key={day}
-                            className="text-center font-poppins text-sm font-medium text-[#3f4e4f] py-2"
-                          >
-                            {day.substring(0, 1)}
-                          </div>
-                        ),
-                      )}
-                    </div>
-
-                    <div className="grid grid-cols-7 gap-1">
-                      {days.map(({ date, isCurrentMonth }, index) => {
-                        const isToday =
-                          date.toDateString() === today.toDateString();
-                        const isSelected =
-                          selectedDate &&
-                          date.toDateString() === selectedDate.toDateString();
-                        const isPast = date < today && !isToday;
-
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {services.map((service, index) => {
+                        const IconComponent = service.icon;
                         return (
                           <button
-                            key={index}
-                            onClick={() =>
-                              !isPast && isCurrentMonth && setSelectedDate(date)
-                            }
-                            disabled={isPast || !isCurrentMonth}
-                            className={`h-10 sm:h-12 rounded-xl font-poppins font-medium transition-all duration-300 ${
-                              isSelected
-                                ? "bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] text-white shadow-lg scale-105"
-                                : isToday
-                                  ? "bg-[#a27b5b]/20 text-[#a27b5b] border-2 border-[#a27b5b]/30"
-                                  : isPast
-                                    ? "text-[#dcd7c9] cursor-not-allowed"
-                                    : !isCurrentMonth
-                                      ? "text-[#dcd7c9] cursor-not-allowed"
-                                      : "text-[#3f4e4f] hover:bg-[#dcd7c9] hover:scale-105"
-                            }`}
+                            key={service.id}
+                            onClick={() => {
+                              setSelectedService(service);
+                              setSelectedDuration(service.durations[0]);
+                              setBookingStep(2);
+                            }}
+                            className="group relative bg-white/90 backdrop-blur-sm rounded-2xl border-2 border-gray-200 p-6 text-left hover:border-gray-900 hover:shadow-2xl transition-all duration-300 hover:scale-105 animate-fade-in"
+                            style={{ animationDelay: `${index * 0.1}s` }}
                           >
-                            {date.getDate()}
+                            {/* Glow Effect */}
+                            <div
+                              className={`absolute inset-0 ${service.gradient} opacity-0 group-hover:opacity-20 rounded-2xl blur-xl transition-opacity duration-500`}
+                            ></div>
+
+                            <div className="relative z-10">
+                              <div
+                                className={`w-14 h-14 rounded-xl ${service.gradient} flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg`}
+                              >
+                                <IconComponent className="w-7 h-7 text-white" />
+                              </div>
+                              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                {service.name}
+                              </h3>
+                              <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+                                {service.description}
+                              </p>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  {service.features
+                                    .slice(0, 2)
+                                    .map((feature, idx) => (
+                                      <span
+                                        key={idx}
+                                        className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium group-hover:bg-gray-200 transition-colors"
+                                      >
+                                        {feature}
+                                      </span>
+                                    ))}
+                                </div>
+                                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-gray-900 group-hover:translate-x-2 transition-all duration-300" />
+                              </div>
+                            </div>
                           </button>
                         );
                       })}
                     </div>
                   </div>
+                )}
 
-                  {/* Enhanced Time Slots */}
-                  {selectedDate && (
-                    <div className="bg-white rounded-2xl border border-[#dcd7c9] p-4 sm:p-6 shadow-sm">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-bebas-neue text-xl sm:text-2xl text-[#2c3639]">
-                          Available Time Slots
-                        </h3>
-                        <div className="font-poppins text-[#3f4e4f] text-sm">
-                          {selectedDate && formatDate(selectedDate)}
+                {/* Time Selection */}
+                {(bookingStep === 2 || bookingStep === 3) && (
+                  <div className="space-y-8">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-3xl font-bold text-gray-900 mb-2 animate-fade-in">
+                          Select Date & Time
+                        </h2>
+                        <div className="flex items-center gap-3 animate-fade-in-delay">
+                          <div
+                            className={`w-10 h-10 rounded-xl ${selectedService.gradient} flex items-center justify-center shadow-lg group-hover:animate-pulse`}
+                          >
+                            <selectedService.icon className="w-5 h-5 text-white" />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-900">
+                              {selectedService.name}
+                            </p>
+                            <p className="text-gray-600 text-sm">
+                              {selectedDuration.label} •{" "}
+                              {formatCurrency(selectedDuration.price)}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                      <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
-                        {timeSlots.map((time) => (
+                      <button
+                        onClick={() => setBookingStep(1)}
+                        className="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl transition-colors duration-300 text-sm font-medium hover:scale-105 active:scale-95"
+                      >
+                        Change Service
+                      </button>
+                    </div>
+
+                    {/* Duration Selection */}
+                    <div className="bg-gradient-to-br from-white/50 to-white/30 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-lg">
+                      <h3 className="text-xl font-bold text-gray-900 mb-4">
+                        Consultation Duration
+                      </h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        {selectedService.durations.map((duration) => (
                           <button
-                            key={time}
-                            onClick={() => {
-                              setSelectedTime(time);
-                              setBookingStep(3);
-                            }}
-                            className={`p-3 rounded-xl border-2 transition-all duration-300 ${
-                              selectedTime === time
-                                ? "border-[#a27b5b] bg-[#a27b5b]/10 shadow-md scale-105"
-                                : "border-[#dcd7c9] hover:border-[#a27b5b] hover:scale-105 bg-white"
+                            key={duration.length}
+                            onClick={() => setSelectedDuration(duration)}
+                            className={`p-5 rounded-xl border-2 transition-all duration-300 text-left relative overflow-hidden group ${
+                              selectedDuration.length === duration.length
+                                ? "border-[#a27b5b] bg-gradient-to-br from-[#a27b5b]/10 to-[#b8966f]/10 shadow-lg scale-105"
+                                : "border-gray-200 hover:border-[#a27b5b] bg-white/50 backdrop-blur-sm"
                             }`}
                           >
-                            <div className="font-poppins font-semibold text-[#2c3639] text-sm sm:text-base">
-                              {time}
+                            {/* Hover Effect */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-[#a27b5b] to-[#b8966f] opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+
+                            <div className="flex items-center justify-between mb-2 relative z-10">
+                              <div className="text-lg font-bold">
+                                {duration.label}
+                              </div>
+                              <Clock4
+                                className={`w-5 h-5 ${
+                                  selectedDuration.length === duration.length
+                                    ? "text-[#a27b5b]"
+                                    : "text-gray-400"
+                                }`}
+                              />
+                            </div>
+                            <div
+                              className={`text-2xl font-bold mb-1 relative z-10 ${
+                                selectedDuration.length === duration.length
+                                  ? "text-[#a27b5b]"
+                                  : "text-gray-900"
+                              }`}
+                            >
+                              {formatCurrency(duration.price)}
+                            </div>
+                            <div
+                              className={`text-sm relative z-10 ${
+                                selectedDuration.length === duration.length
+                                  ? "text-gray-600"
+                                  : "text-gray-500"
+                              }`}
+                            >
+                              Comprehensive expert consultation
                             </div>
                           </button>
                         ))}
                       </div>
                     </div>
-                  )}
-                </div>
-              )}
-            </div>
 
-            {/* Right Side - Enhanced Booking Summary & Form */}
-            <div className="space-y-6 sm:space-y-8">
-              {/* Enhanced Booking Summary */}
-              <div className="bg-gradient-to-br from-[#2c3639] to-[#3f4e4f] rounded-2xl p-4 sm:p-6 text-white shadow-xl">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                    <selectedService.icon className="w-5 h-5 text-white" />
-                  </div>
-                  <h2 className="font-bebas-neue text-2xl sm:text-3xl">
-                    Booking Summary
-                  </h2>
-                </div>
+                    {/* Calendar */}
+                    <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-white/50 p-6 shadow-lg">
+                      <div className="flex items-center justify-between mb-6">
+                        <button
+                          onClick={() =>
+                            setCurrentMonth(
+                              new Date(
+                                currentMonth.setMonth(
+                                  currentMonth.getMonth() - 1,
+                                ),
+                              ),
+                            )
+                          }
+                          className="p-3 hover:bg-gray-100 rounded-xl transition-colors hover:scale-105 active:scale-95"
+                        >
+                          <ChevronLeft className="w-5 h-5 text-gray-700" />
+                        </button>
 
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center py-2 border-b border-white/20">
-                    <span className="font-poppins opacity-90">Service:</span>
-                    <span className="font-poppins font-semibold text-right">
-                      {selectedService.name}
-                    </span>
-                  </div>
+                        <h3 className="text-2xl font-bold text-gray-900">
+                          {currentMonth.toLocaleDateString("en-US", {
+                            month: "long",
+                            year: "numeric",
+                          })}
+                        </h3>
 
-                  <div className="flex justify-between items-center py-2 border-b border-white/20">
-                    <span className="font-poppins opacity-90">Duration:</span>
-                    <span className="font-poppins font-semibold">
-                      {selectedDuration.label}
-                    </span>
-                  </div>
+                        <button
+                          onClick={() =>
+                            setCurrentMonth(
+                              new Date(
+                                currentMonth.setMonth(
+                                  currentMonth.getMonth() + 1,
+                                ),
+                              ),
+                            )
+                          }
+                          className="p-3 hover:bg-gray-100 rounded-xl transition-colors hover:scale-105 active:scale-95"
+                        >
+                          <ChevronRight className="w-5 h-5 text-gray-700" />
+                        </button>
+                      </div>
 
-                  {selectedDate && (
-                    <div className="flex justify-between items-center py-2 border-b border-white/20">
-                      <span className="font-poppins opacity-90">Date:</span>
-                      <span className="font-poppins font-semibold text-right text-sm">
-                        {formatDate(selectedDate)}
-                      </span>
+                      <div className="grid grid-cols-7 gap-2">
+                        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                          (day) => (
+                            <div
+                              key={day}
+                              className="text-center font-medium text-gray-700 py-3 text-sm"
+                            >
+                              {day}
+                            </div>
+                          ),
+                        )}
+
+                        {days.map((date, index) => {
+                          const isToday =
+                            date.toDateString() === today.toDateString();
+                          const isSelected =
+                            selectedDate &&
+                            date.toDateString() === selectedDate.toDateString();
+                          const isPast = date < today && !isToday;
+
+                          return (
+                            <button
+                              key={index}
+                              onClick={() => !isPast && setSelectedDate(date)}
+                              disabled={isPast}
+                              className={`h-12 rounded-xl font-medium transition-all duration-300 relative overflow-hidden group ${
+                                isSelected
+                                  ? "bg-gradient-to-br from-[#a27b5b] to-[#b8966f] text-white shadow-lg scale-105"
+                                  : isToday
+                                    ? "bg-gradient-to-br from-[#a27b5b] to-[#b8966f] text-white"
+                                    : isPast
+                                      ? "text-gray-300 cursor-not-allowed"
+                                      : "text-gray-700 hover:bg-gray-100 hover:scale-105"
+                              }`}
+                            >
+                              {/* Hover Effect */}
+                              {!isPast && !isToday && !isSelected && (
+                                <div className="absolute inset-0 bg-gradient-to-br from-[#a27b5b] to-[#b8966f] opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+                              )}
+                              <span className="relative z-10">
+                                {date.getDate()}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
-                  )}
 
-                  {selectedTime && (
-                    <div className="flex justify-between items-center py-2 border-b border-white/20">
-                      <span className="font-poppins opacity-90">Time:</span>
-                      <span className="font-poppins font-semibold">
-                        {selectedTime}
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="pt-3 mt-2">
-                    <div className="flex justify-between items-center">
-                      <span className="font-poppins opacity-90 text-lg">
-                        Total Amount:
-                      </span>
-                      <span className="font-bebas-neue text-3xl text-[#a27b5b]">
-                        {formatCurrency(selectedDuration.price)}
-                      </span>
-                    </div>
+                    {/* Time Slots */}
+                    {selectedDate && (
+                      <div className="bg-white/50 backdrop-blur-sm rounded-2xl border border-white/50 p-6 shadow-lg">
+                        <div className="flex items-center justify-between mb-6">
+                          <h3 className="text-xl font-bold text-gray-900">
+                            Available Time Slots
+                          </h3>
+                          <div className="flex items-center gap-2 text-gray-700">
+                            <Calendar className="w-4 h-4" />
+                            <span className="font-medium">
+                              {selectedDate && formatDate(selectedDate)}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                          {timeSlots.map((time, index) => (
+                            <button
+                              key={time}
+                              onClick={() => {
+                                setSelectedTime(time);
+                                setBookingStep(3);
+                              }}
+                              className={`p-4 rounded-xl border-2 transition-all duration-300 relative overflow-hidden group ${
+                                selectedTime === time
+                                  ? "border-[#a27b5b] bg-gradient-to-br from-[#a27b5b]/10 to-[#b8966f]/10 shadow-lg scale-105"
+                                  : "border-gray-200 hover:border-[#a27b5b] hover:scale-105 bg-white/50 backdrop-blur-sm"
+                              }`}
+                            >
+                              {/* Hover Effect */}
+                              <div className="absolute inset-0 bg-gradient-to-br from-[#a27b5b] to-[#b8966f] opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+                              <div className="font-semibold text-center relative z-10">
+                                {time}
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
-
-                {selectedDate && selectedTime && (
-                  <button
-                    onClick={() => setBookingStep(4)}
-                    className="w-full mt-6 bg-[#a27b5b] text-white font-poppins font-semibold py-3 sm:py-4 rounded-xl hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl hover:bg-[#b8966f]"
-                  >
-                    Continue to Details
-                  </button>
                 )}
               </div>
 
-              {/* Enhanced Booking Form */}
-              {bookingStep === 4 && (
-                <div className="bg-white rounded-2xl border border-[#dcd7c9] p-4 sm:p-6 shadow-sm">
-                  <h2 className="font-bebas-neue text-2xl sm:text-3xl text-[#2c3639] mb-6">
-                    Your Information
-                  </h2>
+              {/* Right Side - Booking Summary & Form */}
+              <div className="space-y-8">
+                {/* Booking Summary */}
+                <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white shadow-2xl relative overflow-hidden">
+                  {/* Animated Background */}
+                  <div className="absolute inset-0 opacity-10">
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        backgroundImage: `radial-gradient(circle at 20% 30%, #a27b5b 1px, transparent 1px)`,
+                        backgroundSize: "50px 50px",
+                      }}
+                    ></div>
+                  </div>
 
-                  <form
-                    onSubmit={handleFormSubmit}
-                    className="space-y-4 sm:space-y-6"
-                  >
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="flex items-center gap-2 font-poppins font-medium text-[#2c3639] mb-2">
-                          <User className="w-4 h-4 text-[#a27b5b]" />
-                          Full Name
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={formData.name}
-                          onChange={(e) =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              name: e.target.value,
-                            }))
-                          }
-                          className="w-full p-3 border-2 border-[#dcd7c9] rounded-xl font-poppins focus:border-[#a27b5b] focus:ring-2 focus:ring-[#a27b5b]/20 transition-all duration-300"
-                          placeholder="Enter your full name"
-                        />
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center animate-pulse">
+                        <selectedService.icon className="w-6 h-6 text-white" />
                       </div>
-
-                      <div>
-                        <label className="flex items-center gap-2 font-poppins font-medium text-[#2c3639] mb-2">
-                          <Mail className="w-4 h-4 text-[#a27b5b]" />
-                          Email Address
-                        </label>
-                        <input
-                          type="email"
-                          required
-                          value={formData.email}
-                          onChange={(e) =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              email: e.target.value,
-                            }))
-                          }
-                          className="w-full p-3 border-2 border-[#dcd7c9] rounded-xl font-poppins focus:border-[#a27b5b] focus:ring-2 focus:ring-[#a27b5b]/20 transition-all duration-300"
-                          placeholder="Enter your email"
-                        />
-                      </div>
+                      <h2 className="text-3xl font-bold">Booking Summary</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="flex items-center gap-2 font-poppins font-medium text-[#2c3639] mb-2">
-                          <Phone className="w-4 h-4 text-[#a27b5b]" />
-                          Phone Number
-                        </label>
-                        <input
-                          type="tel"
-                          required
-                          value={formData.phone}
-                          onChange={(e) =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              phone: e.target.value,
-                            }))
-                          }
-                          className="w-full p-3 border-2 border-[#dcd7c9] rounded-xl font-poppins focus:border-[#a27b5b] focus:ring-2 focus:ring-[#a27b5b]/20 transition-all duration-300"
-                          placeholder="Your phone number"
-                        />
+                    <div className="space-y-6">
+                      <div className="flex items-center justify-between py-4 border-b border-white/10">
+                        <div className="space-y-1">
+                          <p className="text-gray-300 text-sm">Service</p>
+                          <p className="font-semibold text-lg">
+                            {selectedService.name}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-gray-300 text-sm">Duration</p>
+                          <p className="font-semibold text-lg">
+                            {selectedDuration.label}
+                          </p>
+                        </div>
                       </div>
 
-                      <div>
-                        <label className="flex items-center gap-2 font-poppins font-medium text-[#2c3639] mb-2">
-                          <Building className="w-4 h-4 text-[#a27b5b]" />
-                          Business/Company
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={formData.business}
-                          onChange={(e) =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              business: e.target.value,
-                            }))
-                          }
-                          className="w-full p-3 border-2 border-[#dcd7c9] rounded-xl font-poppins focus:border-[#a27b5b] focus:ring-2 focus:ring-[#a27b5b]/20 transition-all duration-300"
-                          placeholder="Your business name"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="flex items-center gap-2 font-poppins font-medium text-[#2c3639] mb-2">
-                        <FileText className="w-4 h-4 text-[#a27b5b]" />
-                        Project Notes
-                      </label>
-                      <textarea
-                        value={formData.notes}
-                        onChange={(e) =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            notes: e.target.value,
-                          }))
-                        }
-                        rows={4}
-                        className="w-full p-3 border-2 border-[#dcd7c9] rounded-xl font-poppins focus:border-[#a27b5b] focus:ring-2 focus:ring-[#a27b5b]/20 transition-all duration-300 resize-none"
-                        placeholder="Tell us about your project goals, timeline, and any specific requirements..."
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] text-white font-poppins font-semibold py-4 rounded-xl hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-lg"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          Processing Booking...
-                        </>
-                      ) : (
-                        <>
-                          <CreditCard className="w-5 h-5" />
-                          Confirm Booking -{" "}
-                          {formatCurrency(selectedDuration.price)}
-                        </>
+                      {selectedDate && (
+                        <div className="flex items-center justify-between py-4 border-b border-white/10">
+                          <div className="space-y-1">
+                            <p className="text-gray-300 text-sm">Date</p>
+                            <p className="font-semibold">
+                              {formatDate(selectedDate)}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-gray-300 text-sm">Time</p>
+                            <p className="font-semibold">
+                              {selectedTime || "Select time"}
+                            </p>
+                          </div>
+                        </div>
                       )}
-                    </button>
-                  </form>
+
+                      <div className="pt-4">
+                        <div className="flex items-center justify-between mb-4">
+                          <p className="text-gray-300">Amount</p>
+                          <p className="text-4xl font-bold text-white animate-pulse">
+                            {formatCurrency(selectedDuration.price)}
+                          </p>
+                        </div>
+
+                        {selectedDate && selectedTime && (
+                          <button
+                            onClick={() => setBookingStep(4)}
+                            className="group relative w-full bg-gradient-to-r from-[#a27b5b] to-[#b8966f] text-white font-semibold py-4 rounded-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3 overflow-hidden"
+                          >
+                            {/* Shimmer Effect */}
+                            <div className="absolute inset-0 translate-x-full group-hover:-translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                            <span>Continue to Details</span>
+                            <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              )}
+
+                {/* Booking Form */}
+                {bookingStep === 4 && (
+                  <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-white/20 p-8 shadow-xl relative overflow-hidden">
+                    {/* Background Pattern */}
+                    <div className="absolute inset-0 opacity-5">
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          backgroundImage: `linear-gradient(45deg, #a27b5b 1px, transparent 1px)`,
+                          backgroundSize: "30px 30px",
+                        }}
+                      ></div>
+                    </div>
+
+                    <div className="relative z-10">
+                      <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                        Your Information
+                      </h2>
+                      <p className="text-gray-600 mb-8">
+                        Please provide your details to complete the booking
+                      </p>
+
+                      <form onSubmit={handleFormSubmit} className="space-y-6">
+                        <div className="grid md:grid-cols-2 gap-6">
+                          <div className="space-y-2">
+                            <label className="flex items-center gap-2 font-semibold text-gray-900">
+                              <User className="w-4 h-4 text-gray-700" />
+                              Full Name
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              value={formData.name}
+                              onChange={(e) =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  name: e.target.value,
+                                }))
+                              }
+                              className="w-full p-4 border-2 border-gray-200 rounded-xl font-medium focus:border-[#a27b5b] focus:ring-4 focus:ring-[#a27b5b]/20 transition-all duration-300 bg-white/50 backdrop-blur-sm"
+                              placeholder="John Doe"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <label className="flex items-center gap-2 font-semibold text-gray-900">
+                              <Mail className="w-4 h-4 text-gray-700" />
+                              Email Address
+                            </label>
+                            <input
+                              type="email"
+                              required
+                              value={formData.email}
+                              onChange={(e) =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  email: e.target.value,
+                                }))
+                              }
+                              className="w-full p-4 border-2 border-gray-200 rounded-xl font-medium focus:border-[#a27b5b] focus:ring-4 focus:ring-[#a27b5b]/20 transition-all duration-300 bg-white/50 backdrop-blur-sm"
+                              placeholder="john@example.com"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <label className="flex items-center gap-2 font-semibold text-gray-900">
+                              <Phone className="w-4 h-4 text-gray-700" />
+                              Phone Number
+                            </label>
+                            <input
+                              type="tel"
+                              required
+                              value={formData.phone}
+                              onChange={(e) =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  phone: e.target.value,
+                                }))
+                              }
+                              className="w-full p-4 border-2 border-gray-200 rounded-xl font-medium focus:border-[#a27b5b] focus:ring-4 focus:ring-[#a27b5b]/20 transition-all duration-300 bg-white/50 backdrop-blur-sm"
+                              placeholder="+234 800 000 0000"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <label className="flex items-center gap-2 font-semibold text-gray-900">
+                              <Building className="w-4 h-4 text-gray-700" />
+                              Business/Company
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              value={formData.business}
+                              onChange={(e) =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  business: e.target.value,
+                                }))
+                              }
+                              className="w-full p-4 border-2 border-gray-200 rounded-xl font-medium focus:border-[#a27b5b] focus:ring-4 focus:ring-[#a27b5b]/20 transition-all duration-300 bg-white/50 backdrop-blur-sm"
+                              placeholder="Company Name"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2 font-semibold text-gray-900">
+                            <FileText className="w-4 h-4 text-gray-700" />
+                            Project Notes
+                          </label>
+                          <textarea
+                            value={formData.notes}
+                            onChange={(e) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                notes: e.target.value,
+                              }))
+                            }
+                            rows={4}
+                            className="w-full p-4 border-2 border-gray-200 rounded-xl font-medium focus:border-[#a27b5b] focus:ring-4 focus:ring-[#a27b5b]/20 transition-all duration-300 resize-none bg-white/50 backdrop-blur-sm"
+                            placeholder="Tell us about your project goals, timeline, and specific requirements..."
+                          />
+                        </div>
+
+                        <button
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="group relative w-full bg-gradient-to-r from-[#a27b5b] to-[#b8966f] text-white font-semibold py-5 rounded-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-lg overflow-hidden"
+                        >
+                          {/* Animated Background */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-[#b8966f] to-[#a27b5b] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                          {/* Shimmer Effect */}
+                          <div className="absolute inset-0 translate-x-full group-hover:-translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+
+                          {isSubmitting ? (
+                            <>
+                              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin relative z-10"></div>
+                              <span className="relative z-10">
+                                Processing Booking...
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <CreditCard className="w-6 h-6 relative z-10 group-hover:scale-110 transition-transform" />
+                              <span className="relative z-10">
+                                Confirm Booking •{" "}
+                                {formatCurrency(selectedDuration.price)}
+                              </span>
+                            </>
+                          )}
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
+          </div>
+
+          {/* Footer Note */}
+          <div className="mt-12 text-center text-gray-600 text-sm">
+            <p>
+              Need assistance? Contact our support team at{" "}
+              <a
+                href="mailto:info@ebcomtechnologies.com"
+                className="text-gray-900 font-semibold hover:text-[#a27b5b] transition-colors"
+              >
+                info@ebcomtechnologies.com
+              </a>
+            </p>
+            <p className="mt-2">
+              All consultations are confidential and backed by our quality
+              guarantee
+            </p>
           </div>
         </div>
       </div>
 
+      {/* Add custom animations */}
       <style jsx global>{`
-        .font-bebas-neue {
-          font-family: var(--font-bebas-neue), sans-serif;
+        @keyframes float {
+          0%,
+          100% {
+            transform: translateY(0) rotate(0deg);
+          }
+          50% {
+            transform: translateY(-20px) rotate(180deg);
+          }
         }
-        .font-poppins {
-          font-family: var(--font-poppins), sans-serif;
+
+        @keyframes gradient-x {
+          0%,
+          100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+        }
+
+        @keyframes spin-slow {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+        @keyframes bounce-slow {
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes pulse {
+          0%,
+          100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.5;
+          }
+        }
+
+        .animate-float {
+          animation: float infinite linear;
+        }
+
+        .animate-gradient-x {
+          background-size: 200% 200%;
+          animation: gradient-x 3s ease infinite;
+        }
+
+        .animate-spin-slow {
+          animation: spin-slow 20s linear infinite;
+        }
+
+        .animate-spin-slow.reverse {
+          animation-direction: reverse;
+        }
+
+        .animate-bounce-slow {
+          animation: bounce-slow 2s ease-in-out infinite;
+        }
+
+        .animate-fade-in {
+          animation: fade-in 0.6s ease-out forwards;
+        }
+
+        .animate-fade-in-delay {
+          animation: fade-in 0.6s ease-out 0.2s forwards;
+          opacity: 0;
+        }
+
+        .border-gradient-to-br {
+          border-image: linear-gradient(
+              to bottom right,
+              var(--tw-gradient-stops)
+            )
+            1;
         }
       `}</style>
     </div>

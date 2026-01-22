@@ -35,7 +35,7 @@ export default function AboutSection() {
   }, []);
 
   const stats = [
-    { number: "500+", label: "Projects Delivered", icon: CheckCircle },
+    { number: "300+", label: "Projects Delivered", icon: CheckCircle },
     { number: "98%", label: "Client Satisfaction", icon: TrendingUp },
     { number: "24/7", label: "Support Available", icon: Clock },
     { number: "7+", label: "Years Experience", icon: Award },
@@ -342,44 +342,6 @@ export default function AboutSection() {
                 </div>
               );
             })}
-          </div>
-        </div>
-
-        {/* CTA Section */}
-        <div className="bg-[#2c3639] rounded-2xl p-8 lg:p-12 text-center relative overflow-hidden">
-          {/* Background elements */}
-          <div className="absolute top-0 left-0 w-40 h-40 bg-[#a27b5b]/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-0 w-60 h-60 bg-[#3f4e4f]/10 rounded-full blur-3xl"></div>
-
-          <div className="relative z-10">
-            <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4">
-              Ready to Transform Your Business?
-            </h3>
-            <p className="text-[#dcd7c9] mb-8 max-w-2xl mx-auto">
-              Join hundreds of businesses who trust EBCom Technologies for their
-              digital transformation journey.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-8 py-3 bg-white text-[#2c3639] font-semibold rounded-lg hover:bg-gray-100 transition-colors shadow-lg hover:shadow-xl">
-                Start Your Project
-              </button>
-              <button className="px-8 py-3 bg-transparent text-white font-semibold rounded-lg border-2 border-white/30 hover:border-white/60 transition-colors">
-                Schedule Consultation
-              </button>
-            </div>
-
-            <div className="mt-8 flex items-center justify-center gap-4 text-sm text-[#dcd7c9]">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-[#a27b5b] rounded-full"></div>
-                <span>No hidden fees</span>
-              </div>
-              <div className="w-1 h-1 bg-[#dcd7c9]/30 rounded-full"></div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-[#a27b5b] rounded-full"></div>
-                <span>Free initial consultation</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
