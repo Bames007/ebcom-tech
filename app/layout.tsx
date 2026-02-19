@@ -8,6 +8,7 @@ import {
   Bebas_Neue,
 } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -107,6 +108,7 @@ export default function RootLayout({
       <body
         className={`${bebasNeue.variable} ${poppins.variable} ${gantari.variable} ${geistMono.variable} ${geistSans.variable} ${playfair.variable} antialiased`}
       >
+        <Analytics />
         {/* Professional tech background gradient */}
         <div className="fixed inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50/70 -z-10" />
 
