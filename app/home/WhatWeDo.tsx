@@ -1,667 +1,290 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Bebas_Neue, Poppins, Gantari } from "next/font/google";
-import {
-  ArrowRight,
-  Play,
-  Code,
-  Shield,
-  Sun,
-  Palette,
-  Smartphone,
-  Globe,
-  Zap,
-  Server,
-  Lock,
-  Users,
-  TrendingUp,
-  MessageCircle,
-  Lightbulb,
-  BarChart3,
-  Cloud,
-  Wifi,
-  Cctv,
-  Network,
-  Router,
-  Database,
-  Mail,
-  ShoppingCart,
-  Video,
-  Monitor,
-  Laptop,
-  HardDrive,
-  LucidePhone,
-  HeartHandshake,
-  ChevronRight,
-  CheckCircle,
-  Clock,
-  Award,
-} from "lucide-react";
+import { Space_Grotesk, Inter } from "next/font/google";
+import { ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
 
-// Font configurations
-const bebasNeue = Bebas_Neue({
-  weight: "400",
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-bebas-neue",
+  variable: "--font-space",
 });
 
-const poppins = Poppins({
-  weight: ["300", "400", "500", "600", "700"],
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-poppins",
+  variable: "--font-inter",
 });
 
-const gantari = Gantari({
-  weight: ["300", "400", "500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-gantari",
-});
-
-export default function WhatWeDo() {
-  const [mounted, setMounted] = useState(false);
+export default function MuseumServices() {
   const [activeCategory, setActiveCategory] = useState(0);
-  const [hoveredService, setHoveredService] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-
-    // Slower auto-rotation for 7 categories
-    const interval = setInterval(() => {
-      setActiveCategory((prev) => (prev + 1) % 7);
-    }, 6000);
-
-    return () => clearInterval(interval);
   }, []);
 
   const categories = [
     {
-      title: "Software Development",
-      icon: Code,
-      description: "Cutting-edge digital solutions for modern businesses",
-      color: "#2c3639",
+      id: "01",
+      title: "Digital Architecture",
+      subtitle: "Software Development",
+      description:
+        "Engineering digital structures that define the modern landscape. We prioritize clean lines, scalable logic, and intuitive user flows.",
       services: [
-        {
-          name: "Mobile Applications",
-          icon: Smartphone,
-          description: "iOS & Android apps built with latest technologies",
-        },
-        {
-          name: "Web Applications",
-          icon: Globe,
-          description: "Responsive, scalable web solutions",
-        },
-        {
-          name: "Enterprise Software",
-          icon: Server,
-          description: "Custom business management systems",
-        },
-        {
-          name: "E-commerce Solutions",
-          icon: ShoppingCart,
-          description: "Online stores and payment integrations",
-        },
-        {
-          name: "Cloud Solutions",
-          icon: Cloud,
-          description: "Secure cloud infrastructure and deployment",
-        },
+        "Mobile Applications",
+        "Web Ecosystems",
+        "Enterprise Systems",
+        "E-commerce",
+        "Cloud Infra",
       ],
     },
     {
-      title: "Security Solutions",
-      icon: Shield,
-      description: "Comprehensive protection for your assets and data",
-      color: "#a27b5b",
+      id: "02",
+      title: "The Shield",
+      subtitle: "Security Solutions",
+      description:
+        "Advanced protection for the physical and virtual. Our security protocols act as silent sentinels for your most valuable assets.",
       services: [
-        {
-          name: "CCTV Systems",
-          icon: Cctv,
-          description: "HD surveillance with remote monitoring",
-        },
-        {
-          name: "Solar Security",
-          icon: Sun,
-          description: "Eco-friendly security power solutions",
-        },
-        {
-          name: "Access Control",
-          icon: Lock,
-          description: "Advanced entry management systems",
-        },
-        {
-          name: "Alarm Systems",
-          icon: Shield,
-          description: "Intrusion detection and alert systems",
-        },
-        {
-          name: "Security Audits",
-          icon: BarChart3,
-          description: "Comprehensive security assessments",
-        },
+        "CCTV Surveillance",
+        "Solar Security",
+        "Access Control",
+        "Intrusion Detection",
+        "Security Audits",
       ],
     },
     {
-      title: "Networking & Communications",
-      icon: Network,
-      description: "Robust network infrastructure and communication systems",
-      color: "#3f4e4f",
+      id: "03",
+      title: "Connectivity",
+      subtitle: "Networking & Comms",
+      description:
+        "The invisible threads that bind business. High-performance infrastructure designed for seamless, uninterrupted global exchange.",
       services: [
-        {
-          name: "Cisco Networking",
-          icon: Router,
-          description: "Enterprise-grade Cisco network solutions",
-        },
-        {
-          name: "Structured Cabling",
-          icon: Network,
-          description: "Professional network cabling installation",
-        },
-        {
-          name: "Wireless Networks",
-          icon: Wifi,
-          description: "Secure and reliable WiFi solutions",
-        },
-        {
-          name: "VoIP Systems",
-          icon: LucidePhone,
-          description: "Voice over IP business phone systems",
-        },
-        {
-          name: "Network Security",
-          icon: Lock,
-          description: "Firewalls and network protection",
-        },
+        "Cisco Systems",
+        "Structured Cabling",
+        "Wireless Mesh",
+        "VoIP Solutions",
+        "Network Security",
       ],
     },
     {
-      title: "IT Infrastructure",
-      icon: Server,
-      description: "Complete IT systems and infrastructure solutions",
-      color: "#2c3639",
+      id: "04",
+      title: "Foundations",
+      subtitle: "IT Infrastructure",
+      description:
+        "The hardware and systems that power progress. Robust, reliable, and redundant systems for a world that never sleeps.",
       services: [
-        {
-          name: "Server Setup",
-          icon: Server,
-          description: "Business server installation and configuration",
-        },
-        {
-          name: "Hardware Solutions",
-          icon: Laptop,
-          description: "Computers, workstations, and peripherals",
-        },
-        {
-          name: "Data Storage",
-          icon: HardDrive,
-          description: "NAS, SAN, and backup solutions",
-        },
-        {
-          name: "Disaster Recovery",
-          icon: Shield,
-          description: "Business continuity and data protection",
-        },
-        {
-          name: "IT Procurement",
-          icon: ShoppingCart,
-          description: "Hardware and software sourcing",
-        },
+        "Server Ecosystems",
+        "Hardware Solutions",
+        "Data Storage",
+        "Disaster Recovery",
+        "IT Procurement",
       ],
     },
     {
-      title: "Branding & Digital Marketing",
-      icon: Palette,
-      description: "Creative solutions that make your brand stand out",
-      color: "#a27b5b",
+      id: "05",
+      title: "Visual Identity",
+      subtitle: "Branding & Marketing",
+      description:
+        "Curating your brand's narrative. We craft visual languages that resonate across cultures and digital touchpoints.",
       services: [
-        {
-          name: "Logo & Brand Identity",
-          icon: Users,
-          description: "Memorable brand identities and guidelines",
-        },
-        {
-          name: "Business Materials",
-          icon: TrendingUp,
-          description: "Flyers, brochures, and marketing collateral",
-        },
-        {
-          name: "Social Media Management",
-          icon: MessageCircle,
-          description: "Engaging social media content and strategy",
-        },
-        {
-          name: "Email Marketing",
-          icon: Mail,
-          description: "Newsletter and campaign management",
-        },
-        {
-          name: "Content Creation",
-          icon: Video,
-          description: "Photos, videos, and digital content",
-        },
+        "Brand Identity",
+        "Marketing Collateral",
+        "Social Strategy",
+        "Email Campaigns",
+        "Content Production",
       ],
     },
     {
-      title: "Consultation Services",
-      icon: MessageCircle,
-      description: "Strategic guidance for business and technology growth",
-      color: "#3f4e4f",
+      id: "06",
+      title: "The Strategy",
+      subtitle: "Consultation Services",
+      description:
+        "Intellectual guidance for complex growth. Navigating the intersection of business goals and technological possibility.",
       services: [
-        {
-          name: "Business Consultation",
-          icon: BarChart3,
-          description: "Strategic planning and business development",
-        },
-        {
-          name: "Tech Consultation",
-          icon: Lightbulb,
-          description: "Technology strategy and digital transformation",
-        },
-        {
-          name: "IT Infrastructure Planning",
-          icon: Server,
-          description: "Network and system architecture planning",
-        },
-        {
-          name: "Digital Strategy",
-          icon: TrendingUp,
-          description: "Online presence and marketing strategy",
-        },
-        {
-          name: "Project Planning",
-          icon: Zap,
-          description: "Roadmap development and implementation planning",
-        },
+        "Business Strategy",
+        "Digital Transformation",
+        "Infra Planning",
+        "Digital Roadmap",
+        "Project Planning",
       ],
     },
     {
-      title: "Support & Maintenance",
-      icon: Users,
-      description: "Ongoing support to keep your systems running smoothly",
-      color: "#2c3639",
+      id: "07",
+      title: "Continuity",
+      subtitle: "Support & Maintenance",
+      description:
+        "Everlasting vigilance. Our support systems ensure that your technological evolution is never interrupted.",
       services: [
-        {
-          name: "24/7 Technical Support",
-          icon: Users,
-          description: "Round-the-clock assistance and troubleshooting",
-        },
-        {
-          name: "System Maintenance",
-          icon: Server,
-          description: "Regular updates and performance optimization",
-        },
-        {
-          name: "Security Updates",
-          icon: Shield,
-          description: "Continuous security monitoring and patches",
-        },
-        {
-          name: "Hardware Maintenance",
-          icon: Monitor,
-          description: "Equipment servicing and replacements",
-        },
-        {
-          name: "Training & Onboarding",
-          icon: Lightbulb,
-          description: "Staff training and system onboarding",
-        },
+        "24/7 Technical Desk",
+        "System Optimization",
+        "Security Patching",
+        "Hardware Care",
+        "Staff Onboarding",
       ],
     },
   ];
 
-  const stats = [
-    { number: "300+", label: "Projects Completed", icon: CheckCircle },
-    { number: "75+", label: "Happy Clients", icon: Users },
-    { number: "24/7", label: "Support Available", icon: Clock },
-    { number: "98%", label: "Client Satisfaction", icon: TrendingUp },
-  ];
-
-  // Helper function to get icon color class based on color value
-  const getIconColorClass = (color: string) => {
-    switch (color) {
-      case "#2c3639":
-        return "text-[#2c3639]";
-      case "#a27b5b":
-        return "text-[#a27b5b]";
-      case "#3f4e4f":
-        return "text-[#3f4e4f]";
-      default:
-        return "text-[#2c3639]";
-    }
-  };
+  if (!mounted) return null;
 
   return (
     <section
-      className={`relative py-24 lg:py-32 overflow-hidden bg-white ${bebasNeue.variable} ${poppins.variable} ${gantari.variable}`}
+      className={`bg-[#0a0a0a] text-white py-16 md:py-24 min-h-screen selection:bg-[#a27b5b] ${spaceGrotesk.variable} ${inter.variable} font-sans`}
     >
-      {/* Enhanced Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Grid pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(44,54,57,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(44,54,57,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]" />
-
-        {/* Animated background elements */}
-        <div className="absolute -top-40 -right-32 w-80 h-80 bg-gradient-to-r from-[#a27b5b]/10 to-[#3f4e4f]/10 rounded-full blur-3xl opacity-10 animate-pulse" />
-        <div
-          className="absolute -bottom-40 -left-32 w-80 h-80 bg-gradient-to-r from-[#3f4e4f]/10 to-[#2c3639]/10 rounded-full blur-3xl opacity-10 animate-pulse"
-          style={{ animationDelay: "2s" }}
-        />
-
-        {/* Floating dots */}
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-[#a27b5b]/20 rounded-full animate-float"
-            style={{
-              top: `${10 + i * 10}%`,
-              left: `${5 + i * 12}%`,
-              animationDelay: `${i * 0.5}s`,
-              animationDuration: `${6 + i * 2}s`,
-            }}
-          />
-        ))}
-
-        {/* Animated lines */}
-        <div className="absolute inset-0 opacity-[0.02]">
-          <div className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#a27b5b] to-transparent" />
-          <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#3f4e4f] to-transparent" />
-          <div className="absolute top-3/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#2c3639] to-transparent" />
-        </div>
-      </div>
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#a27b5b]/10 border border-[#a27b5b]/20 mb-6">
-            <HeartHandshake className="w-4 h-4 text-[#a27b5b]" />
-            <span className="text-sm font-medium text-[#a27b5b] tracking-wider uppercase">
-              Comprehensive Solutions
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+        {/* Editorial Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-white/10 pb-12 mb-12 lg:mb-20">
+          <div className="max-w-2xl">
+            <span className="font-space text-[#a27b5b] tracking-[0.3em] uppercase text-[10px] md:text-sm mb-4 block">
+              Our Curated Works
             </span>
+            <h2 className="font-space text-4xl md:text-5xl lg:text-7xl font-light tracking-tight leading-none mb-6 lg:mb-8">
+              Services <br className="hidden md:block" />{" "}
+              <span className="italic font-serif opacity-80 text-2xl md:text-3xl lg:text-5xl">
+                & Solutions
+              </span>
+            </h2>
           </div>
-
-          <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-[#2c3639] mb-6">
-            Our <span className="text-[#a27b5b]">Services</span>
-          </h2>
-
-          <p className="text-lg lg:text-xl text-[#3f4e4f] max-w-3xl mx-auto leading-relaxed">
-            We deliver comprehensive technology solutions including software
-            development, security systems, networking infrastructure, IT
-            support, and digital marketing to drive your business growth and
-            digital transformation.
-          </p>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
-          {stats.map((stat, index) => {
-            const Icon = stat.icon;
-            return (
-              <div
-                key={stat.label}
-                className={`bg-white border border-gray-100 rounded-xl p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-[#a27b5b]/30 ${
-                  mounted
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
-                }`}
-                style={{
-                  transitionDelay: `${index * 100}ms`,
-                }}
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-[#a27b5b]/10 flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-[#a27b5b]" />
-                  </div>
-                  <div className="text-3xl font-bold text-[#2c3639]">
-                    {stat.number}
-                  </div>
-                </div>
-                <div className="text-sm font-medium text-[#3f4e4f]">
-                  {stat.label}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Services Navigation */}
-        <div className="mb-12">
-          <div className="flex flex-col gap-2">
-            <div className="flex overflow-x-auto pb-4 gap-2 scrollbar-hide">
-              {categories.slice(0, 4).map((category, index) => {
-                const Icon = category.icon;
-                const iconColorClass = getIconColorClass(category.color);
-                return (
-                  <button
-                    key={category.title}
-                    onClick={() => setActiveCategory(index)}
-                    className={`group relative px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center gap-2 border flex-shrink-0 ${
-                      activeCategory === index
-                        ? "bg-[#a27b5b] text-white border-[#a27b5b] shadow-lg"
-                        : "bg-white text-[#3f4e4f] border-gray-200 hover:border-[#a27b5b] hover:bg-gray-50"
-                    }`}
-                  >
-                    <Icon
-                      className={`w-4 h-4 ${
-                        activeCategory === index ? "text-white" : iconColorClass
-                      }`}
-                    />
-                    <span className="whitespace-nowrap">{category.title}</span>
-                    {activeCategory === index && (
-                      <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-[#a27b5b] rotate-45"></div>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-            <div className="flex overflow-x-auto pb-4 gap-2 scrollbar-hide">
-              {categories.slice(4).map((category, index) => {
-                const Icon = category.icon;
-                const iconColorClass = getIconColorClass(category.color);
-                const actualIndex = index + 4;
-                return (
-                  <button
-                    key={category.title}
-                    onClick={() => setActiveCategory(actualIndex)}
-                    className={`group relative px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center gap-2 border flex-shrink-0 ${
-                      activeCategory === actualIndex
-                        ? "bg-[#a27b5b] text-white border-[#a27b5b] shadow-lg"
-                        : "bg-white text-[#3f4e4f] border-gray-200 hover:border-[#a27b5b] hover:bg-gray-50"
-                    }`}
-                  >
-                    <Icon
-                      className={`w-4 h-4 ${
-                        activeCategory === actualIndex
-                          ? "text-white"
-                          : iconColorClass
-                      }`}
-                    />
-                    <span className="whitespace-nowrap">{category.title}</span>
-                    {activeCategory === actualIndex && (
-                      <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-[#a27b5b] rotate-45"></div>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+          <div className="max-w-xs text-[10px] md:text-sm text-gray-400 font-inter leading-relaxed uppercase tracking-wider mt-6 md:mt-0">
+            Curating the future of enterprise through precision technology and
+            artistic digital strategy.
           </div>
         </div>
 
-        {/* Active Service Category */}
-        <div className="relative min-h-[600px]">
-          {categories.map((category, index) => {
-            const Icon = category.icon;
-            const iconColorClass = getIconColorClass(category.color);
-            return (
-              <div
-                key={category.title}
-                className={`transition-all duration-700 ease-in-out ${
-                  activeCategory === index
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 absolute translate-y-8 pointer-events-none"
-                }`}
-              >
-                <div className="bg-white border border-gray-100 rounded-2xl p-6 lg:p-8 shadow-lg">
-                  {/* Category Header */}
-                  <div className="flex flex-col lg:flex-row items-start gap-6 mb-8">
-                    <div
-                      className="w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0 mx-auto lg:mx-0"
-                      style={{ backgroundColor: category.color + "10" }}
-                    >
-                      <Icon className={`w-8 h-8 ${iconColorClass}`} />
-                    </div>
-                    <div className="text-center lg:text-left">
-                      <h3 className="text-2xl lg:text-3xl font-bold text-[#2c3639] mb-2">
-                        {category.title}
-                      </h3>
-                      <p className="text-[#3f4e4f] leading-relaxed">
-                        {category.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Services Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {category.services.map((service, serviceIndex) => {
-                      const ServiceIcon = service.icon;
-                      const isHovered = hoveredService === serviceIndex;
-                      return (
-                        <div
-                          key={service.name}
-                          className="group relative bg-white border border-gray-100 rounded-xl p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-[#a27b5b]/30"
-                          onMouseEnter={() => setHoveredService(serviceIndex)}
-                          onMouseLeave={() => setHoveredService(null)}
-                          style={{
-                            transitionDelay: `${serviceIndex * 100}ms`,
-                          }}
-                        >
-                          <div className="flex flex-col h-full">
-                            <div className="flex items-start gap-4 mb-4">
-                              <div
-                                className="w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
-                                style={{
-                                  backgroundColor: category.color + "10",
-                                }}
-                              >
-                                <ServiceIcon
-                                  className="w-6 h-6"
-                                  style={{ color: category.color }}
-                                />
-                              </div>
-                              <h4 className="text-lg font-bold text-[#2c3639] flex-1">
-                                {service.name}
-                              </h4>
-                            </div>
-                            <p className="text-[#3f4e4f] text-sm leading-relaxed mb-4 flex-1">
-                              {service.description}
-                            </p>
-                            <div className="pt-4 border-t border-gray-100">
-                              <div className="flex items-center text-sm font-medium text-[#a27b5b] group-hover:gap-2 transition-all duration-300">
-                                <span>Learn more</span>
-                                <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-300" />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Category Indicator Dots */}
-        <div className="flex justify-center space-x-2 mt-8">
-          {categories.map((_, index) => (
-            <button
-              key={index}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                activeCategory === index
-                  ? "bg-[#a27b5b] w-6 scale-110"
-                  : "bg-gray-300 hover:bg-gray-400"
-              }`}
-              onClick={() => setActiveCategory(index)}
-            />
-          ))}
-        </div>
-
-        {/* CTA Section */}
-        <div className="mt-20">
-          <div className="bg-[#2c3639] rounded-2xl p-8 lg:p-12 text-center relative overflow-hidden">
-            {/* Background elements */}
-            <div className="absolute top-0 left-0 w-40 h-40 bg-[#a27b5b]/10 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-0 w-60 h-60 bg-[#3f4e4f]/10 rounded-full blur-3xl"></div>
-
-            <div className="relative z-10">
-              <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4">
-                Ready to Transform Your Business?
-              </h3>
-              <p className="text-[#dcd7c9] mb-8 max-w-2xl mx-auto">
-                Join hundreds of businesses who trust EBCom Technologies for
-                their digital transformation journey.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="/schedule"
-                  className="px-8 py-3 bg-white text-[#2c3639] font-semibold rounded-lg hover:bg-gray-100 transition-colors shadow-lg hover:shadow-xl"
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+          {/* Navigation - Exhibit List */}
+          <nav className="lg:col-span-5 flex flex-col">
+            {categories.map((cat, idx) => (
+              <div key={cat.id} className="flex flex-col">
+                <button
+                  onClick={() => setActiveCategory(idx)}
+                  className={`group flex items-center gap-4 md:gap-6 py-6 md:py-8 border-b border-white/5 text-left transition-all duration-500 ${
+                    activeCategory === idx
+                      ? "opacity-100 lg:translate-x-4"
+                      : "opacity-40 hover:opacity-100"
+                  }`}
                 >
-                  Start Your Project
-                </Link>
-                <button className="px-8 py-3 bg-transparent text-white font-semibold rounded-lg border-2 border-white/30 hover:border-white/60 transition-colors">
-                  Schedule Consultation
+                  <span className="font-space text-[10px] md:text-xs text-[#a27b5b] tracking-widest">
+                    {cat.id}
+                  </span>
+                  <span className="font-space text-xl md:text-2xl lg:text-3xl uppercase tracking-tighter group-hover:italic flex-1">
+                    {cat.title}
+                  </span>
+                  {activeCategory === idx && (
+                    <ArrowRight className="w-5 h-5 text-[#a27b5b] animate-pulse" />
+                  )}
                 </button>
-              </div>
 
-              <div className="mt-8 flex items-center justify-center gap-4 text-sm text-[#dcd7c9]">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-[#a27b5b] rounded-full"></div>
-                  <span>No hidden fees</span>
-                </div>
-                <div className="w-1 h-1 bg-[#dcd7c9]/30 rounded-full"></div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-[#a27b5b] rounded-full"></div>
-                  <span>Free initial consultation</span>
+                {/* Mobile Content Display (Visible only on small screens when active) */}
+                <div
+                  className={`lg:hidden overflow-hidden transition-all duration-500 ${
+                    activeCategory === idx
+                      ? "max-h-[1000px] py-8 opacity-100"
+                      : "max-h-0 opacity-0"
+                  }`}
+                >
+                  <p className="font-inter text-base text-gray-400 leading-relaxed mb-8">
+                    {cat.description}
+                  </p>
+                  <div className="grid grid-cols-1 gap-y-3">
+                    {cat.services.map((service) => (
+                      <div
+                        key={service}
+                        className="flex items-center gap-4 border-t border-white/10 pt-4"
+                      >
+                        <Plus className="w-3 h-3 text-[#a27b5b]" />
+                        <span className="font-space text-[10px] uppercase tracking-widest">
+                          {service}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
+            ))}
+          </nav>
+
+          {/* Desktop Display Area - Hidden on mobile */}
+          <div className="hidden lg:block lg:col-span-7 relative">
+            <div className="sticky top-24">
+              {categories.map((cat, idx) => (
+                <div
+                  key={cat.id}
+                  className={`transition-all duration-700 ease-out ${
+                    activeCategory === idx
+                      ? "opacity-100 scale-100 relative"
+                      : "opacity-0 scale-95 absolute inset-0 pointer-events-none"
+                  }`}
+                >
+                  <div className="aspect-[4/3] bg-zinc-900 border border-white/5 overflow-hidden relative mb-8">
+                    <div className="absolute inset-0 opacity-20 flex items-center justify-center">
+                      <div className="w-1/2 h-px bg-white rotate-45 absolute" />
+                      <div className="w-1/2 h-px bg-white -rotate-45 absolute" />
+                      <div className="w-64 h-64 border border-white rounded-full opacity-50" />
+                    </div>
+                    <div className="absolute bottom-8 left-8">
+                      <h4 className="font-space text-4xl uppercase font-bold tracking-tighter mix-blend-difference">
+                        {cat.subtitle}
+                      </h4>
+                    </div>
+                  </div>
+
+                  <p className="font-inter text-lg text-gray-400 leading-relaxed mb-10 max-w-xl">
+                    {cat.description}
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-12">
+                    {cat.services.map((service) => (
+                      <div
+                        key={service}
+                        className="flex items-center gap-4 group cursor-pointer border-t border-white/10 pt-4"
+                      >
+                        <Plus className="w-4 h-4 text-[#a27b5b] group-hover:rotate-90 transition-transform" />
+                        <span className="font-space text-sm uppercase tracking-widest group-hover:text-[#a27b5b] transition-colors">
+                          {service}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
+          </div>
+        </div>
+
+        {/* Call to Action */}
+        <div className="mt-24 md:mt-40 border border-white/10 p-8 md:p-12 lg:p-24 flex flex-col items-center text-center bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] relative overflow-hidden">
+          <h3 className="font-space text-3xl md:text-4xl lg:text-6xl uppercase tracking-tighter mb-8 relative z-10">
+            Inquire for{" "}
+            <span className="text-[#a27b5b] italic">Transformation</span>
+          </h3>
+          <p className="font-inter text-gray-400 max-w-lg mb-12 uppercase tracking-[0.2em] text-[10px] md:text-xs relative z-10">
+            We are currently accepting bespoke projects for the 2026 fiscal
+            year.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 md:gap-8 w-full sm:w-auto relative z-10">
+            <Link
+              href="/contact"
+              className="px-8 md:px-12 py-4 md:py-5 bg-white text-black font-space uppercase tracking-widest text-[10px] md:text-sm font-bold hover:bg-[#a27b5b] hover:text-white transition-all text-center"
+            >
+              Start Project
+            </Link>
+            <button className="px-8 md:px-12 py-4 md:py-5 border border-white/20 font-space uppercase tracking-widest text-[10px] md:text-sm hover:border-[#a27b5b] transition-all text-center">
+              The Dossier
+            </button>
           </div>
         </div>
       </div>
 
       <style jsx global>{`
-        .font-bebas-neue {
-          font-family: var(--font-bebas-neue), sans-serif;
+        :root {
+          --font-space: ${spaceGrotesk.style.fontFamily};
+          --font-inter: ${inter.style.fontFamily};
         }
-
-        .font-poppins {
-          font-family: var(--font-poppins), sans-serif;
+        .font-space {
+          font-family: var(--font-space);
         }
-
-        .font-gantari {
-          font-family: var(--font-gantari), sans-serif;
-        }
-
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-        }
-
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
+        .font-inter {
+          font-family: var(--font-inter);
         }
       `}</style>
     </section>

@@ -1,320 +1,235 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Menu, X, Phone, MessageCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // Added for navigation
+import { Menu, X, Phone, ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface HeaderProps {
   scrollToSection?: (section: string) => void;
   activeSection?: string;
 }
 
-interface NavItem {
-  name: string;
-  section: string;
-}
-
 export default function Header({
   scrollToSection,
   activeSection,
 }: HeaderProps) {
+  const router = useRouter(); // Initialize router
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const pathname = usePathname();
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (
-        isMenuOpen &&
-        !target.closest(".mobile-menu") &&
-        !target.closest(".menu-button")
-      ) {
-        setIsMenuOpen(false);
-      }
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      document.body.style.overflow = "unset";
     };
-
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
   }, [isMenuOpen]);
 
-  const navItems: NavItem[] = [
+  const navItems = [
     { name: "Home", section: "home" },
     { name: "About", section: "about" },
     { name: "Services", section: "services" },
-    { name: "Solutions", section: "solutions" },
-    { name: "Projects", section: "projects" },
-    { name: "Process", section: "process" },
+    { name: "Portfolio", section: "portfolio" },
+    { name: "Process", section: "serviceProcess" },
     { name: "Contact", section: "contact" },
   ];
 
-  const handleNavClick = (item: NavItem) => {
-    if (scrollToSection) {
-      scrollToSection(item.section);
-      setIsMenuOpen(false);
-    }
-  };
-
-  const handleCall = () => {
-    window.open("tel:08127728084", "_self");
-  };
-
-  const handleWhatsApp = () => {
-    window.open("https://wa.me/2348127728084", "_blank");
-  };
-
-  const handleEmail = () => {
-    window.open("mailto:ebcomtechnologies@gmail.com", "_self");
-  };
-
-  const isActive = (section: string) => {
-    return activeSection === section;
+  const handleNavClick = (section: string) => {
+    scrollToSection?.(section);
+    setIsMenuOpen(false);
   };
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-[999] transition-all duration-500 ${
         isScrolled
-          ? "bg-white/95 backdrop-blur-sm shadow-lg border-b border-gray-100"
-          : "bg-white border-b border-gray-100"
+          ? "py-3 bg-[#DCD7C9] border-b border-[#a27b5b]/20 shadow-sm"
+          : "py-6 bg-transparent"
       }`}
     >
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          {/* Logo - Closer to the edge */}
-          <button
-            onClick={() => scrollToSection && scrollToSection("home")}
-            className="flex items-center"
-          >
-            <div className="relative w-40 h-10 lg:w-48 lg:h-12">
-              <div className="relative w-full h-full">
-                <div className="w-full h-full flex items-center justify-center">
-                  <Image
-                    src="/logo.png"
-                    alt="EBCOM Technologies"
-                    width={160}
-                    height={40}
-                    className="object-contain w-full h-full"
-                    priority
-                  />
-                </div>
-              </div>
-            </div>
-          </button>
+      <div className="w-full px-4 md:px-8 lg:px-12 flex justify-between items-center">
+        {/* LOGO */}
+        <button
+          onClick={() => handleNavClick("home")}
+          className="relative z-[1001] active:scale-95 transition-transform"
+        >
+          <div className="relative w-24 h-6 md:w-32 md:h-8 lg:w-40 lg:h-10">
+            <Image
+              src="/logo.png"
+              alt="EBCOM"
+              fill
+              className="object-contain object-left"
+              style={{ filter: "brightness(0.2) contrast(1.1)" }}
+              priority
+            />
+          </div>
+        </button>
 
-          {/* Desktop Navigation - Absolutely centered */}
-          <nav className="hidden lg:flex items-center space-x-1 absolute left-1/2 -translate-x-1/2">
-            {navItems.map((item) => (
+        {/* DESKTOP NAV */}
+        <nav className="hidden lg:flex items-center gap-2 absolute left-1/2 -translate-x-1/2">
+          {navItems.map((item, idx) => {
+            const active = activeSection === item.section;
+            return (
               <button
                 key={item.name}
-                onClick={() => handleNavClick(item)}
-                className={`relative px-4 py-3 text-sm font-medium transition-all duration-300 group ${
-                  isActive(item.section)
-                    ? "text-[#a27b5b]"
-                    : "text-[#2c3639] hover:text-[#a27b5b]"
-                }`}
+                onClick={() => handleNavClick(item.section)}
+                className="group relative px-5 py-4 flex flex-col items-center min-w-[80px]"
               >
-                <span className="relative z-10">{item.name}</span>
-
-                {/* Hover background effect */}
-                <div
-                  className={`absolute inset-0 rounded-lg transition-all duration-300 ${
-                    isActive(item.section)
-                      ? "bg-[#a27b5b]/10"
-                      : "group-hover:bg-[#a27b5b]/5"
+                <span
+                  className={`text-[8px] font-black absolute top-0 transition-all duration-300 ${
+                    active
+                      ? "text-[#a27b5b] opacity-100 translate-y-0"
+                      : "opacity-0 -translate-y-1"
                   }`}
-                ></div>
+                >
+                  0{idx + 1}
+                </span>
 
-                {/* Active indicator line */}
-                {isActive(item.section) && (
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-[#a27b5b] rounded-full"></div>
-                )}
+                <span
+                  className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${
+                    active
+                      ? "text-[#2c3639]"
+                      : "text-[#2c3639]/40 hover:text-[#2c3639]"
+                  }`}
+                >
+                  {item.name}
+                </span>
 
-                {/* Hover indicator line */}
-                {!isActive(item.section) && (
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-[#a27b5b] rounded-full transition-all duration-300 group-hover:w-6"></div>
+                {active && (
+                  <motion.div
+                    layoutId="nav-underline"
+                    className="absolute bottom-2 h-[2px] w-4 bg-[#a27b5b]"
+                  />
                 )}
               </button>
-            ))}
-          </nav>
+            );
+          })}
+        </nav>
 
-          {/* Desktop Contact Button */}
-          <div className="hidden lg:flex items-center space-x-3">
-            <button
-              onClick={handleCall}
-              className="group flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg transition-all duration-300 hover:shadow-sm"
-            >
-              <div className="w-8 h-8 rounded-lg bg-[#a27b5b]/10 flex items-center justify-center group-hover:bg-[#a27b5b]/20 transition-colors">
-                <Phone className="w-4 h-4 text-[#a27b5b]" />
-              </div>
-              <div className="text-left">
-                <div className="text-xs text-[#3f4e4f]">Call us</div>
-                <div className="font-medium text-sm text-[#2c3639] group-hover:text-[#a27b5b] transition-colors">
-                  08127728084
-                </div>
-              </div>
-            </button>
-
-            <button
-              onClick={() => scrollToSection && scrollToSection("contact")}
-              className="px-6 py-3 bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] text-white font-medium hover:shadow-lg transition-all duration-300 rounded-lg hover:scale-[1.02]"
-            >
-              Get Quote
-            </button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="lg:hidden group flex items-center justify-center w-12 h-12 rounded-lg bg-gray-50 hover:bg-gray-100 transition-all duration-300 menu-button"
+        {/* DESKTOP UTILITY */}
+        <div className="hidden lg:flex items-center gap-6">
+          <a
+            href="tel:08127728084"
+            className="text-[11px] font-bold text-[#2c3639] flex items-center gap-2"
           >
-            {isMenuOpen ? (
-              <X className="w-6 h-6 text-[#2c3639] group-hover:text-[#a27b5b] transition-colors" />
-            ) : (
-              <Menu className="w-6 h-6 text-[#2c3639] group-hover:text-[#a27b5b] transition-colors" />
-            )}
+            <Phone size={12} className="text-[#a27b5b]" /> 08127728084
+          </a>
+          <button
+            onClick={() => router.push("/schedule")} // Redirects to Schedule
+            className="bg-[#2c3639] text-[#dcd7c9] px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-[#a27b5b] transition-colors rounded-sm"
+          >
+            Start Now
           </button>
         </div>
-      </div>
 
-      {/* Mobile Menu */}
-      <div
-        className={`lg:hidden mobile-menu fixed inset-0 top-0 left-0 right-0 h-screen w-full z-40 transition-all duration-500 ${
-          isMenuOpen
-            ? "opacity-100 visible"
-            : "opacity-0 invisible pointer-events-none"
-        }`}
-      >
-        {/* Backdrop */}
-        <div
-          className="absolute inset-0 bg-black/30"
-          onClick={() => setIsMenuOpen(false)}
-        ></div>
-
-        {/* Menu Content */}
-        <div className="absolute right-0 top-0 h-full w-80 bg-[#dcd7c9] shadow-xl">
-          <div className="flex flex-col h-full">
-            {/* Mobile Menu Header */}
-            <div className="p-6 border-b border-gray-300">
-              <div className="flex justify-between items-center">
-                <button
-                  onClick={() => {
-                    scrollToSection && scrollToSection("home");
-                    setIsMenuOpen(false);
-                  }}
-                  className="flex items-center"
-                >
-                  <div className="text-xl font-bold text-[#2c3639]">EBCOM</div>
-                </button>
-
-                <button
-                  onClick={() => setIsMenuOpen(false)}
-                  className="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-gray-300/50 transition-colors"
-                >
-                  <X className="w-6 h-6 text-[#2c3639]" />
-                </button>
-              </div>
-            </div>
-
-            {/* Mobile Navigation */}
-            <div className="flex-1 overflow-y-auto p-6">
-              <div className="space-y-2">
-                {navItems.map((item) => (
-                  <button
-                    key={item.name}
-                    onClick={() => handleNavClick(item)}
-                    className={`w-full flex items-center p-4 text-left transition-all duration-300 rounded-lg ${
-                      isActive(item.section)
-                        ? "bg-[#a27b5b]/20 text-[#2c3639] font-medium"
-                        : "text-[#2c3639] hover:bg-gray-300/50"
-                    }`}
-                  >
-                    <span className="relative">
-                      {item.name}
-                      {isActive(item.section) && (
-                        <div className="absolute -right-6 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#a27b5b]"></div>
-                      )}
-                    </span>
-                  </button>
-                ))}
-              </div>
-
-              {/* Mobile Contact Info */}
-              <div className="mt-8 space-y-4">
-                {/* Contact Card */}
-                <div className="bg-white/80 backdrop-blur-sm rounded-lg p-5 border border-gray-300">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-[#a27b5b]/10 flex items-center justify-center">
-                      <Phone className="w-5 h-5 text-[#a27b5b]" />
-                    </div>
-                    <div>
-                      <div className="text-sm text-[#3f4e4f]">Call us</div>
-                      <div className="font-bold text-[#2c3639]">
-                        08127728084
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-sm text-[#3f4e4f]">
-                    Monday - Saturday, 8AM - 6PM
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    onClick={() => {
-                      handleCall();
-                      setIsMenuOpen(false);
-                    }}
-                    className="flex flex-col items-center gap-2 p-4 bg-white/80 hover:bg-white rounded-lg border border-gray-300 transition-all duration-300 hover:shadow-sm"
-                  >
-                    <Phone className="w-5 h-5 text-[#a27b5b]" />
-                    <span className="font-medium text-[#2c3639]">Call</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      handleWhatsApp();
-                      setIsMenuOpen(false);
-                    }}
-                    className="flex flex-col items-center gap-2 p-4 bg-[#25D366] text-white hover:bg-[#20bd5c] rounded-lg transition-all duration-300 hover:shadow-sm"
-                  >
-                    <MessageCircle className="w-5 h-5" />
-                    <span className="font-medium">WhatsApp</span>
-                  </button>
-                </div>
-
-                {/* Main CTA */}
-                <button
-                  onClick={() => {
-                    if (scrollToSection) {
-                      scrollToSection("contact");
-                    }
-                    setIsMenuOpen(false);
-                  }}
-                  className="w-full p-4 bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] text-white font-medium hover:shadow-lg transition-all duration-300 rounded-lg"
-                >
-                  Request Quote
-                </button>
-              </div>
-            </div>
+        {/* MOBILE TOGGLE */}
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="lg:hidden relative z-[1001] flex items-center justify-center w-24 h-10 bg-[#2c3639] rounded-full shadow-xl active:scale-90 transition-transform"
+        >
+          <div className="flex items-center gap-2 text-white">
+            <span className="text-[10px] font-black uppercase tracking-widest">
+              {isMenuOpen ? "Exit" : "Menu"}
+            </span>
+            {isMenuOpen ? (
+              <X size={14} strokeWidth={3} />
+            ) : (
+              <Menu size={14} strokeWidth={3} />
+            )}
           </div>
-        </div>
+        </button>
       </div>
+
+      {/* MOBILE MENU */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed inset-0 z-[1000] bg-[#DCD7C9] flex flex-col"
+          >
+            <div className="h-24" />
+            <div className="flex-1 flex flex-col px-8">
+              <p className="text-[9px] font-bold text-[#a27b5b] uppercase tracking-[0.4em] mb-6 border-b border-[#a27b5b]/20 pb-2">
+                Navigation
+              </p>
+
+              <div className="flex flex-col">
+                {navItems.map((item, idx) => {
+                  const active = activeSection === item.section;
+                  return (
+                    <button
+                      key={item.name}
+                      onClick={() => handleNavClick(item.section)}
+                      className="flex items-center justify-between py-5 border-b border-[#2c3639]/5 text-left"
+                    >
+                      <div className="flex items-center gap-4">
+                        <span className="text-[10px] font-bold text-[#a27b5b]">
+                          0{idx + 1}
+                        </span>
+                        <span
+                          className={`text-lg font-bold uppercase tracking-tight transition-all ${
+                            active
+                              ? "text-[#2c3639] translate-x-2"
+                              : "text-[#2c3639]/30"
+                          }`}
+                        >
+                          {item.name}
+                        </span>
+                      </div>
+                      {active && (
+                        <ArrowRight size={18} className="text-[#a27b5b]" />
+                      )}
+                    </button>
+                  );
+                })}
+                {/* Mobile Specific Schedule Link */}
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    router.push("/schedule");
+                  }}
+                  className="flex items-center justify-between py-5 border-b border-[#2c3639]/5 text-left"
+                >
+                  <div className="flex items-center gap-4">
+                    <span className="text-[10px] font-bold text-[#a27b5b]">
+                      07
+                    </span>
+                    <span className="text-lg font-bold uppercase tracking-tight text-[#2c3639]">
+                      Start Now
+                    </span>
+                  </div>
+                  <ArrowRight size={18} className="text-[#a27b5b]" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-8 bg-[#2c3639] text-[#dcd7c9] flex flex-col gap-4">
+              <span className="text-[8px] uppercase tracking-[0.3em] text-[#a27b5b]">
+                Direct Inquiry
+              </span>
+              <a
+                href="tel:08127728084"
+                className="text-xl font-bold flex items-center gap-3"
+              >
+                <Phone size={18} className="text-[#a27b5b]" /> 08127728084
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

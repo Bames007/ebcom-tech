@@ -1,4 +1,10 @@
-import { Bebas_Neue, Gantari, Poppins } from "next/font/google";
+import {
+  Bebas_Neue,
+  Gantari,
+  Inter,
+  Poppins,
+  Space_Grotesk,
+} from "next/font/google";
 
 export const bebasNeue = Bebas_Neue({
   subsets: ["latin"],
@@ -18,7 +24,19 @@ export const gantari = Gantari({
   variable: "--font-gantari",
 });
 
-export const primaryColor = "#2c3639";
+export const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["300", "700"],
+  variable: "--font-space-grotesk",
+});
+
+export const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "700", "900"],
+  variable: "--font-inter",
+});
+
+export const primaryColor = "#a27b5b";
 export const backgroundColor = "#dcd7c9";
-export const accentColor = "#a27b5b";
+export const accentColor = "#2c3639";
 export const highlightColor = "#3f4e4f";

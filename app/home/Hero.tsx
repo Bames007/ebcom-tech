@@ -1,368 +1,296 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+  useSpring,
+  useMotionValue,
+} from "framer-motion";
 import {
   ArrowRight,
-  Play,
-  Users,
-  Briefcase,
-  Globe2,
-  Star,
-  Zap,
-  TrendingUp,
+  Fingerprint,
+  Box,
   Globe,
-  Handshake,
+  Minus,
+  ShieldCheck,
+  Activity,
 } from "lucide-react";
-import Link from "next/link";
-import { bebasNeue, gantari, poppins } from "../util/constants";
+import { inter, spaceGrotesk } from "../util/constants";
 
-const clients = [
-  {
-    name: "Bumblebee Cars",
-    logo: "/clients/bumblebee.png",
-    industry: "Automotive",
-    ceo: "Daniel Okafor",
-    comment:
-      "EBCom transformed our car dealership with a powerful booking system that drives real results.",
-    link: "#",
-    rating: 5,
-  },
-  {
-    name: "SAU University",
-    logo: "/clients/sau.png",
-    industry: "Education",
-    ceo: "Dr. Blessing Adamu",
-    comment:
-      "Their software helped us digitize admissions and improve student experience dramatically.",
-    link: "#",
-    rating: 5,
-  },
-  {
-    name: "Okemena Stores",
-    logo: "/clients/okemena.png",
-    industry: "E-commerce",
-    ceo: "Linda Ebuka",
-    comment:
-      "We saw a 3x increase in conversions after EBCom rebuilt our platform.",
-    link: "#",
-    rating: 5,
-  },
-  {
-    name: "Lush Lashes",
-    logo: "/clients/lush.png",
-    industry: "Beauty",
-    ceo: "Amaka Ude",
-    comment:
-      "Their appointment system helped automate our bookings and increased our client retention.",
-    link: "#",
-    rating: 4,
-  },
-];
+interface Client {
+  id: string;
+  name: string;
+  category: string;
+  image: string;
+  location: string;
+  comment: string;
+  color: string;
+  accent: string;
+  services?: string[];
+}
 
-export default function Hero() {
-  const [mounted, setMounted] = useState(false);
-  const [currentClient, setCurrentClient] = useState(0);
+export default function EbcomSovereignExhibition({
+  clients,
+}: {
+  clients: Client[];
+}) {
+  const [index, setIndex] = useState(0);
+  const [isLargeScreen, setIsLargeScreen] = useState(false); // Fix for SSR
+  const active = clients[index];
+  const containerRef = useRef(null);
 
+  // Handle window object safely
   useEffect(() => {
-    setMounted(true);
-    const interval = setInterval(() => {
-      setCurrentClient((prev) => (prev + 1) % clients.length);
-    }, 4000);
-    return () => clearInterval(interval);
+    const handleResize = () => setIsLargeScreen(window.innerWidth > 1024);
+    handleResize(); // Set initial value
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
+  const bgTextScale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
+  const textY = useTransform(scrollYProgress, [0, 1], [0, -30]);
+  const imageY = useTransform(scrollYProgress, [0, 1], [0, 40]);
+
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const mouseSpringX = useSpring(x, { stiffness: 120, damping: 20 });
+  const mouseSpringY = useSpring(y, { stiffness: 120, damping: 20 });
+  const rotateX = useTransform(mouseSpringY, [-0.5, 0.5], [7, -7]);
+  const rotateY = useTransform(mouseSpringX, [-0.5, 0.5], [-7, 7]);
+
+  function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
+    if (!isLargeScreen) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    x.set((event.clientX - rect.left) / rect.width - 0.5);
+    y.set((event.clientY - rect.top) / rect.height - 0.5);
+  }
+
+  useEffect(() => {
+    if (!clients?.length) return;
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % clients.length);
+    }, 9000);
+    return () => clearInterval(timer);
+  }, [clients]);
+
+  if (!active) return null;
+
   return (
-    <section className="relative min-h-screen bg-white flex items-center justify-center overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Floating Shapes */}
-        <div className="absolute top-20 left-10 w-6 h-6 bg-[#a27b5b]/30 rounded-full opacity-40 animate-float"></div>
-        <div
-          className="absolute top-40 right-20 w-8 h-8 bg-[#3f4e4f]/30 rounded-lg opacity-40 animate-float"
-          style={{ animationDelay: "1s" }}
-        ></div>
-        <div
-          className="absolute bottom-32 left-20 w-10 h-10 bg-[#2c3639]/20 rounded-full opacity-30 animate-float"
-          style={{ animationDelay: "2s" }}
-        ></div>
-
-        {/* Subtle Grid Pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(44,54,57,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(44,54,57,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,black,transparent)]"></div>
-
-        {/* Solid Color Orbs */}
-        <div className="absolute -top-20 -right-20 w-80 h-80 bg-[#3f4e4f]/10 rounded-full blur-3xl opacity-30"></div>
-        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-[#2c3639]/10 rounded-full blur-3xl opacity-20"></div>
+    <section
+      ref={containerRef}
+      className={`relative min-h-screen lg:min-h-[115vh] w-full bg-[#dcd7c9] flex flex-col pt-24 lg:pt-48 pb-12 lg:pb-20 overflow-hidden font-sans ${inter.variable} ${spaceGrotesk.variable}`}
+    >
+      {/* LAYER 0: WATERMARK */}
+      <div className="absolute inset-0 hidden md:flex items-center justify-center overflow-hidden pointer-events-none z-0">
+        <AnimatePresence mode="wait">
+          <motion.h2
+            key={active.name}
+            style={{ scale: bgTextScale }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 0.03, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.1 }}
+            transition={{ duration: 2 }}
+            className="text-[20vw] font-black uppercase whitespace-nowrap font-space text-[#2c3639]"
+          >
+            {active.name}
+          </motion.h2>
+        </AnimatePresence>
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        {/* LEFT SIDE – Hero Text */}
-        <div
-          className={`transition-all duration-700 ${
-            mounted ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-          }`}
-        >
-          {/* Premium Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#a27b5b]/20 border border-[#a27b5b]/30 mb-8">
-            <Globe className="w-4 h-4 text-[#a27b5b]" />
-            <span
-              className={`${poppins.className} text-[#a27b5b] text-sm font-semibold tracking-wide`}
-            >
-              PREMIUM DIGITAL SOLUTIONS
+      {/* LAYER 1: EBCOM HEADER */}
+      <div className="absolute top-8 left-6 lg:top-12 lg:left-12 z-50">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <h1 className="font-space text-lg lg:text-2xl font-bold tracking-tighter text-[#2c3639]">
+            EBCom{" "}
+            <span className="text-[#a27b5b] italic font-light">
+              Technologies
+            </span>
+          </h1>
+          <div className="flex items-center gap-2">
+            <div className="w-8 lg:w-12 h-[1px] bg-[#a27b5b]" />
+            <span className="text-[7px] lg:text-[9px] font-black uppercase tracking-[0.3em] lg:tracking-[0.5em] text-[#2c3639]/40">
+              Systemic Mastery
             </span>
           </div>
-
-          {/* Main Headline */}
-          <h1
-            className={`${bebasNeue.className} text-6xl sm:text-7xl lg:text-8xl leading-[1.1] mb-6`}
-          >
-            <span className="text-[#2c3639]">EBCom</span>
-            <br />
-            <span className="text-[#3f4e4f]">TECHNOLOGIES</span>
-          </h1>
-
-          {/* Enhanced Subtitle */}
-          <div className="space-y-4">
-            <p
-              className={`${poppins.className} text-xl sm:text-2xl text-[#3f4e4f] max-w-lg leading-relaxed`}
-            >
-              We design and build{" "}
-              <span className="relative inline-block">
-                <span className="relative z-10 text-[#a27b5b] font-semibold">
-                  smart digital platforms
-                </span>
-                <span className="absolute bottom-0 left-0 w-full h-3 bg-[#a27b5b]/20 -z-10 transform -rotate-1"></span>
-              </span>{" "}
-              that elevate brands and accelerate growth.
-            </p>
-
-            {/* Trust Indicators */}
-            <div className="flex items-center gap-6 mt-4">
-              <div className="flex items-center gap-2">
-                <div className="flex">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className="w-4 h-4 text-[#a27b5b] fill-current"
-                    />
-                  ))}
-                </div>
-                <span className={`${poppins.className} text-sm text-[#3f4e4f]`}>
-                  5.0 Rating
-                </span>
-              </div>
-              <div className="w-px h-6 bg-[#3f4e4f]/30"></div>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-[#a27b5b]" />
-                <span className={`${poppins.className} text-sm text-[#3f4e4f]`}>
-                  300+ Projects
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mt-8">
-            <Link
-              href="/schedule"
-              className={`${poppins.className} group relative bg-[#2c3639] hover:bg-[#1e2729] text-[#dcd7c9] font-semibold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center gap-3 overflow-hidden`}
-            >
-              <span className="relative z-10">Start Your Project</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
-              <div className="absolute inset-0 bg-[#3f4e4f]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </Link>
-
-            <button
-              className={`${poppins.className} group relative bg-[#a27b5b] border border-[#3f4e4f]/30 hover:border-[#a27b5b] text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 flex items-center gap-3 shadow-sm hover:shadow-md`}
-            >
-              <Play className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
-              <span>Watch Story</span>
-            </button>
-          </div>
-
-          {/* Company Stats */}
-          <div className="grid grid-cols-3 gap-8 mt-12">
-            {[
-              { number: "300+", label: "Projects Delivered", icon: Briefcase },
-              { number: "7+", label: "Years Excellence", icon: Zap },
-              { number: "98%", label: "Client Satisfaction", icon: Users },
-            ].map((stat, index) => (
-              <div key={stat.label} className="text-center group">
-                <div className="w-12 h-12 bg-[#a27b5b]/20 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:bg-[#a27b5b] transition-colors duration-300">
-                  <stat.icon className="w-6 h-6 text-[#a27b5b] group-hover:text-[#dcd7c9] transition-colors duration-300" />
-                </div>
-                <h3
-                  className={`${bebasNeue.className} text-3xl text-[#2c3639] group-hover:text-[#a27b5b] transition-colors duration-300`}
-                >
-                  {stat.number}
-                </h3>
-                <p
-                  className={`${poppins.className} text-[#3f4e4f] text-sm mt-1`}
-                >
-                  {stat.label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* RIGHT SIDE – Client Showcase */}
-        <div
-          className={`relative transition-all duration-700 delay-200 ${
-            mounted ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-          }`}
-        >
-          {/* Main Featured Client Card */}
-          <div className="relative bg-[#dcd7c9]/20 rounded-3xl p-8 border border-[#a27b5b]/30 shadow-xl mb-8">
-            <div className="absolute -top-4 -right-4 w-8 h-8 bg-[#a27b5b] rounded-full flex items-center justify-center">
-              <Handshake className="w-4 h-4 text-[#dcd7c9]" />
-            </div>
-
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 rounded-2xl overflow-hidden bg-[#dcd7c9] shadow-md flex items-center justify-center p-2 border border-[#3f4e4f]/20">
-                <div className="w-12 h-12 bg-[#2c3639] rounded-xl flex items-center justify-center text-[#dcd7c9] font-bold text-sm">
-                  {clients[currentClient].name
-                    .split(" ")
-                    .map((word) => word[0])
-                    .join("")}
-                </div>
-              </div>
-              <div>
-                <h4
-                  className={`${poppins.className} font-bold text-[#2c3639] text-lg`}
-                >
-                  {clients[currentClient].name}
-                </h4>
-                <p
-                  className={`${poppins.className} text-[#a27b5b] text-sm font-medium`}
-                >
-                  {clients[currentClient].industry}
-                </p>
-              </div>
-            </div>
-
-            <p
-              className={`${poppins.className} text-[#3f4e4f] text-lg leading-relaxed mb-6 italic`}
-            >
-              "{clients[currentClient].comment}"
-            </p>
-
-            <div className="flex items-center justify-between">
-              <span
-                className={`${poppins.className} text-[#2c3639] font-semibold`}
-              >
-                – {clients[currentClient].ceo}
-              </span>
-              <div className="flex gap-1">
-                {[...Array(clients[currentClient].rating)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-4 h-4 text-[#a27b5b] fill-current"
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Client Indicator Dots */}
-            <div className="flex justify-center gap-2 mt-6">
-              {clients.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentClient(index)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    index === currentClient
-                      ? "bg-[#a27b5b] w-6"
-                      : "bg-[#3f4e4f]/40"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Client Grid */}
-          <div className="grid grid-cols-2 gap-4">
-            {clients.slice(0, 4).map((client, index) => (
-              <div
-                key={client.name}
-                className={`group relative bg-[#dcd7c9]/30 rounded-2xl p-4 border border-[#3f4e4f]/20 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 ${
-                  index === currentClient
-                    ? "ring-2 ring-[#a27b5b]/50"
-                    : "hover:border-[#a27b5b]/40"
-                }`}
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#dcd7c9] flex items-center justify-center border border-[#3f4e4f]/20">
-                    <div className="w-6 h-6 bg-[#2c3639] rounded-lg flex items-center justify-center text-[#dcd7c9] text-xs font-bold">
-                      {client.name
-                        .split(" ")
-                        .map((word) => word[0])
-                        .join("")}
-                    </div>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h5
-                      className={`${poppins.className} font-semibold text-[#2c3639] text-sm truncate`}
-                    >
-                      {client.name}
-                    </h5>
-                    <p
-                      className={`${poppins.className} text-[#3f4e4f] text-xs`}
-                    >
-                      {client.industry}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-1 mb-2">
-                  {[...Array(client.rating)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="w-3 h-3 text-[#a27b5b] fill-current"
-                    />
-                  ))}
-                </div>
-
-                <p
-                  className={`${poppins.className} text-[#3f4e4f] text-xs leading-relaxed line-clamp-2`}
-                >
-                  {client.comment}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* Trust Badge */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-[#3f4e4f] bg-[#dcd7c9]/80 backdrop-blur-sm rounded-2xl p-4 border border-[#3f4e4f]/20">
-            <div className="flex items-center gap-2">
-              <Globe2 className="w-5 h-5 text-[#a27b5b]" />
-              <span className={`${poppins.className} text-sm font-medium`}>
-                Trusted by businesses in 10+ industries
-              </span>
-            </div>
-            <div className="w-px h-6 bg-[#3f4e4f]/30 hidden sm:block"></div>
-            <div className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-[#2c3639]" />
-              <span className={`${poppins.className} text-sm font-medium`}>
-                98% client retention
-              </span>
-            </div>
-          </div>
-        </div>
+        </motion.div>
       </div>
 
-      <style jsx global>{`
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-15px);
-          }
-        }
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-      `}</style>
+      {/* LAYER 2: GRID CONTENT */}
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 w-full px-6 lg:px-24 gap-10 lg:gap-16 items-center">
+        {/* LEFT: EDITORIAL */}
+        <motion.div
+          style={{ y: isLargeScreen ? textY : 0 }}
+          className="lg:col-span-5 order-2 lg:order-1"
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={active.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-6 lg:space-y-10"
+            >
+              <div className="space-y-2 lg:space-y-4">
+                <div className="flex items-center gap-3">
+                  <Minus size={16} className="text-[#a27b5b]" />
+                  <span className="text-[9px] lg:text-[10px] font-black uppercase tracking-[0.4em] lg:tracking-[0.6em] text-[#2c3639]/40 font-space">
+                    Case // 0{active.id}
+                  </span>
+                </div>
+                <h2 className="font-space text-5xl lg:text-[clamp(3.5rem,7vw,8rem)] font-bold leading-[0.9] tracking-tighter text-[#2c3639]">
+                  {active.name}
+                  <span className="text-[#a27b5b]">.</span>
+                </h2>
+              </div>
+
+              <p className="text-lg lg:text-2xl font-light leading-relaxed italic border-l-2 border-[#a27b5b] pl-5 lg:pl-8 max-w-sm text-[#2c3639]/80">
+                {active.comment}
+              </p>
+
+              <div className="flex flex-wrap gap-2 pt-2">
+                {active.services?.map((s) => (
+                  <span
+                    key={s}
+                    className="text-[8px] lg:text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 lg:px-4 lg:py-2 bg-[#2c3639] text-[#dcd7c9] rounded-sm"
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+
+              {/* Updated Link to /schedule */}
+              <Link href="/schedule">
+                <motion.button
+                  whileHover={{ gap: "30px" }}
+                  className="group flex items-center gap-4 lg:gap-6 pt-4 transition-all"
+                >
+                  <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-full border border-[#2c3639]/20 flex items-center justify-center group-hover:bg-[#2c3639] group-hover:text-[#dcd7c9] transition-all">
+                    <ArrowRight size={18} />
+                  </div>
+                  <span className="text-[9px] lg:text-[10px] font-black uppercase tracking-[0.3em] lg:tracking-[0.5em] text-[#2c3639]">
+                    Consult Now
+                  </span>
+                </motion.button>
+              </Link>
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
+
+        {/* RIGHT: IMAGE & NAV */}
+        <motion.div
+          style={{ y: isLargeScreen ? imageY : 0 }}
+          className="lg:col-span-7 flex justify-center lg:justify-end relative order-1 lg:order-2"
+        >
+          {/* NAV INDICATORS */}
+          <div className="absolute -left-4 lg:-left-20 top-1/2 -translate-y-1/2 flex flex-col gap-4 lg:gap-8 z-40">
+            {clients.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setIndex(i)}
+                className="group relative flex items-center"
+              >
+                <motion.div
+                  className="w-[2px] bg-[#2c3639]/10"
+                  animate={{
+                    height: index === i ? (isLargeScreen ? 40 : 25) : 12,
+                    backgroundColor: index === i ? "#a27b5b" : "#2c36391a",
+                  }}
+                />
+                <span
+                  className={`absolute left-4 text-[8px] lg:text-[9px] font-black font-space ${
+                    index === i ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  0{i + 1}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          {/* THE IMAGE ARTIFACT */}
+          <motion.div
+            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={() => {
+              x.set(0);
+              y.set(0);
+            }}
+            className="relative w-full max-w-[450px] lg:max-w-[560px] aspect-[4/5] overflow-hidden shadow-2xl rounded-[2rem_0.5rem_2rem_0.5rem] lg:rounded-[3rem_0.5rem_3rem_0.5rem]"
+          >
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active.image}
+                initial={{ filter: "grayscale(100%)", scale: 1.05 }}
+                animate={{ filter: "grayscale(100%)", scale: 1 }}
+                whileHover={{ filter: "grayscale(0%)", scale: 1.02 }}
+                transition={{ duration: 1 }}
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${active.image})` }}
+              />
+            </AnimatePresence>
+
+            <div className="absolute bottom-6 left-6 right-6 lg:bottom-10 lg:left-10 lg:right-10 text-white z-30 flex justify-between items-end mix-blend-difference">
+              <div className="flex flex-col items-start">
+                <Globe size={12} className="text-[#a27b5b] mb-1" />
+                <span className="text-[8px] lg:text-[10px] font-black uppercase tracking-widest font-space">
+                  {active.location}
+                </span>
+              </div>
+              <div className="flex gap-1.5">
+                <div
+                  className="w-6 h-6 lg:w-8 lg:h-8 rounded-md border border-white/20"
+                  style={{ backgroundColor: active.color }}
+                />
+                <div
+                  className="w-6 h-6 lg:w-8 lg:h-8 rounded-md border border-white/20"
+                  style={{ backgroundColor: active.accent }}
+                />
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      </div>
+
+      {/* LAYER 3: SYSTEM STATS */}
+      <div className="mt-auto px-6 lg:px-24 flex flex-col md:flex-row justify-between items-center md:items-end gap-8 border-t border-[#2c3639]/10 pt-10">
+        <div className="flex flex-wrap justify-center md:justify-start gap-8 lg:gap-20">
+          {[
+            { icon: Fingerprint, label: "Trust", val: "Legacy Protected" },
+            { icon: ShieldCheck, label: "Volume", val: "600+ Projects" },
+            { icon: Activity, label: "Cycle", val: "Est. 2023—2026" },
+          ].map((stat, i) => (
+            <div key={i} className="flex items-center gap-3 lg:gap-5">
+              <div className="p-2.5 lg:p-3.5 bg-white/40 rounded-xl border border-white/50 shadow-sm">
+                <stat.icon className="text-[#a27b5b]" size={18} />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[8px] font-black uppercase tracking-widest text-[#2c3639]/40 font-space">
+                  {stat.label}
+                </span>
+                <span className="text-[10px] lg:text-[11px] font-bold text-[#2c3639]">
+                  {stat.val}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-col items-center md:items-end opacity-30 pb-4 md:pb-0">
+          <Box size={20} className="mb-1" />
+          <span className="text-[8px] font-black tracking-widest uppercase font-space text-center">
+            High Fidelity Architecture
+          </span>
+        </div>
+      </div>
     </section>
   );
 }

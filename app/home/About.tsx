@@ -1,348 +1,275 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  Target,
-  Users,
-  Award,
-  Rocket,
-  Lightbulb,
-  ShieldCheck,
-  Globe2,
-  HeartHandshake,
-  Building2,
-  TrendingUp,
-  Clock,
-  CheckCircle,
-  ArrowRight,
-  Zap,
-  ChevronRight,
-} from "lucide-react";
+import { useRef } from "react";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { spaceGrotesk, inter } from "@/app/util/constants";
 
-interface ValueCard {
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  desc: string;
-  color: string;
-}
+// --- REFINED ARCHITECTURAL ICONS (ULTRA-MINIMAL) ---
+const IconPrecision = () => (
+  <svg
+    width="32"
+    height="32"
+    viewBox="0 0 32 32"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className="opacity-80"
+  >
+    <path d="M16 2V30M2 16H30" stroke="currentColor" strokeWidth="0.5" />
+    <circle cx="16" cy="16" r="6" stroke="currentColor" strokeWidth="0.5" />
+    <circle cx="16" cy="16" r="1" fill="currentColor" />
+  </svg>
+);
 
-export default function AboutSection() {
-  const [mounted, setMounted] = useState(false);
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+const IconFlux = () => (
+  <svg
+    width="32"
+    height="32"
+    viewBox="0 0 32 32"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className="opacity-80"
+  >
+    <path
+      d="M4 16C4 16 8 6 16 6C24 6 28 16 28 16M4 16C4 16 8 26 16 26C24 26 28 16 28 16"
+      stroke="currentColor"
+      strokeWidth="0.5"
+    />
+    <path d="M12 16H20" stroke="currentColor" strokeWidth="2" />
+  </svg>
+);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+export default function AboutMuseum() {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
 
-  const stats = [
-    { number: "300+", label: "Projects Delivered", icon: CheckCircle },
-    { number: "98%", label: "Client Satisfaction", icon: TrendingUp },
-    { number: "24/7", label: "Support Available", icon: Clock },
-    { number: "7+", label: "Years Experience", icon: Award },
-  ];
-
-  const visionMission: ValueCard[] = [
-    {
-      icon: Target,
-      title: "Our Vision",
-      desc: "To redefine how businesses leverage technology — making innovation accessible, scalable, and impactful.",
-      color: "#2c3639",
-    },
-    {
-      icon: Rocket,
-      title: "Our Mission",
-      desc: "To empower brands and institutions with intelligent solutions that drive measurable growth and transformation.",
-      color: "#a27b5b",
-    },
-  ];
-
-  const values: ValueCard[] = [
-    {
-      icon: ShieldCheck,
-      title: "Integrity & Trust",
-      desc: "We believe in transparency, accountability, and building lasting partnerships.",
-      color: "#2c3639",
-    },
-    {
-      icon: Lightbulb,
-      title: "Innovation",
-      desc: "Every project we deliver is powered by creativity, research, and emerging technologies.",
-      color: "#a27b5b",
-    },
-    {
-      icon: Users,
-      title: "Collaboration",
-      desc: "We work closely with our clients to ensure their goals are met — together.",
-      color: "#3f4e4f",
-    },
-    {
-      icon: Award,
-      title: "Excellence",
-      desc: "We don't settle for good. We aim for exceptional in everything we create.",
-      color: "#2c3639",
-    },
-  ];
-
-  const reasons: ValueCard[] = [
-    {
-      icon: Target,
-      title: "Purpose-Driven",
-      desc: "Our solutions are built around your vision and tailored to meet measurable outcomes.",
-      color: "#2c3639",
-    },
-    {
-      icon: HeartHandshake,
-      title: "Client-Centric",
-      desc: "Your success defines ours. Every solution is created to empower your business.",
-      color: "#a27b5b",
-    },
-    {
-      icon: Zap,
-      title: "Future-Focused",
-      desc: "We leverage AI, automation, and cloud technologies to future-proof your operations.",
-      color: "#3f4e4f",
-    },
-    {
-      icon: Globe2,
-      title: "Global Expertise",
-      desc: "With clients and partners worldwide, our strategies scale beyond borders.",
-      color: "#2c3639",
-    },
-  ];
-
-  // Helper function to get icon color class based on color value
-  const getIconColorClass = (color: string) => {
-    switch (color) {
-      case "#2c3639":
-        return "text-[#2c3639]";
-      case "#a27b5b":
-        return "text-[#a27b5b]";
-      case "#3f4e4f":
-        return "text-[#3f4e4f]";
-      default:
-        return "text-[#2c3639]";
-    }
-  };
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
 
   return (
-    <section className="relative bg-white py-24 lg:py-32 overflow-hidden">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#a27b5b]/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#3f4e4f]/20 to-transparent" />
+    <section
+      ref={containerRef}
+      className={`relative bg-[#F4F1EA] text-[#1A1A1A] py-20 lg:py-56 overflow-hidden ${inter.className}`}
+    >
+      {/* 01. THE BACKGROUND LAYER: SCULPTURAL TEXT */}
+      <motion.div
+        style={{ y: y1 }}
+        className="absolute top-10 lg:top-20 left-0 w-full whitespace-nowrap pointer-events-none opacity-[0.03] select-none"
+      >
+        <h2
+          className={`${spaceGrotesk.className} text-[40vw] lg:text-[25vw] font-black uppercase leading-none`}
+        >
+          Infrastructure Excellence Architecture
+        </h2>
+      </motion.div>
 
-        {/* Grid pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(44,54,57,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(44,54,57,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,black,transparent)]"></div>
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+        {/* 02. THE HEADER: EDITORIAL SPREAD */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-24 lg:mb-60">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-9"
+          >
+            <div className="flex items-center gap-4 mb-6 lg:mb-10">
+              <div className="w-8 lg:w-12 h-[1px] bg-[#C5A371]" />
+              <span
+                className={`${spaceGrotesk.className} text-[9px] lg:text-[11px] tracking-[0.4em] lg:tracking-[0.8em] uppercase font-bold text-[#C5A371]`}
+              >
+                EBCom Manifesto
+              </span>
+            </div>
+            <h2
+              className={`${spaceGrotesk.className} text-5xl md:text-7xl lg:text-[130px] leading-[0.9] lg:leading-[0.8] font-bold tracking-tighter uppercase`}
+            >
+              Digital <br />
+              <span className="italic font-light text-[#C5A371]/40 pr-2 lg:pr-4">
+                Ecosystem
+              </span>{" "}
+              <br />
+              Architecture.
+            </h2>
+          </motion.div>
 
-        {/* Accent dots */}
-        <div className="absolute top-20 right-20 w-2 h-2 bg-[#a27b5b]/30 rounded-full animate-pulse" />
-        <div className="absolute bottom-40 left-10 w-3 h-3 bg-[#3f4e4f]/20 rounded-full" />
-        <div className="absolute top-1/3 left-20 w-1 h-1 bg-[#2c3639]/20 rounded-full" />
-      </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ delay: 0.5, duration: 1 }}
+            className="lg:col-span-3 flex flex-col justify-end"
+          >
+            <div className="space-y-4 lg:space-y-6 max-w-md lg:max-w-none">
+              <p className="text-[10px] font-bold uppercase tracking-widest opacity-30 italic">
+                / Manifesto
+              </p>
+              <p className="text-lg lg:text-xl font-light leading-relaxed text-black/80">
+                EBCom builds invisible, indispensable digital infrastructure for
+                the world’s most ambitious brands.
+              </p>
+            </div>
+          </motion.div>
+        </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#a27b5b]/10 border border-[#a27b5b]/20 mb-6">
-            <Building2 className="w-4 h-4 text-[#a27b5b]" />
-            <span className="text-sm font-medium text-[#a27b5b] tracking-wider uppercase">
-              About Our Company
+        {/* 03. THE GALLERY GRID: METRICS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-black/10 mb-24 lg:mb-60">
+          {[
+            {
+              val: "15+",
+              label: "Artifacts Delivered",
+              detail: "Bespoke Nodes",
+            },
+            {
+              val: "100%",
+              label: "Client Retention",
+              detail: "Partner Loyalty",
+            },
+            {
+              val: "24/7",
+              label: "Protocol Uptime",
+              detail: "Active Monitoring",
+            },
+            {
+              val: "03",
+              label: "Continents Served",
+              detail: "Global Infrastructure",
+            },
+          ].map((stat, i) => (
+            <motion.div
+              key={i}
+              whileHover={{ backgroundColor: "#1A1A1A", color: "#F4F1EA" }}
+              className="bg-[#F4F1EA] p-8 lg:p-12 transition-all duration-500 group"
+            >
+              <h4
+                className={`${spaceGrotesk.className} text-4xl lg:text-5xl font-bold mb-4 tracking-tighter`}
+              >
+                {stat.val}
+              </h4>
+              <p className="text-[9px] lg:text-[10px] uppercase tracking-[0.3em] lg:tracking-[0.4em] font-black text-[#C5A371] mb-1">
+                {stat.label}
+              </p>
+              <p className="text-[8px] lg:text-[9px] uppercase tracking-widest opacity-30 font-medium group-hover:opacity-60 transition-opacity">
+                {stat.detail}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* 04. BENTO: THE DUAL MONOLITHS */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-24 lg:mb-60">
+          <motion.div
+            whileHover={{ y: -10 }}
+            className="relative bg-white border border-black/5 p-10 lg:p-24 flex flex-col justify-between aspect-auto md:aspect-square group overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 p-8 lg:p-12 opacity-10 group-hover:opacity-100 transition-opacity duration-700">
+              <IconPrecision />
+            </div>
+            <span
+              className={`${spaceGrotesk.className} text-[10px] font-bold opacity-20 uppercase tracking-[0.5em] lg:tracking-[1em] mb-12 lg:mb-0`}
+            >
+              01 / Vision
             </span>
-          </div>
-
-          <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-[#2c3639] mb-6">
-            Driving Digital{" "}
-            <span className="text-[#a27b5b]">Transformation</span>
-          </h2>
-
-          <p className="text-lg lg:text-xl text-[#3f4e4f] max-w-3xl mx-auto leading-relaxed">
-            We are a digital innovation company committed to helping businesses
-            harness the power of technology for growth, efficiency, and impact.
-            From software development to digital transformation, EBCom is where
-            vision meets precision.
-          </p>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-20">
-          {stats.map((stat, index) => {
-            const Icon = stat.icon;
-            return (
-              <div
-                key={stat.label}
-                className={`bg-white border border-gray-100 rounded-xl p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-[#a27b5b]/30 ${
-                  mounted
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
-                }`}
-                style={{
-                  transitionDelay: `${index * 100}ms`,
-                }}
+            <div className="max-w-md">
+              <h3
+                className={`${spaceGrotesk.className} text-4xl lg:text-5xl font-bold uppercase tracking-tight mb-6 lg:mb-8`}
               >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-[#a27b5b]/10 flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-[#a27b5b]" />
-                  </div>
-                  <div className="text-3xl font-bold text-[#2c3639]">
-                    {stat.number}
-                  </div>
-                </div>
-                <div className="text-sm font-medium text-[#3f4e4f]">
-                  {stat.label}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                The Global <br /> Benchmark.
+              </h3>
+              <p className="text-lg lg:text-xl font-light leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity">
+                To become Africa’s most trusted digital engineering firm,
+                setting global benchmarks for resilient technology.
+              </p>
+            </div>
+          </motion.div>
 
-        {/* Vision & Mission */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-20">
-          {visionMission.map((item, index) => {
-            const Icon = item.icon;
-            const iconColorClass = getIconColorClass(item.color);
-            return (
-              <div
-                key={item.title}
-                className="relative overflow-hidden rounded-2xl bg-white border border-gray-100 p-8 group hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-                onMouseEnter={() => setHoveredCard(index)}
-                onMouseLeave={() => setHoveredCard(null)}
+          <motion.div
+            whileHover={{ y: -10 }}
+            className="relative bg-[#1A1A1A] text-[#F4F1EA] p-10 lg:p-24 flex flex-col justify-between aspect-auto md:aspect-square group overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 p-8 lg:p-12 text-[#C5A371] opacity-20 group-hover:opacity-100 transition-opacity duration-700">
+              <IconFlux />
+            </div>
+            <span
+              className={`${spaceGrotesk.className} text-[10px] font-bold text-[#C5A371] uppercase tracking-[0.5em] lg:tracking-[1em] mb-12 lg:mb-0`}
+            >
+              02 / Mission
+            </span>
+            <div className="max-w-md">
+              <h3
+                className={`${spaceGrotesk.className} text-4xl lg:text-5xl font-bold uppercase tracking-tight mb-6 lg:mb-8 text-[#C5A371]`}
               >
-                <div className="relative z-10">
-                  <div className="flex items-start gap-4 mb-6">
-                    <div
-                      className="w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-                      style={{ backgroundColor: item.color + "10" }}
-                    >
-                      <Icon className={`w-7 h-7 ${iconColorClass}`} />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-[#2c3639] mb-2">
-                        {item.title}
-                      </h3>
-                      <div className="w-12 h-0.5 bg-[#a27b5b] rounded-full"></div>
-                    </div>
-                  </div>
-                  <p className="text-[#3f4e4f] leading-relaxed">{item.desc}</p>
-                </div>
+                Invisible <br /> Logic.
+              </h3>
+              <p className="text-lg lg:text-xl font-light leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity">
+                Empowering visionary founders by crafting digital ecosystems
+                that are invisible in operation but indispensable.
+              </p>
+            </div>
+          </motion.div>
+        </div>
 
-                {/* Background accent */}
-                <div
-                  className="absolute bottom-0 left-0 w-full h-1 transition-all duration-300 group-hover:h-full group-hover:opacity-5"
-                  style={{ backgroundColor: item.color }}
-                ></div>
+        {/* 05. CORE PILLARS: THE EXHIBITION LIST */}
+        <div className="space-y-0">
+          <div className="flex items-center gap-6 mb-10 lg:mb-16">
+            <h3
+              className={`${spaceGrotesk.className} text-[10px] lg:text-xs font-black uppercase tracking-[0.4em] lg:tracking-[0.6em] text-[#C5A371]`}
+            >
+              Core Pillars
+            </h3>
+            <div className="h-[1px] flex-1 bg-black/10" />
+          </div>
+
+          {[
+            {
+              title: "Radical Transparency",
+              desc: "Open communication, clear architecture, and honest timelines.",
+              cat: "COMMUNICATION",
+            },
+            {
+              title: "Design as Engineering",
+              desc: "Every pixel is a structural element. We treat interfaces as buildings.",
+              cat: "STRUCTURE",
+            },
+            {
+              title: "Permanent Relevance",
+              desc: "We don't build for today; we build for the next decade.",
+              cat: "LONGEVITY",
+            },
+          ].map((pillar, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="group border-b border-black/10 py-10 lg:py-16 flex flex-col md:grid md:grid-cols-12 gap-4 lg:gap-8 hover:bg-white transition-all duration-700 px-2 lg:px-6 cursor-crosshair"
+            >
+              <div className="md:col-span-1">
+                <span
+                  className={`${spaceGrotesk.className} text-[10px] lg:text-xs font-bold opacity-20 group-hover:text-[#C5A371] group-hover:opacity-100 transition-all`}
+                >
+                  0{i + 1}
+                </span>
               </div>
-            );
-          })}
-        </div>
-
-        {/* Core Values */}
-        <div className="mb-20">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl lg:text-4xl font-bold text-[#2c3639] mb-4">
-              Our Core Values
-            </h3>
-            <p className="text-[#3f4e4f] max-w-2xl mx-auto">
-              The principles that guide every project we undertake and every
-              relationship we build
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {values.map((item, index) => {
-              const Icon = item.icon;
-              const iconColorClass = getIconColorClass(item.color);
-              return (
-                <div
-                  key={item.title}
-                  className="group relative bg-white border border-gray-100 rounded-xl p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-[#a27b5b]/30"
-                  onMouseEnter={() => setHoveredCard(index + 10)}
-                  onMouseLeave={() => setHoveredCard(null)}
+              <div className="md:col-span-6">
+                <h4
+                  className={`${spaceGrotesk.className} text-3xl md:text-5xl font-bold uppercase tracking-tighter group-hover:translate-x-2 lg:group-hover:translate-x-4 transition-transform duration-700`}
                 >
-                  <div className="flex flex-col h-full">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div
-                        className="w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
-                        style={{ backgroundColor: item.color + "10" }}
-                      >
-                        <Icon className={`w-6 h-6 ${iconColorClass}`} />
-                      </div>
-                      <h4 className="text-lg font-bold text-[#2c3639] flex-1">
-                        {item.title}
-                      </h4>
-                    </div>
-                    <p className="text-[#3f4e4f] text-sm leading-relaxed flex-1">
-                      {item.desc}
-                    </p>
-                    <div className="mt-4 pt-4 border-t border-gray-100">
-                      <div className="flex items-center text-sm font-medium text-[#a27b5b] group-hover:gap-2 transition-all duration-300">
-                        <span>Learn more</span>
-                        <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-300" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Why Choose Us */}
-        <div className="mb-20">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl lg:text-4xl font-bold text-[#2c3639] mb-4">
-              Why Choose EBCom
-            </h3>
-            <p className="text-[#3f4e4f] max-w-2xl mx-auto">
-              Discover what sets us apart and why businesses trust us with their
-              digital transformation
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {reasons.map((item, index) => {
-              const Icon = item.icon;
-              const iconColorClass = getIconColorClass(item.color);
-              return (
-                <div
-                  key={item.title}
-                  className="group relative bg-white border border-gray-100 rounded-xl p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-2"
-                  onMouseEnter={() => setHoveredCard(index + 20)}
-                  onMouseLeave={() => setHoveredCard(null)}
-                >
-                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <div className="w-2 h-2 bg-[#a27b5b] rounded-full animate-ping"></div>
-                  </div>
-
-                  <div className="mb-4">
-                    <div
-                      className="w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-[#a27b5b]"
-                      style={{
-                        backgroundColor: item.color + "10",
-                      }}
-                    >
-                      <Icon
-                        className={`w-6 h-6 ${iconColorClass} transition-all duration-300 group-hover:text-white`}
-                      />
-                    </div>
-                    <h4 className="text-xl font-bold text-[#2c3639] mb-2">
-                      {item.title}
-                    </h4>
-                  </div>
-
-                  <p className="text-[#3f4e4f] text-sm leading-relaxed mb-6">
-                    {item.desc}
-                  </p>
-
-                  <div className="pt-4 border-t border-gray-100">
-                    <button className="text-sm font-medium text-[#a27b5b] hover:text-[#2c3639] transition-colors flex items-center gap-1 group-hover:gap-2">
-                      <span>Read case study</span>
-                      <ArrowRight className="w-4 h-4 transition-all duration-300" />
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                  {pillar.title}
+                </h4>
+              </div>
+              <div className="md:col-span-4">
+                <p className="text-sm lg:text-base font-light text-black/50 group-hover:text-black transition-colors leading-relaxed">
+                  {pillar.desc}
+                </p>
+              </div>
+              <div className="md:col-span-1 text-left md:text-right">
+                <span className="text-[8px] lg:text-[9px] font-black tracking-widest opacity-20 uppercase group-hover:opacity-100">
+                  {pillar.cat}
+                </span>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

@@ -1,929 +1,274 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo, useCallback } from "react";
-import { Bebas_Neue, Poppins, Gantari } from "next/font/google";
-import dynamic from "next/dynamic";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  Code,
-  Network,
-  Shield,
-  Cloud,
-  Smartphone,
-  Zap,
   ArrowRight,
-  Play,
-  Pause,
-  MessageCircle,
-  Layout,
-  Palette,
-  Figma,
-  Terminal,
-  Rocket,
-  CheckCircle2,
-  Users,
-  FileText,
-  Menu,
-  X,
+  ArrowLeft,
+  Command,
+  Plus,
+  ArrowUpRight,
 } from "lucide-react";
+import dynamic from "next/dynamic";
+import Link from "next/link";
 
-// Import Lottie animations
+// Dynamically import Lottie
+const Lottie = dynamic(() => import("lottie-react"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full bg-[#2c3639]/20 animate-pulse rounded-full" />
+  ),
+});
+
+// Import Lottie animations (Placeholder names based on your original)
 import discussionAnimation from "@/public/assets/animations/chat_bot.json";
 import wireframeAnimation from "@/public/assets/animations/digital.json";
 import designAnimation from "@/public/assets/animations/mobile_showcase.json";
 import prototypeAnimation from "@/public/assets/animations/cloud_security.json";
 import developmentAnimation from "@/public/assets/animations/cybersecurity.json";
 import deploymentAnimation from "@/public/assets/animations/network.json";
-import networkAnimation from "@/public/assets/animations/network.json";
-import securityAnimation from "@/public/assets/animations/cybersecurity.json";
-import cloudAnimation from "@/public/assets/animations/cloud_security.json";
-import mobileAnimation from "@/public/assets/animations/mobile_showcase.json";
-import Link from "next/link";
-
-// Dynamically import Lottie to reduce initial bundle size
-const Lottie = dynamic(() => import("lottie-react"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-32 lg:h-48 bg-[#DCD7C9] rounded-xl animate-pulse" />
-  ),
-});
-
-// Font configurations
-const bebasNeue = Bebas_Neue({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-bebas-neue",
-});
-
-const poppins = Poppins({
-  weight: ["300", "400", "500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-poppins",
-});
-
-const gantari = Gantari({
-  weight: ["300", "400", "500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-gantari",
-});
-
-// Lottie animations mapping
-const lottieAnimations = {
-  discussion: discussionAnimation,
-  wireframe: wireframeAnimation,
-  design: designAnimation,
-  prototype: prototypeAnimation,
-  development: developmentAnimation,
-  deployment: deploymentAnimation,
-  network: networkAnimation,
-  security: securityAnimation,
-  cloud: cloudAnimation,
-  mobile: mobileAnimation,
-};
 
 const services = [
   {
-    id: "software",
-    title: "Software Development",
-    icon: Code,
-    color: "from-[#2c3639] to-[#3f4e4f]",
-    bgColor: "bg-[#2c3639]/10",
-    borderColor: "border-[#2c3639]/20",
+    id: "SOFTWARE",
+    title: "Software Engineering",
     steps: [
       {
-        title: "Discovery & Discussion",
+        title: "Discovery Audit",
+        lottie: discussionAnimation,
+        duration: "10 Days",
+        deliverables: ["Project Brief", "Tech Stack Audit"],
         description:
-          "We start by understanding your vision, goals, and requirements through detailed conversations.",
-        icon: MessageCircle,
-        duration: "1-2 weeks",
-        deliverables: ["Project Brief", "Requirements Document", "Timeline"],
-        lottie: "discussion",
+          "We begin with an architectural excavation, identifying core technical requirements.",
       },
       {
-        title: "Wireframing",
+        title: "Wireframe Logic",
+        lottie: wireframeAnimation,
+        duration: "14 Days",
+        deliverables: ["User Flow", "Blueprints"],
         description:
-          "Creating the structural blueprint of your application with focus on user flow and functionality.",
-        icon: Layout,
-        duration: "2-3 weeks",
-        deliverables: [
-          "Wireframes",
-          "User Flow Maps",
-          "Information Architecture",
-        ],
-        lottie: "wireframe",
+          "Before aesthetics, we define logic. We map the structural skeleton of your application.",
       },
       {
-        title: "UI/UX Design",
+        title: "Vogue Design",
+        lottie: designAnimation,
+        duration: "21 Days",
+        deliverables: ["Hi-Fi UI", "Style Guide"],
         description:
-          "Transforming wireframes into beautiful, intuitive designs with focus on user experience.",
-        icon: Palette,
-        duration: "3-4 weeks",
-        deliverables: [
-          "Visual Designs",
-          "Style Guide",
-          "Interactive Prototypes",
-        ],
-        lottie: "design",
-      },
-      {
-        title: "Prototyping",
-        description:
-          "Building interactive prototypes to test and validate the user experience before development.",
-        icon: Figma,
-        duration: "1-2 weeks",
-        deliverables: [
-          "Clickable Prototype",
-          "User Testing Reports",
-          "Design Revisions",
-        ],
-        lottie: "prototype",
-      },
-      {
-        title: "Development",
-        description:
-          "Writing clean, efficient code to bring your vision to life with modern technologies.",
-        icon: Terminal,
-        duration: "6-12 weeks",
-        deliverables: [
-          "Source Code",
-          "Development Updates",
-          "Quality Assurance",
-        ],
-        lottie: "development",
-      },
-      {
-        title: "Web & App Deployment",
-        description:
-          "Launching your product to the world with thorough testing and optimization.",
-        icon: Rocket,
-        duration: "1-2 weeks",
-        deliverables: ["Live Website/App", "Documentation", "Training"],
-        lottie: "deployment",
+          "Merging high-fashion aesthetics with functional UX digital statements.",
       },
     ],
   },
   {
-    id: "network",
-    title: "Network Solutions",
-    icon: Network,
-    color: "from-[#a27b5b] to-[#8a6a4f]",
-    bgColor: "bg-[#a27b5b]/10",
-    borderColor: "border-[#a27b5b]/20",
+    id: "SECURITY",
+    title: "Cyber Infrastructure",
     steps: [
       {
-        title: "Network Assessment",
+        title: "Threat Assessment",
+        lottie: developmentAnimation,
+        duration: "7 Days",
+        deliverables: ["Risk Audit"],
         description:
-          "Comprehensive analysis of your current infrastructure and requirements.",
-        icon: FileText,
-        duration: "1 week",
-        deliverables: ["Network Audit", "Requirements Analysis", "Proposal"],
-        lottie: "network",
-      },
-      {
-        title: "Infrastructure Planning",
-        description:
-          "Designing robust network architecture tailored to your business needs.",
-        icon: Layout,
-        duration: "2 weeks",
-        deliverables: [
-          "Network Diagrams",
-          "Hardware Specs",
-          "Implementation Plan",
-        ],
-        lottie: "network",
-      },
-      {
-        title: "Hardware Installation",
-        description:
-          "Professional installation of routers, switches, and network equipment.",
-        icon: Zap,
-        duration: "2-3 weeks",
-        deliverables: [
-          "Installed Hardware",
-          "Configuration Files",
-          "Testing Reports",
-        ],
-        lottie: "network",
-      },
-      {
-        title: "Configuration & Security",
-        description:
-          "Setting up secure network configurations and implementing security protocols.",
-        icon: Shield,
-        duration: "2 weeks",
-        deliverables: [
-          "Network Security",
-          "Access Controls",
-          "Monitoring Setup",
-        ],
-        lottie: "security",
-      },
-      {
-        title: "Testing & Optimization",
-        description:
-          "Thorough testing and performance optimization of the entire network.",
-        icon: CheckCircle2,
-        duration: "1 week",
-        deliverables: ["Performance Reports", "Optimization", "Documentation"],
-        lottie: "network",
-      },
-      {
-        title: "Deployment & Support",
-        description:
-          "Final deployment and ongoing support with 24/7 monitoring.",
-        icon: Cloud,
-        duration: "Ongoing",
-        deliverables: ["Live Network", "Support Plan", "Monitoring Dashboard"],
-        lottie: "cloud",
-      },
-    ],
-  },
-  {
-    id: "security",
-    title: "Security Systems",
-    icon: Shield,
-    color: "from-[#3f4e4f] to-[#2c3639]",
-    bgColor: "bg-[#3f4e4f]/10",
-    borderColor: "border-[#3f4e4f]/20",
-    steps: [
-      {
-        title: "Security Assessment",
-        description:
-          "Evaluating your current security posture and identifying vulnerabilities.",
-        icon: FileText,
-        duration: "1 week",
-        deliverables: ["Security Audit", "Risk Assessment", "Recommendations"],
-        lottie: "security",
-      },
-      {
-        title: "System Design",
-        description:
-          "Designing comprehensive security systems with CCTV, access control, and alarms.",
-        icon: Layout,
-        duration: "2 weeks",
-        deliverables: [
-          "System Design",
-          "Equipment List",
-          "Implementation Plan",
-        ],
-        lottie: "security",
-      },
-      {
-        title: "Hardware Installation",
-        description:
-          "Professional installation of cameras, sensors, and security equipment.",
-        icon: Zap,
-        duration: "3-4 weeks",
-        deliverables: ["Installed Equipment", "Wiring", "Initial Setup"],
-        lottie: "security",
-      },
-      {
-        title: "System Integration",
-        description:
-          "Integrating all security components into a unified management system.",
-        icon: Network,
-        duration: "2 weeks",
-        deliverables: ["Integrated System", "Control Panel", "Mobile Access"],
-        lottie: "security",
-      },
-      {
-        title: "Testing & Calibration",
-        description:
-          "Comprehensive testing and fine-tuning of all security systems.",
-        icon: CheckCircle2,
-        duration: "1 week",
-        deliverables: ["Test Reports", "Calibration Data", "User Training"],
-        lottie: "security",
-      },
-      {
-        title: "Monitoring Setup",
-        description: "Setting up 24/7 monitoring and response protocols.",
-        icon: Cloud,
-        duration: "1 week",
-        deliverables: ["Monitoring System", "Response Plan", "Support Setup"],
-        lottie: "cloud",
-      },
-    ],
-  },
-  {
-    id: "cloud",
-    title: "Cloud Solutions",
-    icon: Cloud,
-    color: "from-[#2c3639] to-[#a27b5b]",
-    bgColor: "bg-[#2c3639]/10",
-    borderColor: "border-[#2c3639]/20",
-    steps: [
-      {
-        title: "Cloud Strategy",
-        description:
-          "Developing a comprehensive cloud migration and implementation strategy.",
-        icon: Users,
-        duration: "2 weeks",
-        deliverables: ["Cloud Strategy", "Migration Plan", "Cost Analysis"],
-        lottie: "cloud",
-      },
-      {
-        title: "Architecture Design",
-        description:
-          "Designing scalable and secure cloud infrastructure architecture.",
-        icon: Layout,
-        duration: "3 weeks",
-        deliverables: [
-          "Architecture Diagrams",
-          "Security Plan",
-          "Scalability Design",
-        ],
-        lottie: "cloud",
-      },
-      {
-        title: "Migration Planning",
-        description:
-          "Planning the seamless migration of data and applications to the cloud.",
-        icon: FileText,
-        duration: "2 weeks",
-        deliverables: ["Migration Plan", "Data Strategy", "Backup Plan"],
-        lottie: "cloud",
-      },
-      {
-        title: "Implementation",
-        description:
-          "Executing the cloud migration and setting up the infrastructure.",
-        icon: Terminal,
-        duration: "4-8 weeks",
-        deliverables: [
-          "Cloud Environment",
-          "Migrated Data",
-          "Application Setup",
-        ],
-        lottie: "cloud",
-      },
-      {
-        title: "Security & Compliance",
-        description:
-          "Implementing security measures and ensuring compliance standards.",
-        icon: Shield,
-        duration: "2 weeks",
-        deliverables: [
-          "Security Configuration",
-          "Compliance Reports",
-          "Access Controls",
-        ],
-        lottie: "security",
-      },
-      {
-        title: "Optimization & Support",
-        description:
-          "Continuous optimization and 24/7 support for your cloud infrastructure.",
-        icon: Zap,
-        duration: "Ongoing",
-        deliverables: [
-          "Performance Optimization",
-          "Cost Management",
-          "Support Services",
-        ],
-        lottie: "cloud",
-      },
-    ],
-  },
-  {
-    id: "mobile",
-    title: "Mobile Development",
-    icon: Smartphone,
-    color: "from-[#a27b5b] to-[#3f4e4f]",
-    bgColor: "bg-[#a27b5b]/10",
-    borderColor: "border-[#a27b5b]/20",
-    steps: [
-      {
-        title: "Concept & Strategy",
-        description:
-          "Defining your mobile app vision, target audience, and business objectives.",
-        icon: Users,
-        duration: "1-2 weeks",
-        deliverables: ["App Strategy", "Market Research", "Feature List"],
-        lottie: "mobile",
-      },
-      {
-        title: "UX Design & Wireframes",
-        description:
-          "Creating user-centric designs and interactive wireframes for optimal mobile experience.",
-        icon: Layout,
-        duration: "2-3 weeks",
-        deliverables: ["User Flows", "Wireframes", "UX Research"],
-        lottie: "wireframe",
-      },
-      {
-        title: "UI Design",
-        description:
-          "Crafting beautiful, intuitive interfaces following iOS and Android guidelines.",
-        icon: Palette,
-        duration: "3-4 weeks",
-        deliverables: ["UI Designs", "Design System", "Iconography"],
-        lottie: "design",
-      },
-      {
-        title: "Prototype Development",
-        description:
-          "Building functional prototypes to test user experience and gather feedback.",
-        icon: Figma,
-        duration: "2 weeks",
-        deliverables: [
-          "Interactive Prototype",
-          "User Testing",
-          "Feedback Reports",
-        ],
-        lottie: "prototype",
-      },
-      {
-        title: "Native Development",
-        description:
-          "Developing high-performance native apps for iOS and Android platforms.",
-        icon: Terminal,
-        duration: "8-16 weeks",
-        deliverables: ["iOS App", "Android App", "API Integration"],
-        lottie: "development",
-      },
-      {
-        title: "App Store Deployment",
-        description:
-          "Publishing your app to Apple App Store and Google Play Store.",
-        icon: Rocket,
-        duration: "1-2 weeks",
-        deliverables: [
-          "App Store Listings",
-          "Store Optimization",
-          "Launch Plan",
-        ],
-        lottie: "deployment",
+          "A comprehensive vulnerability scan across your entire digital surface.",
       },
     ],
   },
 ];
 
 export default function ServiceProcess() {
-  const [activeService, setActiveService] = useState(services[0]);
-  const [activeStep, setActiveStep] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const stepsRef = useRef<HTMLDivElement>(null);
+  const [activeServiceIdx, setActiveServiceIdx] = useState(0);
+  const [activeStepIdx, setActiveStepIdx] = useState(0);
 
-  // Refs for performance
-  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const animationFrameRef = useRef<number | null>(null);
-  const isScrollingRef = useRef(false);
+  const activeService = services[activeServiceIdx];
+  const currentStep = activeService.steps[activeStepIdx];
 
-  // Memoize services
-  const memoizedServices = useMemo(() => services, []);
-
-  // Optimized scroll handler with throttling
-  const handleScroll = useCallback(() => {
-    if (isScrollingRef.current || !stepsRef.current) return;
-
-    if (scrollTimeoutRef.current) {
-      clearTimeout(scrollTimeoutRef.current);
+  const handleNext = () => {
+    if (activeStepIdx < activeService.steps.length - 1) {
+      setActiveStepIdx((prev) => prev + 1);
+    } else if (activeServiceIdx < services.length - 1) {
+      setActiveServiceIdx((prev) => prev + 1);
+      setActiveStepIdx(0);
     }
+  };
 
-    scrollTimeoutRef.current = setTimeout(() => {
-      if (!stepsRef.current) return;
-
-      const element = stepsRef.current;
-      const scrollTop = element.scrollTop;
-      const scrollHeight = element.scrollHeight - element.clientHeight;
-
-      // Only calculate step if scroll is significant
-      const stepHeight = element.scrollHeight / activeService.steps.length;
-      const currentStep = Math.floor(scrollTop / stepHeight);
-
-      if (currentStep !== activeStep) {
-        setActiveStep(Math.min(currentStep, activeService.steps.length - 1));
-      }
-
-      isScrollingRef.current = false;
-    }, 50); // Increased throttle time
-  }, [activeService.steps.length, activeStep]);
-
-  // Passive scroll listener
-  useEffect(() => {
-    const stepsElement = stepsRef.current;
-    if (!stepsElement) return;
-
-    const scrollOptions = { passive: true };
-    stepsElement.addEventListener("scroll", handleScroll, scrollOptions);
-
-    return () => {
-      stepsElement.removeEventListener("scroll", handleScroll);
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
-  }, [handleScroll]);
-
-  // Optimized auto-scroll with cleanup
-  useEffect(() => {
-    let interval: ReturnType<typeof setTimeout> | null = null;
-
-    const scrollToNextStep = () => {
-      if (!stepsRef.current || activeStep >= activeService.steps.length - 1) {
-        setIsPlaying(false);
-        return;
-      }
-
-      const nextStep = activeStep + 1;
-      const stepHeight =
-        stepsRef.current.scrollHeight / activeService.steps.length;
-
-      stepsRef.current.scrollTo({
-        top: stepHeight * nextStep,
-        behavior: "smooth",
-      });
-
-      // Update step after scroll completes
-      setTimeout(() => {
-        setActiveStep(nextStep);
-      }, 300);
-    };
-
-    if (isPlaying) {
-      interval = setInterval(scrollToNextStep, 3000); // Reduced frequency
+  const handlePrev = () => {
+    if (activeStepIdx > 0) {
+      setActiveStepIdx((prev) => prev - 1);
+    } else if (activeServiceIdx > 0) {
+      setActiveServiceIdx((prev) => prev - 1);
+      setActiveStepIdx(services[activeServiceIdx - 1].steps.length - 1);
     }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isPlaying, activeStep, activeService.steps.length]);
-
-  // Memoized event handlers
-  const handleServiceChange = useCallback((service: (typeof services)[0]) => {
-    setActiveService(service);
-    setActiveStep(0);
-    setIsPlaying(false);
-    setIsMobileMenuOpen(false);
-
-    // Reset scroll position without causing re-render
-    if (stepsRef.current) {
-      stepsRef.current.scrollTop = 0;
-    }
-  }, []);
-
-  const scrollToStep = useCallback(
-    (index: number) => {
-      setActiveStep(index);
-      setIsPlaying(false);
-      isScrollingRef.current = true;
-
-      if (stepsRef.current) {
-        const stepHeight =
-          stepsRef.current.scrollHeight / activeService.steps.length;
-        stepsRef.current.scrollTo({
-          top: stepHeight * index,
-          behavior: "smooth",
-        });
-
-        // Reset scrolling flag after animation
-        setTimeout(() => {
-          isScrollingRef.current = false;
-        }, 500);
-      }
-    },
-    [activeService.steps.length]
-  );
-
-  const togglePlay = useCallback(() => {
-    setIsPlaying((prev) => !prev);
-  }, []);
-
-  const currentStepData = useMemo(
-    () => activeService.steps[activeStep],
-    [activeService, activeStep]
-  );
-
-  const stepElements = useMemo(
-    () =>
-      activeService.steps.map((step, index) => {
-        const StepIcon = step.icon;
-        const isStepActive = index === activeStep;
-        const isStepVisible = Math.abs(index - activeStep) <= 1;
-
-        return (
-          <div
-            key={index}
-            className={`group relative transition-all duration-300 ${
-              index <= activeStep
-                ? "opacity-100 translate-y-0"
-                : "opacity-40 translate-y-4"
-            }`}
-          >
-            {/* Connection Line */}
-            {index < activeService.steps.length - 1 && (
-              <div
-                className={`absolute left-6 top-20 w-0.5 h-24 transition-all duration-300 ${
-                  index < activeStep
-                    ? `bg-gradient-to-b ${activeService.color}`
-                    : "bg-[#3f4e4f]/30"
-                }`}
-              />
-            )}
-
-            <div className="flex gap-4 lg:gap-6">
-              {/* Step Number */}
-              <div
-                className={`flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center font-bebas-neue text-xl transition-all duration-300 ${
-                  index <= activeStep
-                    ? `bg-gradient-to-r ${activeService.color} text-white shadow-lg scale-105`
-                    : "bg-[#DCD7C9] text-[#3f4e4f]"
-                }`}
-              >
-                {index + 1}
-              </div>
-
-              {/* Step Content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4 gap-3">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <StepIcon
-                        className={`w-5 h-5 lg:w-6 lg:h-6 ${
-                          index <= activeStep
-                            ? "text-[#a27b5b]"
-                            : "text-[#3f4e4f]"
-                        }`}
-                      />
-                      <h3
-                        className={`font-bebas-neue text-xl sm:text-2xl lg:text-3xl transition-colors duration-300 break-words ${
-                          index <= activeStep
-                            ? "text-[#2c3639]"
-                            : "text-[#3f4e4f]"
-                        }`}
-                      >
-                        {step.title}
-                      </h3>
-                    </div>
-                    <p className="font-gantari text-[#3f4e4f] text-base lg:text-lg leading-relaxed">
-                      {step.description}
-                    </p>
-                  </div>
-
-                  <span className="px-3 py-1 bg-[#DCD7C9] text-[#3f4e4f] rounded-full text-sm font-poppins font-medium whitespace-nowrap self-start lg:self-auto">
-                    {step.duration}
-                  </span>
-                </div>
-
-                {/* Deliverables */}
-                <div className="flex flex-wrap gap-2 mb-4 lg:mb-6">
-                  {step.deliverables.map((deliverable, deliverableIndex) => (
-                    <span
-                      key={deliverableIndex}
-                      className="px-3 py-1 bg-white border border-[#3f4e4f]/20 text-[#3f4e4f] rounded-full text-sm font-poppins transition-all duration-300 hover:scale-105 hover:shadow-sm"
-                    >
-                      {deliverable}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Simplified Lottie Animation - Only render when visible and active */}
-                {isStepVisible && (
-                  <div className="mt-4 p-4 bg-[#DCD7C9]/50 rounded-2xl border border-[#3f4e4f]/10">
-                    <div className="w-full h-32 lg:h-48 rounded-xl overflow-hidden bg-[#DCD7C9]">
-                      {isStepActive && (
-                        <Lottie
-                          animationData={
-                            lottieAnimations[
-                              step.lottie as keyof typeof lottieAnimations
-                            ]
-                          }
-                          loop={true}
-                          autoplay={true}
-                          className="w-full h-full"
-                          rendererSettings={{
-                            preserveAspectRatio: "xMidYMid slice",
-                          }}
-                        />
-                      )}
-                    </div>
-                    <div className="text-center mt-2 font-poppins text-[#3f4e4f] text-sm">
-                      {step.title} visualization
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        );
-      }),
-    [activeService, activeStep]
-  );
+  };
 
   return (
-    <section
-      className={`relative min-h-screen py-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#DCD7C9] ${bebasNeue.className}`}
-    >
-      {/* Simplified Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-32 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-r from-[#2c3639]/10 to-[#3f4e4f]/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-32 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-r from-[#a27b5b]/10 to-[#2c3639]/10 rounded-full blur-3xl" />
+    <section className="relative w-full min-h-screen bg-[#DCD7C9] text-[#2c3639] overflow-hidden flex flex-col lg:flex-row">
+      {/* --- PROTOCOL HEADER (Fixed to Section, not Window) --- */}
+      <div className="absolute top-0 w-full z-30 px-6 py-6 lg:px-12 flex justify-between items-center pointer-events-none">
+        <div className="flex items-center gap-3 mix-blend-difference text-white pointer-events-auto">
+          <Command className="w-4 h-4 lg:w-5 lg:h-5" />
+          <span className="text-[9px] lg:text-[10px] tracking-[0.4em] font-bold uppercase">
+            Protocol / {activeService.id}
+          </span>
+        </div>
+        <div className="hidden md:block text-[10px] tracking-[0.5em] font-bold uppercase mix-blend-difference text-white">
+          Phase 0{activeStepIdx + 1} — 0{activeService.steps.length}
+        </div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h2
-            className={`font-bebas-neue text-4xl sm:text-5xl lg:text-6xl text-[#2c3639] mb-6 transition-all duration-1000`}
+      {/* --- LEFT: VISUAL EXHIBIT --- */}
+      <div className="w-full lg:w-1/2 h-[40vh] lg:h-screen bg-[#2c3639] relative flex items-center justify-center p-8 overflow-hidden">
+        <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] lg:bg-[size:60px_60px]" />
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`${activeServiceIdx}-${activeStepIdx}`}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.1 }}
+            transition={{ duration: 0.6 }}
+            className="relative z-10 w-48 h-48 lg:w-full lg:max-w-sm aspect-square flex items-center justify-center"
           >
-            Our{" "}
-            <span className="bg-gradient-to-r from-[#2c3639] via-[#3f4e4f] to-[#a27b5b] bg-clip-text text-transparent">
-              Process
-            </span>
-          </h2>
-          <p className="font-gantari text-[#3f4e4f] text-lg max-w-3xl mx-auto">
-            A proven 6-step methodology that transforms your vision into
-            reality, ensuring excellence at every stage.
-          </p>
-        </div>
+            <div className="absolute inset-0 border border-white/10 rounded-full animate-[spin_30s_linear_infinite]" />
+            <Lottie
+              animationData={currentStep.lottie}
+              className="w-full h-full filter grayscale contrast-125"
+            />
+          </motion.div>
+        </AnimatePresence>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
-          {/* Process Steps */}
-          <div
-            ref={stepsRef}
-            className="lg:col-span-3 h-[500px] lg:h-[600px] overflow-y-auto scroll-smooth rounded-3xl bg-white/80 backdrop-blur-sm border border-[#3f4e4f]/10 shadow-xl relative"
-          >
-            {/* Progress Bar */}
-            <div className="sticky top-0 z-20 bg-white/90 backdrop-blur-sm border-b border-[#3f4e4f]/10 p-4">
-              <div className="w-full bg-[#DCD7C9] rounded-full h-2">
-                <div
-                  className={`h-2 rounded-full bg-gradient-to-r ${activeService.color} transition-all duration-300 ease-out`}
-                  style={{
-                    width: `${
-                      ((activeStep + 1) / activeService.steps.length) * 100
-                    }%`,
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Steps */}
-            <div className="p-4 lg:p-6 space-y-8 lg:space-y-12">
-              {stepElements}
-            </div>
-          </div>
-
-          {/* Sidebar - Progress & Controls */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-8 bg-white/80 backdrop-blur-sm rounded-3xl border border-[#3f4e4f]/10 shadow-xl p-4 lg:p-6">
-              {/* Service Icon */}
-              <div
-                className={`w-16 h-16 lg:w-20 lg:h-20 mx-auto mb-4 lg:mb-6 bg-gradient-to-r ${activeService.color} rounded-2xl flex items-center justify-center shadow-lg`}
-              >
-                <activeService.icon className="w-8 h-8 lg:w-10 lg:h-10 text-white" />
-              </div>
-
-              {/* Progress */}
-              <div className="text-center mb-4 lg:mb-6">
-                <div className="font-bebas-neue text-2xl lg:text-3xl text-[#2c3639] mb-2">
-                  Step {activeStep + 1} of {activeService.steps.length}
-                </div>
-                <div className="font-poppins text-[#3f4e4f] text-sm lg:text-base line-clamp-2">
-                  {currentStepData?.title}
-                </div>
-              </div>
-
-              {/* Step Navigation */}
-              <div className="space-y-2 lg:space-y-3 mb-4 lg:mb-6">
-                {activeService.steps.map((step, index) => (
-                  <button
-                    key={index}
-                    onClick={() => scrollToStep(index)}
-                    className={`w-full text-left p-3 rounded-xl transition-all duration-300 ${
-                      index === activeStep
-                        ? `bg-gradient-to-r ${activeService.color} text-white shadow-lg`
-                        : index < activeStep
-                        ? "bg-[#DCD7C9] text-[#3f4e4f] hover:bg-[#DCD7C9]/80"
-                        : "bg-white border border-[#3f4e4f]/10 text-[#3f4e4f] hover:border-[#a27b5b]/30"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-poppins text-sm font-medium truncate">
-                        {step.title}
-                      </span>
-                      {index < activeStep && (
-                        <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-[#a27b5b]" />
-                      )}
-                    </div>
-                  </button>
-                ))}
-              </div>
-
-              {/* Controls */}
-              <div className="flex gap-3">
-                <button
-                  onClick={togglePlay}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-poppins font-semibold transition-all duration-300 ${
-                    isPlaying
-                      ? "bg-[#DCD7C9] text-[#3f4e4f] hover:bg-[#DCD7C9]/80"
-                      : `bg-gradient-to-r ${activeService.color} text-white shadow-lg hover:shadow-xl`
-                  }`}
-                >
-                  {isPlaying ? (
-                    <Pause className="w-4 h-4" />
-                  ) : (
-                    <Play className="w-4 h-4" />
-                  )}
-                  <span className="hidden sm:inline">
-                    {isPlaying ? "Pause" : "Play"}
-                  </span>
-                </button>
-
-                <button
-                  onClick={() => scrollToStep(0)}
-                  className="px-4 py-3 bg-[#DCD7C9] text-[#3f4e4f] rounded-xl font-poppins font-semibold hover:bg-[#DCD7C9]/80 transition-all duration-300"
-                >
-                  <span className="hidden sm:inline">Reset</span>
-                  <ArrowRight className="w-4 h-4 sm:hidden rotate-180" />
-                </button>
-              </div>
-
-              {/* Next Step Preview */}
-              {activeStep < activeService.steps.length - 1 && (
-                <div className="mt-4 lg:mt-6 p-3 lg:p-4 bg-[#DCD7C9]/50 rounded-xl border border-[#3f4e4f]/10">
-                  <div className="font-poppins text-[#3f4e4f] text-sm mb-1 lg:mb-2">
-                    Next:
-                  </div>
-                  <div className="font-poppins font-semibold text-[#2c3639] text-sm lg:text-base">
-                    {activeService.steps[activeStep + 1].title}
-                  </div>
-                  <div className="flex items-center gap-2 mt-1 lg:mt-2 text-[#3f4e4f] text-xs lg:text-sm">
-                    <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4" />
-                    {activeService.steps[activeStep + 1].duration}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* CTA */}
-        <div className="text-center mt-12 lg:mt-16">
-          <div className="bg-gradient-to-r from-[#2c3639] to-[#3f4e4f] rounded-3xl p-6 lg:p-8 xl:p-12 text-white relative overflow-hidden">
-            <h3 className="font-bebas-neue text-2xl sm:text-3xl lg:text-4xl mb-4 relative z-10">
-              Ready to Start Your Project?
-            </h3>
-            <p className="font-gantari text-white/80 text-base lg:text-lg mb-6 lg:mb-8 max-w-2xl mx-auto relative z-10">
-              Let&apos;s discuss how we can bring your vision to life with our
-              proven process and expertise.
-            </p>
-
-            <Link
-              href="/schedule"
-              className="group bg-white text-[#2c3639] font-poppins font-semibold text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 flex items-center gap-3 mx-auto"
+        {/* Service Switcher */}
+        <div className="absolute bottom-6 left-6 lg:bottom-10 lg:left-10 flex gap-4 lg:gap-6 z-20">
+          {services.map((s, i) => (
+            <button
+              key={s.id}
+              onClick={() => {
+                setActiveServiceIdx(i);
+                setActiveStepIdx(0);
+              }}
+              className={`text-[8px] lg:text-[9px] tracking-[0.2em] font-black uppercase transition-all ${
+                activeServiceIdx === i
+                  ? "text-[#a27b5b]"
+                  : "text-white/30 hover:text-white"
+              }`}
             >
-              Start Your Journey
-              <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5 group-hover:translate-x-1 transition-transform duration-200" />
-            </Link>
-          </div>
+              {s.id}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Custom Styles */}
-      <style jsx global>{`
-        /* Custom Scrollbar */
-        .scroll-smooth {
-          scroll-behavior: smooth;
-        }
+      {/* --- RIGHT: EDITORIAL CONTENT --- */}
+      <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 py-12 lg:px-20 lg:py-0 relative bg-[#DCD7C9]">
+        <div className="w-full max-w-xl mx-auto lg:mx-0">
+          <motion.div className="flex items-center gap-3 mb-6 lg:mb-10">
+            <div className="h-[1px] w-8 lg:w-12 bg-[#a27b5b]" />
+            <span className="text-[#a27b5b] text-[9px] lg:text-[10px] font-bold tracking-[0.3em] uppercase">
+              {currentStep.duration} Execution
+            </span>
+          </motion.div>
 
-        .scroll-smooth::-webkit-scrollbar {
-          width: 6px;
-        }
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`${activeServiceIdx}-${activeStepIdx}-content`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="min-h-[300px] lg:min-h-0"
+            >
+              <h2 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter leading-tight mb-6 font-serif">
+                {currentStep.title.split(" ").map((word, i) => (
+                  <span
+                    key={i}
+                    className={
+                      i === 0
+                        ? "block"
+                        : "block text-[#a27b5b] italic font-light lg:ml-8"
+                    }
+                  >
+                    {word}
+                  </span>
+                ))}
+              </h2>
 
-        .scroll-smooth::-webkit-scrollbar-track {
-          background: transparent;
-        }
+              <p className="text-base lg:text-lg text-[#3f4e4f] font-light leading-relaxed mb-8 lg:mb-12">
+                {currentStep.description}
+              </p>
 
-        .scroll-smooth::-webkit-scrollbar-thumb {
-          background: rgba(63, 78, 79, 0.3);
-          border-radius: 3px;
-        }
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 py-6 border-y border-[#2c3639]/10">
+                <div>
+                  <p className="text-[9px] lg:text-[10px] uppercase tracking-widest font-bold text-[#a27b5b] mb-4">
+                    Outcomes
+                  </p>
+                  <ul className="space-y-2">
+                    {currentStep.deliverables.map((d, i) => (
+                      <li
+                        key={i}
+                        className="text-[10px] lg:text-xs font-bold uppercase flex items-center gap-2"
+                      >
+                        <Plus className="w-3 h-3 text-[#a27b5b]" /> {d}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="hidden sm:flex flex-col justify-end items-end">
+                  <span className="text-6xl lg:text-8xl font-black opacity-[0.05] select-none">
+                    0{activeStepIdx + 1}
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
 
-        .scroll-smooth::-webkit-scrollbar-thumb:hover {
-          background: rgba(63, 78, 79, 0.5);
-        }
+          {/* Controls */}
+          <div className="mt-8 lg:mt-12 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="flex gap-4 w-full sm:w-auto">
+              <button
+                onClick={handlePrev}
+                disabled={activeServiceIdx === 0 && activeStepIdx === 0}
+                className="w-12 h-12 lg:w-14 lg:h-14 rounded-full border border-[#2c3639]/20 flex items-center justify-center hover:bg-[#2c3639] hover:text-white transition-all disabled:opacity-10"
+              >
+                <ArrowLeft className="w-4 h-4 lg:w-5 lg:h-5" />
+              </button>
+              <button
+                onClick={handleNext}
+                className="flex-1 sm:flex-none h-12 lg:h-14 px-6 lg:px-8 rounded-full bg-[#2c3639] text-[#DCD7C9] flex items-center justify-center gap-4 hover:bg-[#a27b5b] transition-all group"
+              >
+                <span className="text-[9px] lg:text-[10px] font-bold uppercase tracking-widest">
+                  Next Phase
+                </span>
+                <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
 
-        /* Line clamp utility */
-        .line-clamp-2 {
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
+            <div className="flex gap-2">
+              {activeService.steps.map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-1 transition-all duration-500 rounded-full ${i === activeStepIdx ? "w-8 bg-[#a27b5b]" : "w-2 bg-[#2c3639]/10"}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
 
-        /* Mobile optimizations */
-        @media (max-width: 1024px) {
-          .scroll-smooth::-webkit-scrollbar {
-            width: 4px;
-          }
-        }
-      `}</style>
+        {/* Floating ID Tag - Adjusted for Mobile */}
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 hidden 2xl:block pointer-events-none">
+          <span className="text-[120px] font-black text-[#2c3639] opacity-[0.02] rotate-90 origin-center block uppercase">
+            {activeService.id}
+          </span>
+        </div>
+      </div>
+
+      {/* --- ACTION BUTTON (Scoped to Section) --- */}
+      <Link
+        href="/contact"
+        className="absolute bottom-0 right-0 bg-[#a27b5b] text-white px-6 py-4 lg:px-10 lg:py-6 flex items-center gap-3 hover:bg-[#2c3639] transition-colors z-30 group"
+      >
+        <span className="text-[10px] font-bold uppercase tracking-widest">
+          Contact
+        </span>
+        <ArrowUpRight className="w-3 h-3 lg:w-4 lg:h-4 group-hover:rotate-45 transition-transform" />
+      </Link>
     </section>
   );
 }

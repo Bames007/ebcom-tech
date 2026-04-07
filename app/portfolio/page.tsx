@@ -1,329 +1,245 @@
-// /app/portfolio/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { ArrowRight, Filter, Grid, Sparkles, X } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { Space_Grotesk, Inter } from "next/font/google";
+// Assuming portfolioProjects is imported correctly
 import { portfolioProjects } from "./portfolio";
-import { bebasNeue, poppins } from "@/app/util/constants";
+
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] });
 
 const allServices = Array.from(
   new Set(portfolioProjects.flatMap((project) => project.services)),
 );
-const categories = ["All", ...allServices.slice(0, 8)];
+const categories = ["All", ...allServices];
 
-export default function PortfolioPage() {
-  const [mounted, setMounted] = useState(false);
+export default function MuseumPortfolio() {
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [hoveredProject, setHoveredProject] = useState<string | null>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const filteredProjects = portfolioProjects.filter((project) => {
     if (selectedCategory === "All") return true;
-
-    return project.services.some(
-      (service) =>
-        service.toLowerCase().includes(selectedCategory.toLowerCase()) ||
-        selectedCategory.toLowerCase().includes(service.toLowerCase()),
+    return project.services.some((s) =>
+      s.toLowerCase().includes(selectedCategory.toLowerCase()),
     );
   });
 
-  const clearFilter = () => {
-    setSelectedCategory("All");
-  };
-
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-b from-[#2c3639] to-[#3f4e4f] overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 w-32 h-32 bg-[#a27b5b] rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-40 h-40 bg-[#dcd7c9] rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-6">
-          <div className="text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#a27b5b]/20 border border-[#a27b5b]/30 mb-6">
-                <Sparkles className="w-4 h-4 text-[#a27b5b]" />
-                <span
-                  className={`${poppins.className} text-[#a27b5b] text-sm font-semibold tracking-wide`}
-                >
-                  OUR CREATIVE PORTFOLIO
+    <div
+      className={`min-h-screen bg-[#0a0a0a] text-[#f5f5f5] selection:bg-[#C5A371] selection:text-white ${inter.className} overflow-x-hidden`}
+    >
+      {/* Editorial Hero */}
+      <section className="relative pt-24 md:pt-32 pb-12 md:pb-20 px-6 lg:px-12 border-b border-white/5 overflow-hidden">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
+            <div className="overflow-hidden w-full max-w-full">
+              <motion.span
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                className={`${spaceGrotesk.className} block text-[#C5A371] tracking-[0.3em] md:tracking-[0.5em] uppercase text-[9px] md:text-[10px] mb-4 md:mb-6 font-bold`}
+              >
+                Archive Collection / 2024—2026
+              </motion.span>
+              <motion.h1
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                transition={{
+                  delay: 0.1,
+                  duration: 1,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className={`${spaceGrotesk.className} text-5xl sm:text-7xl md:text-8xl lg:text-[11rem] leading-[0.9] md:leading-[0.8] font-bold tracking-tighter uppercase whitespace-normal break-words`}
+              >
+                Selected <br className="hidden md:block" />
+                <span className="italic font-light opacity-20 lowercase md:pr-4">
+                  {" "}
+                  Works
                 </span>
-              </div>
+              </motion.h1>
+            </div>
 
-              <h1
-                className={`${bebasNeue.className} text-5xl sm:text-7xl text-[#dcd7c9] mb-6`}
-              >
-                BRANDING <span className="text-[#a27b5b]">MASTERPIECES</span>
-              </h1>
-
-              <p
-                className={`${poppins.className} text-xl text-[#dcd7c9]/80 max-w-2xl mx-auto mb-10`}
-              >
-                Explore our curated collection of brand transformations that
-                have redefined industries and captivated audiences.
+            <div className="max-w-xs border-l border-white/10 pl-6 pb-2">
+              <p className="text-[9px] md:text-[10px] uppercase tracking-[0.2em] leading-relaxed text-gray-500 font-medium">
+                A curated exhibition of systemic digital architecture. Each
+                artifact represents a benchmark in scalability.
               </p>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Filters */}
-      <section className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-[#3f4e4f]/10 py-6">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col items-center">
-            {selectedCategory !== "All" && (
-              <div className="flex items-center justify-center gap-2 mb-4">
-                <span className={`${poppins.className} text-sm text-[#3f4e4f]`}>
-                  Filtering by:
-                </span>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#2c3639] text-[#dcd7c9]">
-                  <span className={`${poppins.className} text-sm font-medium`}>
-                    {selectedCategory}
-                  </span>
-                  <button
-                    onClick={clearFilter}
-                    className="hover:bg-white/10 p-1 rounded-full transition-colors"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <div className="flex flex-wrap gap-2 justify-center">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2.5 rounded-full transition-all duration-300 ${poppins.className} text-sm font-medium whitespace-nowrap ${
-                    selectedCategory === category
-                      ? "bg-[#2c3639] text-[#dcd7c9] shadow-lg"
-                      : "bg-[#dcd7c9]/20 text-[#3f4e4f] hover:bg-[#dcd7c9]/40 hover:shadow-md"
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Projects Grid */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-6">
-          {filteredProjects.length === 0 ? (
-            <div className="text-center py-20">
-              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#dcd7c9]/30 flex items-center justify-center">
-                <Filter className="w-10 h-10 text-[#3f4e4f]/50" />
-              </div>
-              <h3
-                className={`${bebasNeue.className} text-2xl text-[#2c3639] mb-2`}
-              >
-                No Projects Found
-              </h3>
-              <p className={`${poppins.className} text-[#3f4e4f] mb-4`}>
-                Try adjusting your filter
-              </p>
+      {/* Museum Style Filter Navigation */}
+      <nav className="sticky top-0 z-[100] bg-[#0a0a0a]/90 backdrop-blur-xl border-b border-white/5 w-full">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+          {/* Added mask-image to fade the edges of the scrollable nav on mobile */}
+          <div className="flex items-center gap-6 md:gap-10 overflow-x-auto no-scrollbar py-6 md:py-8 mask-fade-right">
+            {categories.map((cat, idx) => (
               <button
-                onClick={clearFilter}
-                className={`${poppins.className} px-4 py-2 bg-[#a27b5b] text-white rounded-full hover:bg-[#8b6b4f] transition-colors`}
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className="relative group flex items-center gap-2 md:gap-3 shrink-0 pb-2 outline-none"
               >
-                Clear Filter
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredProjects.map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  onMouseEnter={() => setHoveredProject(project.id)}
-                  onMouseLeave={() => setHoveredProject(null)}
+                <span
+                  className={`${spaceGrotesk.className} text-[8px] md:text-[9px] text-[#C5A371] font-bold transition-opacity duration-300 ${selectedCategory === cat ? "opacity-100" : "opacity-0"}`}
                 >
-                  <Link href={`/portfolio/${project.id}`}>
-                    <div className="group relative overflow-hidden rounded-3xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 h-[500px]">
-                      {/* Background Mockup */}
-                      {project.mockups[0] && (
-                        <div className="absolute inset-0">
-                          <Image
-                            src={project.mockups[0]}
-                            alt={`${project.name} preview`}
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-110"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          />
-                          {/* Gradient Overlay */}
-                          <div
-                            className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/70"
-                            style={{
-                              background: `linear-gradient(to bottom, transparent 0%, ${project.colors.primary}40 50%, ${project.colors.primary}90 100%)`,
-                            }}
-                          />
-                        </div>
-                      )}
+                  0{idx + 1}
+                </span>
+                <span
+                  className={`${spaceGrotesk.className} uppercase tracking-[0.2em] md:tracking-[0.3em] text-[10px] md:text-[11px] font-bold transition-colors ${selectedCategory === cat ? "text-white" : "text-gray-500 hover:text-gray-300"}`}
+                >
+                  {cat}
+                </span>
+                {selectedCategory === cat && (
+                  <motion.div
+                    layoutId="nav-underline"
+                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C5A371]"
+                    transition={{ type: "spring", bounce: 0, duration: 0.6 }}
+                  />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      </nav>
 
-                      {/* Circular Logo Container - Updated */}
-                      <div className="absolute inset-0 flex items-center justify-center p-6">
-                        <div className="relative w-48 h-48 md:w-56 md:h-56">
-                          {/* Outer Glow/Effect */}
-                          <div className="absolute inset-0 rounded-full shadow-2xl">
-                            <div className="absolute inset-0 bg-white/20 backdrop-blur-sm rounded-full transform rotate-6 scale-105 transition-all duration-500 group-hover:rotate-0 group-hover:scale-110"></div>
-                          </div>
-
-                          {/* Logo Container - Perfect Circle */}
-                          <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white/30 shadow-inner">
-                            {project.logo ? (
-                              <Image
-                                src={project.logo}
-                                alt={project.name}
-                                fill
-                                className="object-cover object-center"
-                                sizes="(max-width: 768px) 192px, 224px"
-                                priority={index < 3}
-                              />
-                            ) : (
-                              <div
-                                className="w-full h-full flex items-center justify-center"
-                                style={{
-                                  backgroundColor: project.colors.primary,
-                                }}
-                              >
-                                <h2
-                                  className={`${bebasNeue.className} text-4xl font-bold text-white`}
-                                >
-                                  {project.name.charAt(0)}
-                                </h2>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Glow Effect on Hover */}
-                          <div
-                            className="absolute -inset-4 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
-                            style={{
-                              backgroundColor: project.colors.secondary,
-                              zIndex: -1,
-                            }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Content at Bottom */}
-                      <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                        <div className="flex items-center gap-2 mb-3">
-                          <div
-                            className="w-2 h-2 rounded-full"
-                            style={{
-                              backgroundColor: project.colors.secondary,
-                            }}
-                          ></div>
+      {/* Asymmetric Exhibition Grid */}
+      <section className="py-12 md:py-24 px-6 lg:px-12 overflow-hidden">
+        <div className="max-w-[1400px] mx-auto">
+          <motion.div
+            layout
+            className="grid grid-cols-1 md:grid-cols-12 gap-y-16 md:gap-y-40 md:gap-x-12"
+          >
+            <AnimatePresence mode="popLayout">
+              {filteredProjects.map((project, index) => {
+                const isLarge = index % 3 === 0;
+                return (
+                  <motion.div
+                    key={project.id}
+                    layout
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-10%" }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                    className={`${isLarge ? "md:col-span-8" : "md:col-span-4"} group cursor-crosshair w-full`}
+                  >
+                    <Link href={`/portfolio/${project.id}`} className="block">
+                      <div className="relative aspect-[4/5] md:h-[650px] overflow-hidden bg-zinc-900 border border-white/5">
+                        <div className="absolute top-4 left-4 md:top-8 md:left-8 z-20">
                           <span
-                            className={`${poppins.className} text-sm font-medium text-white/90`}
+                            className={`${spaceGrotesk.className} text-white text-[8px] md:text-[10px] tracking-widest font-bold px-2 py-1 bg-black/40 backdrop-blur-md border border-white/10`}
                           >
-                            {project.category}
+                            ITEM_{project.id}
                           </span>
                         </div>
 
-                        <h3
-                          className={`${bebasNeue.className} text-2xl mb-2 group-hover:text-[${project.colors.secondary}] transition-colors duration-300`}
-                        >
-                          {project.name}
-                        </h3>
+                        <Image
+                          src={project.mockups[0]}
+                          alt={project.name}
+                          fill
+                          className="object-cover grayscale group-hover:grayscale-0 scale-[1.02] group-hover:scale-105 transition-all duration-[1.5s] ease-out opacity-60 group-hover:opacity-100"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
 
-                        <p
-                          className={`${poppins.className} text-white/80 line-clamp-2 mb-4 text-sm`}
-                        >
-                          {project.description}
-                        </p>
-
-                        <div className="flex items-center justify-between pt-4 border-t border-white/20">
-                          <div className="flex items-center gap-3">
-                            <span
-                              className={`${poppins.className} text-sm font-medium`}
-                              style={{ color: project.colors.secondary }}
-                            >
-                              {project.year}
-                            </span>
-                            <div className="w-1 h-1 rounded-full bg-white/40"></div>
-                            <span
-                              className={`${poppins.className} text-sm text-white/60`}
-                            >
-                              {project.location}
-                            </span>
-                          </div>
-
-                          <div className="flex items-center gap-2 text-white group-hover:text-[#a27b5b] transition-colors duration-300">
-                            <span
-                              className={`${poppins.className} text-sm font-medium`}
-                            >
-                              View
-                            </span>
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                        <div className="absolute inset-0 bg-[#0a0a0a]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                          <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white text-black flex items-center justify-center scale-50 group-hover:scale-100 transition-transform duration-500">
+                            <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6" />
                           </div>
                         </div>
                       </div>
 
-                      {/* Services Badges */}
-                      <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-                        {project.services.slice(0, 2).map((service, idx) => (
-                          <div
-                            key={idx}
-                            className="px-2 py-1 rounded-full backdrop-blur-sm bg-white/20 border border-white/30"
+                      <div className="mt-6 md:mt-10 flex flex-col lg:flex-row justify-between items-start gap-4 md:gap-6">
+                        <div className="w-full">
+                          <h3
+                            className={`${spaceGrotesk.className} text-2xl md:text-4xl lg:text-5xl uppercase font-bold tracking-tighter mb-3 md:mb-4 group-hover:text-[#C5A371] transition-colors`}
                           >
-                            <span
-                              className={`${poppins.className} text-xs text-white`}
-                            >
-                              {service}
-                            </span>
+                            {project.name}
+                          </h3>
+                          <div className="flex flex-wrap gap-2">
+                            {project.services.map((s) => (
+                              <span
+                                key={s}
+                                className="text-[8px] md:text-[9px] uppercase tracking-[0.1em] md:tracking-[0.2em] text-gray-500 font-bold border border-white/10 px-2 md:px-3 py-1"
+                              >
+                                {s}
+                              </span>
+                            ))}
                           </div>
-                        ))}
+                        </div>
+                        <div className="font-mono text-[9px] md:text-[10px] tracking-tighter text-gray-600 uppercase lg:text-right w-full lg:w-auto shrink-0">
+                          {project.location} <br className="hidden lg:block" />
+                          Rel. {project.year}
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          )}
-
-          {filteredProjects.length > 0 && (
-            <div className="mt-12 pt-8 border-t border-[#3f4e4f]/10 text-center">
-              <p className={`${poppins.className} text-[#3f4e4f]`}>
-                Showing{" "}
-                <span className="font-semibold">{filteredProjects.length}</span>{" "}
-                of{" "}
-                <span className="font-semibold">
-                  {portfolioProjects.length}
-                </span>{" "}
-                projects
-                {selectedCategory !== "All" && (
-                  <span>
-                    {" "}
-                    in{" "}
-                    <span className="font-semibold text-[#a27b5b]">
-                      {selectedCategory}
-                    </span>
-                  </span>
-                )}
-              </p>
-            </div>
-          )}
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </motion.div>
         </div>
       </section>
+
+      {/* Footer CTA */}
+      <section className="py-24 md:py-60 px-6 border-t border-white/5 text-center bg-white/[0.01] overflow-hidden">
+        <motion.div
+          whileInView={{ opacity: [0, 1], y: [40, 0] }}
+          transition={{ duration: 1 }}
+          className="max-w-4xl mx-auto"
+        >
+          <span
+            className={`${spaceGrotesk.className} text-[#C5A371] tracking-[0.4em] md:tracking-[0.8em] uppercase text-[9px] md:text-[10px] font-black`}
+          >
+            Inquiry Protocol
+          </span>
+          <h2
+            className={`${spaceGrotesk.className} text-4xl md:text-6xl lg:text-9xl mt-6 md:mt-10 mb-8 md:mb-16 uppercase font-bold tracking-tighter leading-none`}
+          >
+            Your Vision <br />
+            <span className="italic font-light opacity-20">Systematized</span>
+          </h2>
+          <Link
+            href="/schedule"
+            className="inline-flex flex-col md:flex-row items-center gap-4 md:gap-8 group"
+          >
+            <span
+              className={`${spaceGrotesk.className} text-xs md:text-sm uppercase tracking-[0.2em] md:tracking-[0.4em] font-bold border-b border-white/20 pb-2 group-hover:border-[#C5A371] transition-all`}
+            >
+              Start Collaboration
+            </span>
+            <div className="w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-[#C5A371] group-hover:border-[#C5A371] transition-all duration-500">
+              <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+        </motion.div>
+      </section>
+
+      <style jsx global>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .mask-fade-right {
+          mask-image: linear-gradient(to right, black 85%, transparent 100%);
+          -webkit-mask-image: linear-gradient(
+            to right,
+            black 85%,
+            transparent 100%
+          );
+        }
+        @media (min-width: 768px) {
+          .mask-fade-right {
+            mask-image: none;
+            -webkit-mask-image: none;
+          }
+        }
+      `}</style>
     </div>
   );
 }

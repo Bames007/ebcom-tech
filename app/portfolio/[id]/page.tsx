@@ -1,613 +1,326 @@
-// /app/portfolio/[id]/page.js
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft,
-  Calendar,
-  MapPin,
-  ChevronLeft,
-  ChevronRight,
-  ExternalLink,
-  Palette,
-  Layers,
-  Package,
-  Users,
-  Loader2,
-} from "lucide-react";
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
+import { ArrowLeft, Plus, ChevronDown, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { portfolioProjects, Project } from "../portfolio";
-import { bebasNeue, poppins } from "@/app/util/constants";
+import { inter, spaceGrotesk } from "@/app/util/constants";
+// Assuming these are available in your constants
 
-const defaultProject: Project = {
-  id: "",
-  name: "Project Not Found",
-  category: "",
-  tagline: "",
-  description: "",
-  fullDescription: "",
-  services: [],
-  year: "",
-  client: "",
-  location: "",
-  colors: {
-    primary: "#2c3639",
-    secondary: "#a27b5b",
-    accent: "#3f4e4f",
-    background: "#f5f3ef",
-  },
-  logo: "",
-  mockups: [],
-  deliverables: [],
-  testimonials: [],
+// Your specific palette
+const COLORS = {
+  primary: "#a27b5b", // Earthy Tan
+  background: "#dcd7c9", // Soft Sand
+  accent: "#2c3639", // Deep Charcoal/Green
+  highlight: "#3f4e4f", // Slate Gray
 };
 
 export default function ProjectDetailPage() {
   const params = useParams();
-  const [mounted, setMounted] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [project, setProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setMounted(true);
-    setIsLoading(true);
-
-    setTimeout(() => {
-      const foundProject = portfolioProjects.find((p) => p.id === params?.id);
-      setProject(foundProject || defaultProject);
-      setIsLoading(false);
-    }, 300);
+    const foundProject = portfolioProjects.find((p) => p.id === params?.id);
+    if (foundProject) setProject(foundProject);
+    const timer = setTimeout(() => setIsLoading(false), 1200);
+    return () => clearTimeout(timer);
   }, [params?.id]);
 
-  const nextImage = () => {
-    if (project?.mockups?.length) {
-      setCurrentImageIndex((prev) => (prev + 1) % project.mockups.length);
-    }
-  };
-
-  const prevImage = () => {
-    if (project?.mockups?.length) {
-      setCurrentImageIndex(
-        (prev) => (prev - 1 + project.mockups.length) % project.mockups.length,
-      );
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-[#a27b5b]" />
-          <h2 className={`${bebasNeue.className} text-2xl text-[#2c3639]`}>
-            Loading Project...
-          </h2>
+  return (
+    <AnimatePresence mode="wait">
+      {isLoading ? (
+        <MuseumLoader key="loader" />
+      ) : project ? (
+        <ProjectExperience key="experience" project={project} />
+      ) : (
+        <div className="h-screen bg-[#dcd7c9] flex items-center justify-center text-[#2c3639]">
+          <h2 className={spaceGrotesk.className}>Artifact Lost</h2>
         </div>
-      </div>
-    );
-  }
-
-  if (!project || project.id === "") {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <h2 className={`${bebasNeue.className} text-3xl text-[#2c3639] mb-4`}>
-            Project Not Found
-          </h2>
-          <Link
-            href="/"
-            className={`${poppins.className} text-[#a27b5b] hover:text-[#2c3639] transition-colors duration-300 flex items-center gap-2 justify-center`}
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Portfolio
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  const currentProjectIndex = portfolioProjects.findIndex(
-    (p) => p.id === project.id,
+      )}
+    </AnimatePresence>
   );
-  const nextProject =
-    portfolioProjects[(currentProjectIndex + 1) % portfolioProjects.length];
+}
+
+function ProjectExperience({ project }: { project: Project }) {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 1.1]);
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-[#3f4e4f]/10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Link
-              href="/"
-              className="flex items-center gap-2 group"
-              style={{ color: project.colors.primary }}
-            >
-              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
-              <span className={`${poppins.className} font-medium`}>
-                Back to Portfolio
-              </span>
-            </Link>
+    <main
+      ref={containerRef}
+      className={`relative selection:bg-[#2c3639] selection:text-[#dcd7c9] ${inter.className}`}
+      style={{ backgroundColor: COLORS.background }}
+    >
+      {/* 1. THE VESTIBULE (Immersive Hero) */}
+      <section className="relative h-[110vh] overflow-hidden flex items-center">
+        <motion.div
+          style={{ scale: heroScale, opacity: heroOpacity }}
+          className="absolute inset-0 z-0"
+        >
+          <Image
+            src={project.mockups[0]}
+            alt="Hero"
+            fill
+            className="object-cover brightness-75 grayscale-[0.2]"
+            priority
+          />
+          {/* Subtle Color Wash */}
+          <div className="absolute inset-0 bg-[#2c3639]/40 mix-blend-multiply" />
+        </motion.div>
 
-            <div className="flex items-center gap-4">
-              <span className={`${poppins.className} text-sm text-[#3f4e4f]`}>
-                Project {currentProjectIndex + 1} of {portfolioProjects.length}
-              </span>
-            </div>
-          </div>
+        <div className="relative z-10 w-full px-6 md:px-20">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <span className="block text-[10px] tracking-[0.5em] mb-4 text-[#dcd7c9] uppercase font-medium">
+              Case Study — {project.year}
+            </span>
+            <h1
+              className={`${spaceGrotesk.className} text-[12vw] md:text-[10vw] leading-[0.85] text-[#dcd7c9] font-bold uppercase tracking-tighter mb-8`}
+            >
+              {project.name}
+            </h1>
+            <p className="max-w-md text-lg text-[#dcd7c9]/80 font-light leading-relaxed">
+              {project.tagline}
+            </p>
+          </motion.div>
         </div>
-      </nav>
 
-      <section className="pt-20 pb-12 relative min-h-[80vh] flex items-center">
-        {/* Background with first mockup image */}
-        {project.mockups[0] && (
-          <div className="absolute inset-0">
-            <Image
-              src={project.mockups[0]}
-              alt={`${project.name} hero background`}
-              fill
-              className="object-cover"
-              priority
-              quality={90}
-              sizes="100vw"
-            />
-            {/* Color overlay for better text contrast */}
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundColor: `${project.colors.primary}CC`,
-                backgroundBlendMode: "multiply",
-              }}
-            />
-          </div>
-        )}
+        <motion.div
+          style={{ opacity: heroOpacity }}
+          className="absolute bottom-12 right-12 flex items-center gap-4 text-[#dcd7c9]"
+        >
+          <span className="text-[10px] tracking-widest uppercase">
+            Explore Archives
+          </span>
+          <div className="w-12 h-[1px] bg-[#dcd7c9]/50" />
+        </motion.div>
+      </section>
 
-        <div className="relative z-10 w-full">
-          <div className="max-w-7xl mx-auto px-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center"
-            >
-              {/* Circular Logo - Updated */}
-              <div className="flex justify-center mb-8">
-                <div className="relative w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80">
-                  {/* Outer Glow */}
-                  <div
-                    className="absolute inset-0 rounded-full blur-2xl opacity-60"
-                    style={{ backgroundColor: project.colors.secondary }}
-                  />
-
-                  {/* Logo Container - Perfect Circle that fills container */}
-                  <div className="relative w-full h-full rounded-full overflow-hidden border-8 border-white/30 shadow-2xl">
-                    {project.logo ? (
-                      <Image
-                        src={project.logo}
-                        alt={project.name}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 192px, (max-width: 1024px) 256px, 320px"
-                        priority
-                      />
-                    ) : (
-                      <div
-                        className="w-full h-full flex items-center justify-center"
-                        style={{ backgroundColor: project.colors.primary }}
-                      >
-                        <h2
-                          className={`${bebasNeue.className} text-6xl text-white`}
-                        >
-                          {project.name}
-                        </h2>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Inner Shadow for depth */}
-                  <div className="absolute inset-0 rounded-full shadow-inner border-2 border-white/10" />
-                </div>
-              </div>
-
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 mb-6">
-                <span
-                  className={`${poppins.className} text-sm font-semibold text-white`}
-                >
-                  {project.category}
-                </span>
-              </div>
-
-              <h1
-                className={`${bebasNeue.className} text-5xl sm:text-7xl mb-4 text-white drop-shadow-lg`}
+      {/* 2. THE FOLIO (Intro Narrative) */}
+      <section className="relative py-32 md:py-56 px-6 bg-[#dcd7c9]">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div className="lg:col-span-4">
+              <h2
+                className={`${spaceGrotesk.className} text-sm uppercase tracking-[0.3em] text-[#a27b5b] font-bold mb-8`}
               >
-                {project.name}
-              </h1>
-
-              <p
-                className={`${poppins.className} text-2xl text-white/90 max-w-3xl mx-auto mb-8`}
-              >
-                {project.tagline}
+                01 — Concept
+              </h2>
+            </div>
+            <div className="lg:col-span-8">
+              <p className="text-3xl md:text-5xl leading-[1.1] text-[#2c3639] font-light mb-16 tracking-tight">
+                {project.fullDescription || project.description}
               </p>
 
-              <div className="flex flex-wrap justify-center gap-6 mb-8">
-                <div className="flex items-center gap-2 backdrop-blur-sm bg-white/10 px-4 py-2 rounded-full border border-white/20">
-                  <Calendar className="w-5 h-5 text-white" />
-                  <span className={`${poppins.className} text-white`}>
-                    {project.year}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 backdrop-blur-sm bg-white/10 px-4 py-2 rounded-full border border-white/20">
-                  <MapPin className="w-5 h-5 text-white" />
-                  <span className={`${poppins.className} text-white`}>
-                    {project.location}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 backdrop-blur-sm bg-white/10 px-4 py-2 rounded-full border border-white/20">
-                  <Users className="w-5 h-5 text-white" />
-                  <span className={`${poppins.className} text-white`}>
-                    {project.client}
-                  </span>
-                </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12 border-t border-[#2c3639]/10">
+                <MetaItem label="Client" value={project.client} />
+                <MetaItem label="Location" value={project.location} />
+                <MetaItem label="Industry" value={project.category} />
+                <MetaItem label="Services" value={project.services[0]} />
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Left Column - Project Info */}
-          <div className="lg:col-span-2 space-y-12">
-            {/* Mockup Gallery - Portrait Layout */}
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h2
-                  className={`${bebasNeue.className} text-3xl text-[#2c3639]`}
-                >
-                  Project Gallery
-                </h2>
-                <span className={`${poppins.className} text-sm text-[#3f4e4f]`}>
-                  {currentImageIndex + 1} / {project.mockups.length}
+      {/* 3. GALLERY (Asymmetric Exhibit) */}
+      <section className="py-20 bg-[#dcd7c9]">
+        <div className="space-y-40 md:space-y-64">
+          {project.mockups.slice(1).map((img, i) => (
+            <ExhibitRow key={i} img={img} index={i} />
+          ))}
+        </div>
+      </section>
+
+      {/* 4. CHROMATIC ARCHIVE (Colors) */}
+      <section className="py-40 bg-[#2c3639] text-[#dcd7c9]">
+        <div className="max-w-7xl mx-auto px-6">
+          <h2
+            className={`${spaceGrotesk.className} text-[8vw] leading-none mb-24 uppercase font-bold text-[#a27b5b]`}
+          >
+            The Palette
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {Object.entries(project.colors).map(([name, hex]) => (
+              <div key={name} className="group cursor-crosshair">
+                <div
+                  className="h-64 w-full mb-6 transition-transform duration-700 group-hover:scale-[0.98]"
+                  style={{ backgroundColor: hex }}
+                />
+                <span className="block text-[10px] uppercase tracking-widest opacity-40 mb-1">
+                  {name}
+                </span>
+                <span className={`${spaceGrotesk.className} text-xl uppercase`}>
+                  {hex}
                 </span>
               </div>
-
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-gray-100">
-                <div className="aspect-[3/4] relative">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={currentImageIndex}
-                      initial={{ opacity: 0, scale: 1.05 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.4 }}
-                      className="absolute inset-0"
-                    >
-                      {project.mockups[currentImageIndex] ? (
-                        <Image
-                          src={project.mockups[currentImageIndex]}
-                          alt={`${project.name} mockup ${currentImageIndex + 1}`}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                        />
-                      ) : (
-                        <div
-                          className="w-full h-full flex items-center justify-center"
-                          style={{ backgroundColor: project.colors.background }}
-                        >
-                          <div className="text-center">
-                            <div
-                              className="text-4xl font-bold mb-2"
-                              style={{ color: project.colors.primary }}
-                            >
-                              {project.name}
-                            </div>
-                            <div
-                              className={`${poppins.className} text-lg`}
-                              style={{ color: project.colors.secondary }}
-                            >
-                              Mockup {currentImageIndex + 1}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </motion.div>
-                  </AnimatePresence>
-
-                  {/* Navigation Buttons */}
-                  {project.mockups.length > 1 && (
-                    <>
-                      <button
-                        onClick={prevImage}
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg hover:bg-white transition-all duration-300 hover:scale-110"
-                        style={{ color: project.colors.primary }}
-                      >
-                        <ChevronLeft className="w-6 h-6" />
-                      </button>
-                      <button
-                        onClick={nextImage}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg hover:bg-white transition-all duration-300 hover:scale-110"
-                        style={{ color: project.colors.primary }}
-                      >
-                        <ChevronRight className="w-6 h-6" />
-                      </button>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Thumbnail Strip with Actual Images */}
-              <div className="flex gap-4 overflow-x-auto pb-2">
-                {project.mockups.map((mockup, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden transition-all duration-300 relative ${
-                      index === currentImageIndex
-                        ? "ring-2 scale-105"
-                        : "opacity-60 hover:opacity-100 hover:scale-105"
-                    }`}
-                    style={{
-                      borderColor: project.colors.primary,
-                    }}
-                  >
-                    {mockup ? (
-                      <Image
-                        src={mockup}
-                        alt={`Thumbnail ${index + 1}`}
-                        fill
-                        className="object-cover"
-                        sizes="80px"
-                      />
-                    ) : (
-                      <div
-                        className="w-full h-full flex items-center justify-center"
-                        style={{ backgroundColor: project.colors.background }}
-                      >
-                        <span
-                          className="text-sm font-bold"
-                          style={{ color: project.colors.primary }}
-                        >
-                          {index + 1}
-                        </span>
-                      </div>
-                    )}
-                    {index === currentImageIndex && (
-                      <div className="absolute inset-0 border-2 border-white" />
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Project Description */}
-            <div className="space-y-6">
-              <h2 className={`${bebasNeue.className} text-3xl text-[#2c3639]`}>
-                Project Overview
-              </h2>
-              <p
-                className={`${poppins.className} text-[#3f4e4f] text-lg leading-relaxed`}
-              >
-                {project.fullDescription || project.description}
-              </p>
-            </div>
-
-            {/* Color Palette */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-2">
-                <Palette
-                  className="w-6 h-6"
-                  style={{ color: project.colors.secondary }}
-                />
-                <h2
-                  className={`${bebasNeue.className} text-3xl text-[#2c3639]`}
-                >
-                  Brand Colors
-                </h2>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {Object.entries(project.colors).map(([key, color]) => (
-                  <div key={key} className="group cursor-pointer">
-                    <div
-                      className="w-full aspect-square rounded-xl mb-2 transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg overflow-hidden"
-                      style={{ backgroundColor: color }}
-                    >
-                      <div className="w-full h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div
-                          className="text-xs font-medium px-2 py-1 rounded bg-white/90"
-                          style={{ color: project.colors.primary }}
-                        >
-                          Click to copy
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <div
-                        className={`${poppins.className} font-medium text-[#2c3639] capitalize mb-1`}
-                      >
-                        {key}
-                      </div>
-                      <div
-                        className={`${poppins.className} text-sm text-[#3f4e4f] font-mono bg-gray-100 py-1 px-2 rounded`}
-                        onClick={() => navigator.clipboard.writeText(color)}
-                      >
-                        {color}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column - Sidebar */}
-          <div className="space-y-8">
-            {/* Services Provided */}
-            <div
-              className="rounded-2xl p-6 border transition-all duration-300 hover:shadow-lg"
-              style={{
-                borderColor: `${project.colors.primary}20`,
-                backgroundColor: `${project.colors.background}20`,
-              }}
-            >
-              <div className="flex items-center gap-2 mb-6">
-                <Layers
-                  className="w-6 h-6"
-                  style={{ color: project.colors.secondary }}
-                />
-                <h3
-                  className={`${bebasNeue.className} text-2xl text-[#2c3639]`}
-                >
-                  Services
-                </h3>
-              </div>
-
-              <div className="space-y-3">
-                {project.services.map((service) => (
-                  <div
-                    key={service}
-                    className={`${poppins.className} flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:scale-[1.02]`}
-                    style={{
-                      backgroundColor: `${project.colors.primary}08`,
-                      borderLeft: `3px solid ${project.colors.secondary}`,
-                    }}
-                  >
-                    <div
-                      className="w-2 h-2 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: project.colors.secondary }}
-                    ></div>
-                    <span className="text-[#3f4e4f]">{service}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Deliverables */}
-            <div
-              className="rounded-2xl p-6 border transition-all duration-300 hover:shadow-lg"
-              style={{
-                borderColor: `${project.colors.primary}20`,
-                backgroundColor: `${project.colors.background}20`,
-              }}
-            >
-              <div className="flex items-center gap-2 mb-6">
-                <Package
-                  className="w-6 h-6"
-                  style={{ color: project.colors.secondary }}
-                />
-                <h3
-                  className={`${bebasNeue.className} text-2xl text-[#2c3639]`}
-                >
-                  Deliverables
-                </h3>
-              </div>
-
-              <div className="space-y-3">
-                {project.deliverables.map((deliverable) => (
-                  <div
-                    key={deliverable}
-                    className="flex items-start gap-3 group"
-                  >
-                    <div
-                      className="w-2 h-2 rounded-full mt-2 flex-shrink-0"
-                      style={{ backgroundColor: project.colors.secondary }}
-                    ></div>
-                    <span
-                      className={`${poppins.className} text-[#3f4e4f] group-hover:text-[#2c3639] transition-colors duration-300`}
-                    >
-                      {deliverable}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Testimonials */}
-            {project.testimonials && project.testimonials.length > 0 && (
-              <div
-                className="rounded-2xl p-6 border transition-all duration-300 hover:shadow-lg"
-                style={{
-                  borderColor: `${project.colors.primary}20`,
-                  backgroundColor: `${project.colors.background}20`,
-                }}
-              >
-                <h3
-                  className={`${bebasNeue.className} text-2xl text-[#2c3639] mb-6`}
-                >
-                  Client Testimonial
-                </h3>
-
-                {project.testimonials.map((testimonial, index) => (
-                  <div key={index} className="space-y-4">
-                    <div
-                      className="text-6xl text-left leading-none"
-                      style={{ color: project.colors.secondary }}
-                    >
-                      "
-                    </div>
-                    <p
-                      className={`${poppins.className} text-[#3f4e4f] italic text-lg`}
-                    >
-                      {testimonial.quote}
-                    </p>
-                    <div
-                      className="pt-4 border-t"
-                      style={{ borderColor: `${project.colors.primary}20` }}
-                    >
-                      <div
-                        className={`${poppins.className} font-semibold text-[#2c3639]`}
-                      >
-                        {testimonial.author}
-                      </div>
-                      <div
-                        className={`${poppins.className} text-sm text-[#3f4e4f]`}
-                      >
-                        {testimonial.role}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Next Project Link */}
-            {nextProject && (
-              <Link
-                href={`/portfolio/${nextProject.id}`}
-                className="block group"
-              >
-                <div
-                  className="rounded-2xl p-6 border transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1"
-                  style={{
-                    borderColor: `${nextProject.colors.primary}20`,
-                    backgroundColor: nextProject.colors.primary,
-                    color: "#ffffff",
-                  }}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <span
-                      className={`${poppins.className} text-sm font-medium opacity-90`}
-                    >
-                      Next Project
-                    </span>
-                    <ExternalLink className="w-5 h-5 opacity-90 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" />
-                  </div>
-                  <h4 className={`${bebasNeue.className} text-xl mb-1`}>
-                    {nextProject.name}
-                  </h4>
-                  <p className={`${poppins.className} text-sm opacity-90`}>
-                    {nextProject.category}
-                  </p>
-                </div>
-              </Link>
-            )}
+            ))}
           </div>
         </div>
+      </section>
+
+      {/* 5. CAPABILITIES (Services) */}
+      <section className="py-40 bg-[#dcd7c9] text-[#2c3639]">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
+            <div>
+              <h3
+                className={`${spaceGrotesk.className} text-6xl uppercase font-bold mb-12`}
+              >
+                Expertise Applied
+              </h3>
+              <div className="space-y-4">
+                {project.services.map((s, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center gap-6 group py-4 border-b border-[#2c3639]/10"
+                  >
+                    <span className="text-xs opacity-30">0{i + 1}</span>
+                    <span className="text-2xl font-light group-hover:text-[#a27b5b] transition-colors">
+                      {s}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* <div className="flex flex-col justify-center bg-[#2c3639] p-12 text-[#dcd7c9]">
+              <p className="text-2xl italic font-light leading-relaxed mb-8">
+                "
+                {project.testimonials[0]?.quote ||
+                  "A masterpiece of modern branding and functional design."}
+                "
+              </p>
+              <div className="h-[1px] w-12 bg-[#a27b5b] mb-4" />
+              <p className="font-bold text-sm uppercase tracking-widest">
+                {project.testimonials[0]?.author || "Executive Client"}
+              </p>
+            </div> */}
+          </div>
+        </div>
+      </section>
+
+      {/* EXIT TRANSITION */}
+      <footer className="h-screen flex items-center justify-center bg-[#dcd7c9] border-t border-[#2c3639]/5">
+        <Link href="/" className="group text-center">
+          <span className="text-[10px] tracking-[0.4em] uppercase text-[#a27b5b] mb-4 block">
+            Return to Collection
+          </span>
+          <h2
+            className={`${spaceGrotesk.className} text-[10vw] text-[#2c3639] group-hover:italic transition-all`}
+          >
+            INDEX
+          </h2>
+        </Link>
+      </footer>
+
+      {/* NAV */}
+      <Link href="/" className="fixed top-10 left-10 z-[100] group">
+        <div className="flex items-center gap-4 bg-[#2c3639] text-[#dcd7c9] px-6 py-3 rounded-full hover:bg-[#a27b5b] transition-colors">
+          <ArrowLeft className="w-4 h-4" />
+          <span className="text-[10px] uppercase tracking-widest font-bold">
+            Back
+          </span>
+        </div>
+      </Link>
+    </main>
+  );
+}
+
+// Sub-components
+function MetaItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <span className="block text-[9px] uppercase tracking-widest text-[#a27b5b] font-bold mb-2">
+        {label}
+      </span>
+      <span className="text-sm text-[#3f4e4f] font-medium">{value}</span>
+    </div>
+  );
+}
+
+function ExhibitRow({ img, index }: { img: string; index: number }) {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
+
+  return (
+    <div
+      ref={ref}
+      className={`flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} gap-12 items-center max-w-7xl mx-auto px-6`}
+    >
+      <div className="w-full md:w-3/5 overflow-hidden">
+        <motion.div
+          style={{ scale: 1.1 }}
+          whileInView={{ scale: 1 }}
+          transition={{ duration: 1.5 }}
+        >
+          <Image
+            src={img}
+            alt="Exhibit"
+            width={1200}
+            height={1600}
+            className="w-full h-auto"
+          />
+        </motion.div>
+      </div>
+      <motion.div
+        style={{ y }}
+        className="w-full md:w-2/5 p-8 border-l border-[#a27b5b]/20"
+      >
+        <span
+          className={`${spaceGrotesk.className} text-5xl font-bold text-[#a27b5b]/20 mb-4 block`}
+        >
+          0{index + 2}
+        </span>
+        <h3
+          className={`${spaceGrotesk.className} text-2xl font-bold text-[#2c3639] mb-4 uppercase tracking-tighter`}
+        >
+          Visual Fragment
+        </h3>
+        <p className="text-[#3f4e4f] leading-relaxed font-light">
+          An exploration of textures, light, and functional layout. Every pixel
+          curated to match the brand's core ethos.
+        </p>
+      </motion.div>
+    </div>
+  );
+}
+
+function MuseumLoader() {
+  return (
+    <div className="fixed inset-0 bg-[#dcd7c9] z-[200] flex items-center justify-center">
+      <div className="text-center">
+        <motion.div
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="w-8 h-8 border border-[#a27b5b] mx-auto mb-8"
+        />
+        <p
+          className={`${spaceGrotesk.className} text-[10px] tracking-[0.6em] text-[#2c3639] uppercase font-bold`}
+        >
+          Retrieving Folio
+        </p>
       </div>
     </div>
   );
